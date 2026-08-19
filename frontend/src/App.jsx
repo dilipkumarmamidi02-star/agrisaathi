@@ -9,7 +9,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Fertilize from './pages/Fertilize.jsx';
 import SoilPassport from './pages/SoilPassport.jsx';
 import CropPlanner from './pages/CropPlanner.jsx';
-import LivestockCare from './pages/LivestockCare.jsx';
+import Livestock from './pages/Livestock.jsx';
 import MarketPrices from './pages/MarketPrices.jsx';
 import Treatments from './pages/Treatments.jsx';
 import SensorLab from './pages/SensorLab.jsx';
@@ -75,7 +75,7 @@ function App() {
           <Route path="/fertilizer" element={<Fertilize />} />
           <Route path="/soil-passport" element={<SoilPassport />} />
           <Route path="/crop-planner" element={<CropPlanner />} />
-          <Route path="/livestock-care" element={<LivestockCare />} />
+          <Route path="/livestock-care" element={<Livestock />} />
           <Route path="/market-prices" element={<MarketPrices />} />
           <Route path="/data-gov" element={<DataGovLiveData />} />
           <Route path="/treatments" element={<Treatments />} />

@@ -34,9 +34,33 @@ async def fetch_resource(
         "offset": max(offset, 0),
     }
 
-    KNOWN_FILTER_FIELDS = {"state.keyword", "district", "market", "commodity", "variety", "grade"}
+    # Only send filters that are known to be supported by
+    # the current Data.gov market-resource integration.
+    #
+    # IMPORTANT:
+    # village / mandal / pincode are NOT included here because
+    # mandi_prices and variety_market_prices do not expose those
+    # fields in their market records.
+
+    KNOWN_FILTER_FIELDS = {
+        "state.keyword",
+        "district",
+        "market",
+        "commodity",
+        "variety",
+        "grade",
+    }
+
     if filters:
         for field, value in filters.items():
+            if value is None:
+                continue
+
+            value = str(value).strip()
+
+            if not value:
+                continue
+
             if field in KNOWN_FILTER_FIELDS:
                 params[f"filters[{field}]"] = value
 

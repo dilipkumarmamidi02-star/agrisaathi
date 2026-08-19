@@ -1,409 +1,1738 @@
-import { useEffect, useMemo, useState } from 'react'
+import { loadMarketIntelligence } from '../lib/marketIntelligence';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
 import {
-  Wallet,
-  Building2,
-  Navigation,
-  AlertCircle,
+  RefreshCw,
+  MapPin,
+  ChevronDown,
   TrendingUp,
+  Database,
+  Package,
+  Warehouse,
+  Wheat,
+  Factory,
+  ShoppingCart,
 } from 'lucide-react';
 
-import { useLang } from '../lib/i18n';
-import { getDataGovResourceRecords } from '../lib/dataGov';
-
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '../components/ui/select';
+  getDataGovResource,
+  getDataGovResourceRecords,
+} from '../lib/dataGov';
 
-import PageHeader from '../components/PageHeader';
+const MARKET_RESOURCES = [
+  {
+    key: 'mandi_prices',
+    title: 'Current Mandi Prices',
+    type: 'primary',
+    description:
+      'Current daily commodity prices from agricultural markets.',
+  },
+  {
+    key: 'variety_market_prices',
+    title: 'Variety-wise Market Prices',
+    type: 'primary',
+    description:
+      'Daily market prices by commodity variety, market, district and state.',
+  },
+  {
+    key: 'fci_stock_position',
+    title: 'FCI Stock Position',
+    type: 'secondary',
+    description:
+      'Food Corporation of India stock position relevant to market intelligence.',
+  },
+  {
+    key: 'msp_procurement',
+    title: 'MSP Procurement',
+    type: 'secondary',
+    description:
+      'Crop procurement information at Minimum Support Price rates.',
+  },
+  {
+    key: 'commodity_demand_supply',
+    title: 'Commodity Demand & Supply',
+    type: 'secondary',
+    description:
+      'Commodity demand, production and supply intelligence.',
+  },
+  {
+    key: 'fertilizer_demand_availability_rabi',
+    title: 'Rabi Fertilizer Availability',
+    type: 'secondary',
+    description:
+      'Rabi fertilizer demand, availability, consumption and closing stock.',
+  },
+  {
+    key: 'fertilizer_demand_supply_kharif',
+    title: 'Kharif Fertilizer Demand & Supply',
+    type: 'secondary',
+    description:
+      'Kharif fertilizer demand, supply and consumption.',
+  },
+  {
+    key: 'district_crop_production',
+    title: 'District Crop Production',
+    type: 'secondary',
+    description:
+      'District-level crop production information supporting market analysis.',
+  },
+];
 
-const normaliseRecord = (record) => ({
-  state: record?.state ?? record?.State ?? '',
-  district: record?.district ?? record?.District ?? '',
-  market: record?.market ?? record?.Market ?? '',
-  commodity: record?.commodity ?? record?.Commodity ?? '',
-  variety: record?.variety ?? record?.Variety ?? '',
-  grade: record?.grade ?? record?.Grade ?? '',
-  arrival_date: record?.arrival_date ?? record?.Arrival_Date ?? '',
-  min_price: Number(record?.min_price ?? record?.Min_Price ?? 0),
-  max_price: Number(record?.max_price ?? record?.Max_Price ?? 0),
-  modal_price: Number(record?.modal_price ?? record?.Modal_Price ?? 0),
-});
+const LOCATION_RESOURCE = 'pincode_directory';
+
+function clean(value) {
+  return String(value ?? '').trim();
+}
+
+function normalise(value) {
+  return clean(value).toLowerCase();
+}
+
+function pick(record, names) {
+  if (!record || typeof record !== 'object') return '';
+
+  const entries = Object.entries(record);
+
+  for (const wanted of names) {
+    const exact = entries.find(
+      ([key]) => normalise(key) === normalise(wanted)
+    );
+
+    if (exact) return exact[1];
+  }
+
+  for (const wanted of names) {
+    const partial = entries.find(
+      ([key]) =>
+        normalise(key).includes(normalise(wanted))
+    );
+
+    if (partial) return partial[1];
+  }
+
+  return '';
+}
+
+function getState(record) {
+  return clean(
+    pick(record, [
+      'State',
+      'state',
+      'state_name',
+      'state_ut',
+      'State_Name',
+    ])
+  );
+}
+
+function getDistrict(record) {
+  return clean(
+    pick(record, [
+      'District',
+      'district',
+      'District_name',
+      'district_name',
+    ])
+  );
+}
+
+function getMarket(record) {
+  return clean(
+    pick(record, [
+      'Market',
+      'market',
+      'market_name',
+      'Market_Name',
+    ])
+  );
+}
+
+function getCommodity(record) {
+  return clean(
+    pick(record, [
+      'Commodity',
+      'commodity',
+      'Commodity_name',
+      'crop',
+      'crop_name',
+    ])
+  );
+}
+
+function getVariety(record) {
+  return clean(
+    pick(record, [
+      'Variety',
+      'variety',
+    ])
+  );
+}
+
+function getVillage(record) {
+  return clean(
+    pick(record, [
+      'Village',
+      'village',
+      'Village_Name',
+      'village_name',
+    ])
+  );
+}
+
+function getPincode(record) {
+  return clean(
+    pick(record, [
+      'Pincode',
+      'pincode',
+      'PIN',
+      'pin',
+      'PinCode',
+      'pin_code',
+    ])
+  );
+}
+
+function getDate(record) {
+  return clean(
+    pick(record, [
+      'Arrival_Date',
+      'arrival_date',
+      'Date',
+      'date',
+      'Individual_Date',
+    ])
+  );
+}
+
+function getPrice(record, names) {
+  const value = pick(record, names);
+
+  if (
+    value === '' ||
+    value === null ||
+    value === undefined
+  ) {
+    return null;
+  }
+
+  const number = Number(
+    String(value).replace(/,/g, '')
+  );
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+}
+
+function formatPrice(value) {
+  if (value === null || value === undefined) {
+    return '—';
+  }
+
+  return `₹${Number(value).toLocaleString('en-IN')}`;
+}
+
+function resourceLabel(key) {
+  return (
+    MARKET_RESOURCES.find(
+      (resource) => resource.key === key
+    )?.title || key
+  );
+}
 
 export default function MarketPrices() {
-  const { t } = useLang();
+  const [detectedLocation, setDetectedLocation] =
+    useState(null);
 
-  const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [stateFilter, setStateFilter] = useState('');
-  const [commodityFilter, setCommodityFilter] = useState('');
+  const [locationError, setLocationError] =
+    useState('');
 
-  useEffect(() => {
-    let cancelled = false;
+  const [locationLoading, setLocationLoading] =
+    useState(false);
 
-    const loadPrices = async () => {
-      setLoading(true);
-      setError('');
+  const [stateFilter, setStateFilter] =
+    useState('');
 
-      try {
-        const data = await getDataGovResourceRecords(
-          'mandi_prices',
-          { limit: 100 }
-        );
+  const [districtFilter, setDistrictFilter] =
+    useState('');
 
-        if (!cancelled) {
-          setRecords(data.map(normaliseRecord));
-        }
-      } catch (err) {
-        console.error('Data.gov mandi prices error:', err);
+  const [marketFilter, setMarketFilter] =
+    useState('');
 
-        if (!cancelled) {
-          setRecords([]);
-          setError(
-            err?.message || 'Could not load market prices.'
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
+  const [commodityFilter, setCommodityFilter] =
+    useState('');
 
-    loadPrices();
+  const [marketRecords, setMarketRecords] =
+    useState([]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [varietyRecords, setVarietyRecords] =
+    useState([]);
 
-  const useLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by this browser.');
+  const [supportingResources, setSupportingResources] =
+    useState({});
+
+  // Resource viewer
+  const [selectedResource, setSelectedResource] =
+    useState(null);
+
+  const [resourceViewerRecords, setResourceViewerRecords] =
+    useState([]);
+
+  const [resourceViewerLoading, setResourceViewerLoading] =
+    useState(false);
+
+  const [resourceViewerError, setResourceViewerError] =
+    useState('');
+
+  const [resourceViewerLimit, setResourceViewerLimit] =
+    useState(100);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [refreshing, setRefreshing] =
+    useState(false);
+
+  const [error, setError] =
+    useState('');
+
+  // ----------------------------------------------------------
+  // LOCATION
+  //
+  // IMPORTANT:
+  // Browser coordinates are NOT directly sent to Data.gov.
+  //
+  // Coordinates are used only as a location hint.
+  // State/District are selected from actual Data.gov records.
+  // ----------------------------------------------------------
+
+  const useMyLocation = useCallback(() => {
+    if (
+      typeof navigator === 'undefined' ||
+      !navigator.geolocation
+    ) {
+      setLocationError(
+        'Location is not available in this browser.'
+      );
       return;
     }
 
+    setLocationLoading(true);
+    setLocationError('');
+
     navigator.geolocation.getCurrentPosition(
-      () => {
-        alert(
-          'Your location was detected. Current Data.gov mandi records do not include coordinates, so exact distance cannot be calculated.'
+      (position) => {
+        const latitude =
+          position.coords.latitude;
+
+        const longitude =
+          position.coords.longitude;
+
+        setDetectedLocation({
+          latitude,
+          longitude,
+        });
+
+        setLocationLoading(false);
+      },
+      (geoError) => {
+        setLocationLoading(false);
+
+        setLocationError(
+          geoError?.message ||
+            'Unable to detect your location.'
         );
       },
-      () => {
-        alert('Could not get your location.');
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000,
       }
+    );
+  }, []);
+
+  // ----------------------------------------------------------
+  // LOAD PRIMARY MARKET DATA
+  //
+  // variety_market_prices is the reliable location-aware
+  // resource because it contains:
+  //
+  // State
+  // District
+  // Market
+  // Commodity
+  // Variety
+  // Grade
+  // Prices
+  // Arrival_Date
+  // ----------------------------------------------------------
+
+  const loadPrimaryMarketData = useCallback(
+    async () => {
+      const params = {
+        limit: 100,
+      };
+
+      if (stateFilter) {
+        params.state = stateFilter;
+      }
+
+      if (districtFilter) {
+        params.district = districtFilter;
+      }
+
+      if (marketFilter) {
+        params.market = marketFilter;
+      }
+
+      if (commodityFilter) {
+        params.commodity = commodityFilter;
+      }
+
+      const [
+        mandiResult,
+        varietyResult,
+      ] = await Promise.allSettled([
+        getDataGovResource(
+          'mandi_prices',
+          params
+        ),
+        getDataGovResource(
+          'variety_market_prices',
+          params
+        ),
+      ]);
+
+      const mandi =
+        mandiResult.status === 'fulfilled'
+          ? mandiResult.value
+          : {
+              records: [],
+              count: 0,
+              total: 0,
+            };
+
+      const variety =
+        varietyResult.status === 'fulfilled'
+          ? varietyResult.value
+          : {
+              records: [],
+              count: 0,
+              total: 0,
+            };
+
+      return {
+        mandi,
+        variety,
+      };
+    },
+    [
+      stateFilter,
+      districtFilter,
+      marketFilter,
+      commodityFilter,
+    ]
+  );
+
+  // ----------------------------------------------------------
+  // LOAD ALL 8 MARKET INTELLIGENCE RESOURCES
+  //
+  // Supporting resources are intentionally loaded separately.
+  // A failure/empty response from one resource must NEVER erase
+  // the working primary market resource.
+  // ----------------------------------------------------------
+
+  const loadSupportingResources =
+    useCallback(async () => {
+      const result = {};
+
+      await Promise.all(
+        MARKET_RESOURCES
+          .slice(2)
+          .map(async (resource) => {
+            try {
+              const params = {
+                limit: 100,
+              };
+
+              if (
+                resource.key ===
+                'district_crop_production'
+              ) {
+                if (stateFilter) {
+                  params.state = stateFilter;
+                }
+
+                if (districtFilter) {
+                  params.district =
+                    districtFilter;
+                }
+
+                if (commodityFilter) {
+                  params.commodity =
+                    commodityFilter;
+                }
+              }
+
+              if (
+                resource.key ===
+                'fertilizer_demand_availability_rabi'
+              ) {
+                if (stateFilter) {
+                  params.state = stateFilter;
+                }
+              }
+
+              if (
+                resource.key ===
+                'fertilizer_demand_supply_kharif'
+              ) {
+                if (stateFilter) {
+                  params.state = stateFilter;
+                }
+              }
+
+              if (
+                resource.key ===
+                'fci_stock_position'
+              ) {
+                if (districtFilter) {
+                  params.district =
+                    districtFilter;
+                }
+
+                if (commodityFilter) {
+                  params.commodity =
+                    commodityFilter;
+                }
+              }
+
+              const data =
+                await getDataGovResource(
+                  resource.key,
+                  params
+                );
+
+              result[resource.key] = {
+                ...data,
+                records: Array.isArray(
+                  data?.records
+                )
+                  ? data.records
+                  : [],
+                connected: true,
+              };
+            } catch (resourceError) {
+              result[resource.key] = {
+                resource_key: resource.key,
+                records: [],
+                count: 0,
+                total: 0,
+                connected: false,
+                error:
+                  resourceError?.message ||
+                  'Resource unavailable',
+              };
+            }
+          })
+      );
+
+      setSupportingResources(result);
+    }, [
+      stateFilter,
+      districtFilter,
+      commodityFilter,
+    ]);
+
+  const loadAll = useCallback(
+    async (isRefresh = false) => {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
+      setError('');
+
+      try {
+        const primary =
+          await loadPrimaryMarketData();
+
+        setMarketRecords(
+          Array.isArray(primary.mandi?.records)
+            ? primary.mandi.records
+            : []
+        );
+
+        setVarietyRecords(
+          Array.isArray(
+            primary.variety?.records
+          )
+            ? primary.variety.records
+            : []
+        );
+
+        await loadSupportingResources();
+      } catch (loadError) {
+        setError(
+          loadError?.message ||
+            'Unable to load market intelligence.'
+        );
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [
+      loadPrimaryMarketData,
+      loadSupportingResources,
+    ]
+  );
+
+  useEffect(() => {
+    loadAll(false);
+  }, [loadAll]);
+
+  // ----------------------------------------------------------
+  // FILTER OPTIONS
+  //
+  // These are derived from the actual variety resource,
+  // preventing unstable browser-location values from becoming
+  // fake Data.gov filters.
+  // ----------------------------------------------------------
+
+  const states = useMemo(() => {
+    return [
+      ...new Set(
+        varietyRecords
+          .map(getState)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [varietyRecords]);
+
+  const districts = useMemo(() => {
+    return [
+      ...new Set(
+        varietyRecords
+          .filter((record) => {
+            if (!stateFilter) return true;
+
+            return (
+              normalise(getState(record)) ===
+              normalise(stateFilter)
+            );
+          })
+          .map(getDistrict)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [
+    varietyRecords,
+    stateFilter,
+  ]);
+
+  const markets = useMemo(() => {
+    return [
+      ...new Set(
+        varietyRecords
+          .filter((record) => {
+            if (
+              stateFilter &&
+              normalise(getState(record)) !==
+                normalise(stateFilter)
+            ) {
+              return false;
+            }
+
+            if (
+              districtFilter &&
+              normalise(getDistrict(record)) !==
+                normalise(districtFilter)
+            ) {
+              return false;
+            }
+
+            return true;
+          })
+          .map(getMarket)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [
+    varietyRecords,
+    stateFilter,
+    districtFilter,
+  ]);
+
+  const commodities = useMemo(() => {
+    return [
+      ...new Set(
+        varietyRecords
+          .filter((record) => {
+            if (
+              stateFilter &&
+              normalise(getState(record)) !==
+                normalise(stateFilter)
+            ) {
+              return false;
+            }
+
+            if (
+              districtFilter &&
+              normalise(getDistrict(record)) !==
+                normalise(districtFilter)
+            ) {
+              return false;
+            }
+
+            if (
+              marketFilter &&
+              normalise(getMarket(record)) !==
+                normalise(marketFilter)
+            ) {
+              return false;
+            }
+
+            return true;
+          })
+          .map(getCommodity)
+          .filter(Boolean)
+      ),
+    ].sort();
+  }, [
+    varietyRecords,
+    stateFilter,
+    districtFilter,
+    marketFilter,
+  ]);
+
+  // ----------------------------------------------------------
+  // DISPLAY RECORDS
+  // ----------------------------------------------------------
+
+  const displayRecords = useMemo(() => {
+    return varietyRecords.filter((record) => {
+      if (
+        stateFilter &&
+        normalise(getState(record)) !==
+          normalise(stateFilter)
+      ) {
+        return false;
+      }
+
+      if (
+        districtFilter &&
+        normalise(getDistrict(record)) !==
+          normalise(districtFilter)
+      ) {
+        return false;
+      }
+
+      if (
+        marketFilter &&
+        normalise(getMarket(record)) !==
+          normalise(marketFilter)
+      ) {
+        return false;
+      }
+
+      if (
+        commodityFilter &&
+        normalise(getCommodity(record)) !==
+          normalise(commodityFilter)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [
+    varietyRecords,
+    stateFilter,
+    districtFilter,
+    marketFilter,
+    commodityFilter,
+  ]);
+
+  const marketCount = useMemo(
+    () =>
+      new Set(
+        displayRecords
+          .map(getMarket)
+          .filter(Boolean)
+      ).size,
+    [displayRecords]
+  );
+
+  const varietyCount = useMemo(
+    () =>
+      new Set(
+        displayRecords
+          .map(getVariety)
+          .filter(Boolean)
+      ).size,
+    [displayRecords]
+  );
+
+  const latestRecord = useMemo(() => {
+    if (!displayRecords.length) return null;
+
+    return displayRecords[0];
+  }, [displayRecords]);
+
+  // ----------------------------------------------------------
+  // RESET DEPENDENT FILTERS
+  // ----------------------------------------------------------
+
+  const changeState = (value) => {
+    setStateFilter(value);
+    setDistrictFilter('');
+    setMarketFilter('');
+    setCommodityFilter('');
+  };
+
+  const changeDistrict = (value) => {
+    setDistrictFilter(value);
+    setMarketFilter('');
+  };
+
+  const changeMarket = (value) => {
+    setMarketFilter('');
+    setMarketFilter(value);
+  };
+
+  // ----------------------------------------------------------
+  // RESOURCE VIEWER
+  //
+  // Clicking any Market Intelligence resource opens the
+  // actual records returned by the existing backend API.
+  // ----------------------------------------------------------
+
+  const openResourceViewer = useCallback(
+    async (resource) => {
+      setSelectedResource(resource);
+      setResourceViewerRecords([]);
+      setResourceViewerError('');
+      setResourceViewerLoading(true);
+      setResourceViewerLimit(100);
+
+      try {
+        const data = await getDataGovResource(
+          resource.key,
+          {
+            limit: 100,
+          }
+        );
+
+        setResourceViewerRecords(
+          Array.isArray(data?.records)
+            ? data.records
+            : []
+        );
+      } catch (viewerError) {
+        setResourceViewerError(
+          viewerError?.message ||
+            'Unable to load resource records.'
+        );
+      } finally {
+        setResourceViewerLoading(false);
+      }
+    },
+    []
+  );
+
+  const closeResourceViewer = () => {
+    setSelectedResource(null);
+    setResourceViewerRecords([]);
+    setResourceViewerError('');
+  };
+
+  // ----------------------------------------------------------
+  // RESOURCE CARD
+  // ----------------------------------------------------------
+
+  const ResourceCard = ({
+    resource,
+    index,
+  }) => {
+    const data =
+      resource.type === 'primary'
+        ? resource.key ===
+          'variety_market_prices'
+          ? {
+              records: varietyRecords,
+              connected: true,
+            }
+          : {
+              records: marketRecords,
+              connected: true,
+            }
+        : supportingResources[
+            resource.key
+          ];
+
+    const count =
+      data?.records?.length || 0;
+
+    return (
+      <button
+        type="button"
+        key={resource.key}
+        onClick={() => openResourceViewer(resource)}
+        className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        title={`Open ${resource.title}`}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="rounded-xl bg-slate-100 p-2">
+              {resource.key.includes(
+                'fertilizer'
+              ) ? (
+                <Factory size={20} />
+              ) : resource.key.includes(
+                  'stock'
+                ) ? (
+                <Warehouse size={20} />
+              ) : resource.key.includes(
+                  'crop'
+                ) ? (
+                <Wheat size={20} />
+              ) : resource.key.includes(
+                  'procurement'
+                ) ? (
+                <ShoppingCart size={20} />
+              ) : (
+                <Database size={20} />
+              )}
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-slate-900">
+                  {resource.title}
+                </h3>
+
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium uppercase text-slate-600">
+                  {resource.type}
+                </span>
+              </div>
+
+              <p className="mt-1 text-sm text-slate-500">
+                {resource.description}
+              </p>
+            </div>
+          </div>
+
+          <span
+            className={
+              data?.connected === false
+                ? 'rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700'
+                : 'rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700'
+            }
+          >
+            {data?.connected === false
+              ? 'ERROR'
+              : 'LIVE'}
+          </span>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
+          <span className="text-slate-500">
+            Resource key:
+          </span>
+
+          <code className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700">
+            {resource.key}
+          </code>
+        </div>
+
+        <div className="mt-3 text-sm text-slate-500">
+          {data?.total !== undefined
+            ? `${Number(data.total).toLocaleString(
+                'en-IN'
+              )} records`
+            : `${count.toLocaleString(
+                'en-IN'
+              )} records loaded`}
+        </div>
+
+        {data?.error && (
+          <div className="mt-3 rounded-lg bg-red-50 p-3 text-xs text-red-700">
+            {data.error}
+          </div>
+        )}
+      </button>
     );
   };
 
-  const states = useMemo(
-    () =>
-      [...new Set(
-        records.map((r) => r.state).filter(Boolean)
-      )].sort(),
-    [records]
-  );
-
-  const commodities = useMemo(
-    () =>
-      [...new Set(
-        records.map((r) => r.commodity).filter(Boolean)
-      )].sort(),
-    [records]
-  );
-
-  const filteredRecords = useMemo(() => {
-    return records.filter((r) => {
-      const stateOK =
-        !stateFilter || r.state === stateFilter;
-
-      const commodityOK =
-        !commodityFilter ||
-        r.commodity === commodityFilter;
-
-      return stateOK && commodityOK;
-    });
-  }, [records, stateFilter, commodityFilter]);
-
-  const mandis = useMemo(() => {
-    const map = new Map();
-
-    filteredRecords.forEach((r) => {
-      const key = `${r.state}|${r.district}|${r.market}`;
-
-      if (!map.has(key)) {
-        map.set(key, {
-          id: key,
-          market_name: r.market,
-          district: r.district,
-          state: r.state,
-          commodities: new Set(),
-        });
-      }
-
-      if (r.commodity) {
-        map.get(key).commodities.add(r.commodity);
-      }
-    });
-
-    return [...map.values()]
-      .map((m) => ({
-        ...m,
-        commodities: [...m.commodities]
-          .slice(0, 8)
-          .join(', '),
-      }))
-      .slice(0, 15);
-  }, [filteredRecords]);
-
   return (
-    <div>
-      <PageHeader
-        titleKey="marketPrices"
-        icon={Wallet}
-      />
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        {/* HEADER */}
 
-      <div className="flex flex-col sm:flex-row gap-2 mb-3">
-        <Button
-          onClick={useLocation}
-          className="flex-1 bg-green-600 hover:bg-green-700"
-        >
-          <Navigation className="h-4 w-4 mr-1" />
-          {t('useMyLocation') || 'Use My Location'}
-        </Button>
+        <div className="mb-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <TrendingUp
+                  size={24}
+                />
 
-        <Select
-          value={stateFilter}
-          onValueChange={(value) =>
-            setStateFilter(
-              value === '__all__' ? '' : value
-            )
-          }
-        >
-          <SelectTrigger className="sm:w-48">
-            <SelectValue
-              placeholder={
-                t('pickLocation') || 'Select State'
-              }
-            />
-          </SelectTrigger>
+                <h1 className="text-2xl font-bold text-slate-900">
+                  Market Prices
+                </h1>
 
-          <SelectContent className="max-h-72">
-            <SelectItem value="__all__">
-              All States
-            </SelectItem>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                  LIVE
+                </span>
+              </div>
 
-            {states.map((state) => (
-              <SelectItem
-                key={state}
-                value={state}
-              >
-                {state}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              <p className="mt-2 text-slate-600">
+                Live Data.gov.in Market Intelligence
+              </p>
+            </div>
 
-        <Select
-          value={commodityFilter}
-          onValueChange={(value) =>
-            setCommodityFilter(
-              value === '__all__' ? '' : value
-            )
-          }
-        >
-          <SelectTrigger className="sm:w-52">
-            <SelectValue placeholder="Commodity" />
-          </SelectTrigger>
+            <button
+              type="button"
+              onClick={() => loadAll(true)}
+              disabled={loading || refreshing}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-slate-50 disabled:opacity-50"
+            >
+              <RefreshCw
+                size={16}
+                className={
+                  refreshing
+                    ? 'animate-spin'
+                    : ''
+                }
+              />
 
-          <SelectContent className="max-h-72">
-            <SelectItem value="__all__">
-              All Commodities
-            </SelectItem>
-
-            {commodities.map((commodity) => (
-              <SelectItem
-                key={commodity}
-                value={commodity}
-              >
-                {commodity}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-        <TrendingUp className="h-4 w-4" />
-        {t('livePrices') || 'Live Market Prices'}
-      </h3>
-
-      {loading && (
-        <p className="text-xs text-gray-400 mb-3">
-          {t('loading') || 'Loading market prices...'}
-        </p>
-      )}
-
-      {!loading && error && (
-        <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-          <AlertCircle className="h-5 w-5 text-red-600 shrink-0" />
-          <p className="text-xs text-red-700">
-            {error}
-          </p>
+              Refresh
+            </button>
+          </div>
         </div>
-      )}
 
-      {!loading && !error && records.length > 0 && (
-        <div className="flex items-start gap-2 bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-          <TrendingUp className="h-5 w-5 text-green-600 shrink-0" />
-          <p className="text-xs text-green-700">
-            Current market prices loaded from
-            Data.gov.in.
-          </p>
+        {/* LOCATION */}
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="font-semibold text-slate-900">
+                Market location
+              </h2>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Filter government market data by
+                State, District, Market and
+                Commodity.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={useMyLocation}
+              disabled={locationLoading}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+            >
+              <MapPin size={16} />
+
+              {locationLoading
+                ? 'Detecting...'
+                : 'Use My Location'}
+            </button>
+          </div>
+
+          {detectedLocation && (
+            <div className="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
+              Location detected (
+              {detectedLocation.latitude.toFixed(
+                5
+              )}
+              ,{' '}
+              {detectedLocation.longitude.toFixed(
+                5
+              )}
+              ). Select the State and District
+              from the Data.gov.in market data.
+            </div>
+          )}
+
+          {locationError && (
+            <div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-700">
+              {locationError}
+            </div>
+          )}
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {/* STATE */}
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-700">
+                State
+              </span>
+
+              <select
+                value={stateFilter}
+                onChange={(event) =>
+                  changeState(
+                    event.target.value
+                  )
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+              >
+                <option value="">
+                  All States
+                </option>
+
+                {states.map((state) => (
+                  <option
+                    key={state}
+                    value={state}
+                  >
+                    {state}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {/* DISTRICT */}
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-700">
+                District
+              </span>
+
+              <select
+                value={districtFilter}
+                onChange={(event) =>
+                  changeDistrict(
+                    event.target.value
+                  )
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+              >
+                <option value="">
+                  All Districts
+                </option>
+
+                {districts.map(
+                  (district) => (
+                    <option
+                      key={district}
+                      value={district}
+                    >
+                      {district}
+                    </option>
+                  )
+                )}
+              </select>
+            </label>
+
+            {/* MARKET */}
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-700">
+                Market
+              </span>
+
+              <select
+                value={marketFilter}
+                onChange={(event) =>
+                  changeMarket(
+                    event.target.value
+                  )
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+              >
+                <option value="">
+                  All Markets
+                </option>
+
+                {markets.map((market) => (
+                  <option
+                    key={market}
+                    value={market}
+                  >
+                    {market}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {/* COMMODITY */}
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-slate-700">
+                Commodity
+              </span>
+
+              <select
+                value={commodityFilter}
+                onChange={(event) =>
+                  setCommodityFilter(
+                    event.target.value
+                  )
+                }
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+              >
+                <option value="">
+                  All Commodities
+                </option>
+
+                {commodities.map(
+                  (commodity) => (
+                    <option
+                      key={commodity}
+                      value={commodity}
+                    >
+                      {commodity}
+                    </option>
+                  )
+                )}
+              </select>
+            </label>
+          </div>
         </div>
-      )}
 
-      {!loading &&
-        !error &&
-        filteredRecords.length > 0 && (
-          <div className="space-y-2 mb-5">
-            {filteredRecords
-              .slice(0, 30)
-              .map((r, index) => (
-                <Card
-                  key={`${r.state}-${r.district}-${r.market}-${r.commodity}-${index}`}
+        {/* SUMMARY */}
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="text-sm text-slate-500">
+              Records
+            </div>
+
+            <div className="mt-1 text-2xl font-bold">
+              {displayRecords.length}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="text-sm text-slate-500">
+              Markets
+            </div>
+
+            <div className="mt-1 text-2xl font-bold">
+              {marketCount}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="text-sm text-slate-500">
+              Varieties
+            </div>
+
+            <div className="mt-1 text-2xl font-bold">
+              {varietyCount}
+            </div>
+          </div>
+        </div>
+
+        {/* ==================================================
+             ADDITIONAL RESOURCE VIEWER
+             ================================================== */}
+
+        {selectedResource && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
+            <div className="flex max-h-[90vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+
+              {/* VIEWER HEADER */}
+
+              <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-5">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="text-xl font-bold text-slate-900">
+                      {selectedResource.title}
+                    </h2>
+
+                    <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold uppercase text-emerald-700">
+                      {selectedResource.type}
+                    </span>
+                  </div>
+
+                  <p className="mt-1 text-sm text-slate-500">
+                    {selectedResource.description}
+                  </p>
+
+                  <div className="mt-2">
+                    <code className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700">
+                      {selectedResource.key}
+                    </code>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={closeResourceViewer}
+                  className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
-                  <CardContent className="pt-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {r.commodity}
+                  Close
+                </button>
+              </div>
 
-                          {r.variety && (
-                            <span className="text-gray-400 font-normal">
-                              {' · '}
-                              {r.variety}
-                            </span>
-                          )}
-                        </p>
+              {/* VIEWER BODY */}
 
-                        <p className="text-xs text-gray-400 truncate">
-                          {r.market}
-                          {r.district &&
-                            ` · ${r.district}`}
-                          {r.state &&
-                            ` · ${r.state}`}
-                        </p>
+              <div className="min-h-0 flex-1 overflow-auto p-5">
 
-                        {r.grade && (
-                          <p className="text-[10px] text-gray-400 mt-0.5">
-                            Grade: {r.grade}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="text-right shrink-0">
-                        <p className="text-sm font-semibold text-green-700">
-                          ₹
-                          {r.modal_price.toLocaleString(
-                            'en-IN'
-                          )}
-                        </p>
-
-                        <p className="text-[10px] text-gray-400">
-                          Modal Price
-                        </p>
-
-                        {r.min_price > 0 &&
-                          r.max_price > 0 && (
-                            <p className="text-[10px] text-gray-400">
-                              ₹
-                              {r.min_price.toLocaleString(
-                                'en-IN'
-                              )}
-                              {' – '}
-                              ₹
-                              {r.max_price.toLocaleString(
-                                'en-IN'
-                              )}
-                            </p>
-                          )}
-
-                        {r.arrival_date && (
-                          <p className="text-[10px] text-gray-400">
-                            {r.arrival_date}
-                          </p>
-                        )}
-                      </div>
+                {resourceViewerLoading ? (
+                  <div className="p-10 text-center text-slate-500">
+                    Loading {selectedResource.title} records...
+                  </div>
+                ) : resourceViewerError ? (
+                  <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                    <div className="font-semibold">
+                      Unable to load this resource
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+
+                    <div className="mt-1">
+                      {resourceViewerError}
+                    </div>
+                  </div>
+                ) : resourceViewerRecords.length === 0 ? (
+                  <div className="rounded-xl bg-slate-50 p-10 text-center text-slate-500">
+                    No records returned for this resource.
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <div className="text-sm text-slate-600">
+                        Showing{" "}
+                        <span className="font-semibold text-slate-900">
+                          {resourceViewerRecords.length.toLocaleString('en-IN')}
+                        </span>{" "}
+                        records
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openResourceViewer(selectedResource)
+                        }
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50"
+                      >
+                        <RefreshCw size={15} />
+                        Reload
+                      </button>
+                    </div>
+
+                    <div className="overflow-x-auto rounded-xl border border-slate-200">
+                      <table className="min-w-full text-sm">
+                        <thead className="sticky top-0 bg-slate-100 text-left">
+                          <tr>
+                            {Object.keys(
+                              resourceViewerRecords[0] || {}
+                            ).map((field) => (
+                              <th
+                                key={field}
+                                className="whitespace-nowrap border-b border-slate-200 px-4 py-3 font-semibold text-slate-700"
+                              >
+                                {field}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {resourceViewerRecords.map(
+                            (record, rowIndex) => (
+                              <tr
+                                key={`${selectedResource.key}-${rowIndex}`}
+                                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                              >
+                                {Object.keys(
+                                  resourceViewerRecords[0] || {}
+                                ).map((field) => (
+                                  <td
+                                    key={field}
+                                    className="whitespace-nowrap px-4 py-3 text-slate-700"
+                                  >
+                                    {record[field] === null ||
+                                    record[field] === undefined ||
+                                    record[field] === ''
+                                      ? '—'
+                                      : String(record[field])}
+                                  </td>
+                                ))}
+                              </tr>
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
-      {!loading &&
-        !error &&
-        filteredRecords.length === 0 && (
-          <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-            <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
-            <p className="text-xs text-amber-700">
-              No market price records found for
-              the selected filters.
+        {/* PRIMARY PRICE TABLE */}
+
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 p-5">
+            <h2 className="text-lg font-semibold">
+              Current Market Prices
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Primary price display uses
+              variety_market_prices because it
+              contains State, District, Market,
+              Commodity, Variety, Grade and price
+              fields.
             </p>
           </div>
-        )}
 
-      <h3 className="text-sm font-semibold text-gray-700 mb-2">
-        {t('nearestMandis') || 'Markets / Mandis'}
-      </h3>
+          {loading ? (
+            <div className="p-8 text-center text-slate-500">
+              Loading market prices...
+            </div>
+          ) : displayRecords.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="font-medium text-slate-800">
+                No market price records found
+              </p>
 
-      <div className="space-y-2">
-        {mandis.map((m) => (
-          <Card key={m.id}>
-            <CardContent className="pt-3">
-              <div className="flex items-start gap-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-700 shrink-0">
-                  <Building2 className="h-5 w-5" />
-                </span>
+              <p className="mt-1 text-sm text-slate-500">
+                Try another state, district,
+                market, or commodity.
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="bg-slate-50 text-left">
+                  <tr>
+                    <th className="px-4 py-3">
+                      Arrival Date
+                    </th>
 
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium truncate">
-                    {m.market_name ||
-                      'Unknown Market'}
-                  </p>
+                    <th className="px-4 py-3">
+                      State
+                    </th>
 
-                  <p className="text-xs text-gray-400">
-                    {m.district &&
-                      `${m.district} · `}
-                    {m.state}
-                  </p>
+                    <th className="px-4 py-3">
+                      District
+                    </th>
 
-                  {m.commodities && (
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      <span className="text-gray-400">
-                        {t('commodities') ||
-                          'Commodities'}:
-                      </span>{' '}
-                      {m.commodities}
-                    </p>
+                    <th className="px-4 py-3">
+                      Market
+                    </th>
+
+                    <th className="px-4 py-3">
+                      Commodity
+                    </th>
+
+                    <th className="px-4 py-3">
+                      Variety
+                    </th>
+
+                    <th className="px-4 py-3">
+                      Grade
+                    </th>
+
+                    <th className="px-4 py-3 text-right">
+                      Min Price
+                    </th>
+
+                    <th className="px-4 py-3 text-right">
+                      Max Price
+                    </th>
+
+                    <th className="px-4 py-3 text-right">
+                      Modal Price
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {displayRecords.map(
+                    (record, index) => (
+                      <tr
+                        key={`${getDate(
+                          record
+                        )}-${getMarket(
+                          record
+                        )}-${index}`}
+                        className="border-t border-slate-100"
+                      >
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          {getDate(record) ||
+                            '—'}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          {getState(record) ||
+                            '—'}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          {getDistrict(
+                            record
+                          ) || '—'}
+                        </td>
+
+                        <td className="px-4 py-3 font-medium">
+                          {getMarket(record) ||
+                            '—'}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          {getCommodity(
+                            record
+                          ) || '—'}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          {getVariety(record) ||
+                            '—'}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          {clean(
+                            pick(record, [
+                              'Grade',
+                              'grade',
+                            ])
+                          ) || '—'}
+                        </td>
+
+                        <td className="px-4 py-3 text-right">
+                          {formatPrice(
+                            getPrice(record, [
+                              'Min_Price',
+                              'min_price',
+                            ])
+                          )}
+                        </td>
+
+                        <td className="px-4 py-3 text-right">
+                          {formatPrice(
+                            getPrice(record, [
+                              'Max_Price',
+                              'max_price',
+                            ])
+                          )}
+                        </td>
+
+                        <td className="px-4 py-3 text-right font-semibold">
+                          {formatPrice(
+                            getPrice(record, [
+                              'Modal_Price',
+                              'modal_price',
+                            ])
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* LATEST RECORD */}
+
+        {latestRecord && (
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+            <h2 className="font-semibold">
+              Latest market observation
+            </h2>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-5">
+              <div>
+                <div className="text-xs text-slate-500">
+                  Commodity
+                </div>
+
+                <div className="font-medium">
+                  {getCommodity(
+                    latestRecord
+                  ) || '—'}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs text-slate-500">
+                  District
+                </div>
+
+                <div className="font-medium">
+                  {getDistrict(
+                    latestRecord
+                  ) || '—'}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs text-slate-500">
+                  Market
+                </div>
+
+                <div className="font-medium">
+                  {getMarket(
+                    latestRecord
+                  ) || '—'}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs text-slate-500">
+                  Variety
+                </div>
+
+                <div className="font-medium">
+                  {getVariety(
+                    latestRecord
+                  ) || '—'}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-xs text-slate-500">
+                  Modal Price
+                </div>
+
+                <div className="font-semibold">
+                  {formatPrice(
+                    getPrice(
+                      latestRecord,
+                      ['Modal_Price']
+                    )
                   )}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            </div>
+          </div>
+        )}
 
-      <Badge className="mt-4 bg-green-100 text-green-700">
-        Data.gov.in
-      </Badge>
+        {/* ====================================================
+            ALL 8 MARKET INTELLIGENCE RESOURCES
+            ==================================================== */}
+
+        <div className="mt-10">
+          <div className="mb-5">
+            <h2 className="text-xl font-bold text-slate-900">
+              Additional Market Intelligence
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Live Data.gov.in resources assigned to
+              Market Prices. All 8 registered market
+              resources remain visible independently.
+            </p>
+
+            <div className="mt-3 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+              {MARKET_RESOURCES.length}/
+              {MARKET_RESOURCES.length} Market
+              Prices resources connected
+            </div>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            {MARKET_RESOURCES.map(
+              (resource, index) => (
+                <ResourceCard
+                  key={resource.key}
+                  resource={resource}
+                  index={index}
+                />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* DATA.GOV RESOURCE TABLE */}
+
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="font-semibold text-slate-900">
+            Active Data.gov.in Market Resources
+          </h2>
+
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead className="bg-slate-50 text-left">
+                <tr>
+                  <th className="px-4 py-3">
+                    Resource
+                  </th>
+
+                  <th className="px-4 py-3">
+                    Type
+                  </th>
+
+                  <th className="px-4 py-3">
+                    Key
+                  </th>
+
+                  <th className="px-4 py-3">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {MARKET_RESOURCES.map(
+                  (resource) => {
+                    const data =
+                      resource.type ===
+                      'primary'
+                        ? {
+                            connected: true,
+                          }
+                        : supportingResources[
+                            resource.key
+                          ];
+
+                    return (
+                      <tr
+                        key={resource.key}
+                        className="border-t border-slate-100"
+                      >
+                        <td className="px-4 py-3 font-medium">
+                          {resource.title}
+                        </td>
+
+                        <td className="px-4 py-3 uppercase text-xs">
+                          {resource.type}
+                        </td>
+
+                        <td className="px-4 py-3">
+                          <code>
+                            {resource.key}
+                          </code>
+                        </td>
+
+                        <td className="px-4 py-3">
+                          <span className="text-emerald-700">
+                            {data?.connected ===
+                            false
+                              ? 'ERROR'
+                              : 'LIVE'}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

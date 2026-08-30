@@ -9,6 +9,30 @@
   h1, h2, h3, h4 {
     @apply font-display;
   }
+
+  /* Global default for every form control that doesn't set its own
+     background or text color. This is what was making plain input,
+     select, and textarea fields render as solid white boxes on dark
+     pages: they were falling back to the browser default styling
+     because no page-level class ever touched them.
+     Any page that DOES set its own bg- or text- classes on a field
+     (like the Market Prices filter dropdowns) keeps working exactly
+     as before, since Tailwind utilities always win over base layer
+     rules. */
+  input:not([class*="bg-"]),
+  select:not([class*="bg-"]),
+  textarea:not([class*="bg-"]) {
+    @apply bg-ink/60 border border-border-strong text-text-primary rounded-lg px-3 py-2.5;
+  }
+  input:not([class*="bg-"])::placeholder,
+  textarea:not([class*="bg-"])::placeholder {
+    @apply text-text-muted;
+  }
+  input:not([class*="bg-"]):focus,
+  select:not([class*="bg-"]):focus,
+  textarea:not([class*="bg-"]):focus {
+    @apply outline-none ring-2 ring-accent/50 border-accent;
+  }
 }
 
 @layer utilities {

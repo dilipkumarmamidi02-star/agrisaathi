@@ -74,7 +74,7 @@ export default function FarmNotifications() {
   return (
     <div>
       <PageHeader title={t('farmNotificationsTitle')} icon={BellRing} />
-      <p className="text-xs text-gray-500 mb-3">Set reminders for spraying, harvest, vaccination — anything with a date.</p>
+      <p className="text-xs text-text-secondary mb-3">Set reminders for spraying, harvest, vaccination — anything with a date.</p>
 
       <div className="flex justify-end mb-3">
         <Button size="sm" onClick={() => setShowForm((s) => !s)}>
@@ -101,9 +101,9 @@ export default function FarmNotifications() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading reminders…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading reminders…</p>
       ) : reminders.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No reminders set yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No reminders set yet.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {reminders.map((b) => (
@@ -113,7 +113,7 @@ export default function FarmNotifications() {
                   {b.payload.done ? <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" /> : <Circle className="h-5 w-5 text-gray-300 shrink-0" />}
                   <div>
                     <p className={`text-sm font-medium ${b.payload.done ? 'line-through' : ''}`}>{b.payload.title}</p>
-                    <p className="text-[11px] text-gray-400">{new Date(b.payload.due_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <p className="text-[11px] text-text-muted">{new Date(b.payload.due_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                 </button>
               </CardContent>

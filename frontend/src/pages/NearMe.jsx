@@ -19,8 +19,8 @@ const haversine = (lat1, lon1, lat2, lon2) => {
 
 const SHOP_TYPES = {
   agrarian: { label: 'Agro shop (pesticides/fertilizers)', icon: FlaskConical, color: 'bg-purple-100 text-purple-700' },
-  garden_centre: { label: 'Nursery / seeds', icon: Sprout, color: 'bg-green-100 text-green-700' },
-  health_food: { label: 'Organic products', icon: Leaf, color: 'bg-emerald-100 text-emerald-700' },
+  garden_centre: { label: 'Nursery / seeds', icon: Sprout, color: 'bg-mint/20 text-mint' },
+  health_food: { label: 'Organic products', icon: Leaf, color: 'bg-mint/20 text-mint' },
   florist: { label: 'Florist / seeds', icon: Leaf, color: 'bg-teal-100 text-teal-700' },
 };
 
@@ -121,8 +121,8 @@ export default function NearMe() {
     return i._type === 'kvk' ? Sprout : Building2;
   };
   const colorFor = (i) => {
-    if (i._type === 'shop') return SHOP_TYPES[i.shop_type]?.color || 'bg-gray-100 text-gray-700';
-    return i._type === 'kvk' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700';
+    if (i._type === 'shop') return SHOP_TYPES[i.shop_type]?.color || 'bg-surface-hover text-text-primary';
+    return i._type === 'kvk' ? 'bg-mint/20 text-mint' : 'bg-orange-100 text-orange-700';
   };
   const nameFor = (i) => i.name || i.market_name || i.address || 'KVK';
   const subFor = (i) => {
@@ -161,8 +161,8 @@ export default function NearMe() {
         </Select>
       </div>
 
-      {!origin && <p className="text-xs text-gray-400 mb-3">Showing saved centres. Tap "{t('useMyLocation')}" to find nearby shops and sort by distance.</p>}
-      {shopsLoading && <p className="text-xs text-gray-400 mb-3">{t('loading')}</p>}
+      {!origin && <p className="text-xs text-text-muted mb-3">Showing saved centres. Tap "{t('useMyLocation')}" to find nearby shops and sort by distance.</p>}
+      {shopsLoading && <p className="text-xs text-text-muted mb-3">{t('loading')}</p>}
 
       <div className="space-y-2">
         {all.map((i) => {
@@ -175,8 +175,8 @@ export default function NearMe() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium truncate">{nameFor(i)}</p>
-                  <p className="text-xs text-gray-400 truncate">{subFor(i)}</p>
-                  {i._dist != null && <Badge className="mt-1 bg-gray-100 text-gray-600">{i._dist.toFixed(1)} {t('distance')}</Badge>}
+                  <p className="text-xs text-text-muted truncate">{subFor(i)}</p>
+                  {i._dist != null && <Badge className="mt-1 bg-surface-hover text-text-secondary">{i._dist.toFixed(1)} {t('distance')}</Badge>}
                 </div>
               </CardContent>
             </Card>
@@ -194,12 +194,12 @@ export default function NearMe() {
                 </span>
                 <h3 className="font-bold">{nameFor(selected)}</h3>
               </div>
-              <p className="text-sm text-gray-600">{subFor(selected)}</p>
-              {selected._dist != null && <Badge className="bg-green-100 text-green-700">{selected._dist.toFixed(1)} {t('distance')}</Badge>}
-              {selected.host_institution_approx && <p className="text-sm"><span className="text-gray-400">Host:</span> {selected.host_institution_approx}</p>}
-              {selected.commodities_traded && <p className="text-sm"><span className="text-gray-400">{t('commodities')}:</span> {selected.commodities_traded}</p>}
-              {selected.shop_type && <p className="text-sm"><span className="text-gray-400">{t('type')}:</span> {SHOP_TYPES[selected.shop_type]?.label}</p>}
-              <p className="text-xs text-gray-400">{selected.VERIFY_AT ? `Verify at: ${selected.VERIFY_AT}` : 'Verify on official portal'}</p>
+              <p className="text-sm text-text-secondary">{subFor(selected)}</p>
+              {selected._dist != null && <Badge className="bg-mint/20 text-mint">{selected._dist.toFixed(1)} {t('distance')}</Badge>}
+              {selected.host_institution_approx && <p className="text-sm"><span className="text-text-muted">Host:</span> {selected.host_institution_approx}</p>}
+              {selected.commodities_traded && <p className="text-sm"><span className="text-text-muted">{t('commodities')}:</span> {selected.commodities_traded}</p>}
+              {selected.shop_type && <p className="text-sm"><span className="text-text-muted">{t('type')}:</span> {SHOP_TYPES[selected.shop_type]?.label}</p>}
+              <p className="text-xs text-text-muted">{selected.VERIFY_AT ? `Verify at: ${selected.VERIFY_AT}` : 'Verify on official portal'}</p>
               {selected.phone && (
                 <a href={`tel:${selected.phone}`}><Button className="w-full bg-green-600 hover:bg-green-700"><Phone className="h-4 w-4 mr-1" />{t('callNow')}</Button></a>
               )}

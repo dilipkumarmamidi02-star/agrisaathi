@@ -77,7 +77,7 @@ export default function VendorContacts() {
   return (
     <div>
       <PageHeader title={t('vendorContactsTitle')} icon={Store} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Save the shops and buyers you deal with regularly, so their numbers are one tap away.
       </p>
 
@@ -123,9 +123,9 @@ export default function VendorContacts() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading vendors…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading vendors…</p>
       ) : vendors.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No vendors saved yet. Add one above.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No vendors saved yet. Add one above.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {vendors.map((b) => (
@@ -133,14 +133,14 @@ export default function VendorContacts() {
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{b.payload.name}</p>
-                  <p className="text-[11px] text-gray-400">{b.payload.type}{b.payload.location ? ` · ${b.payload.location}` : ''}</p>
-                  {b.payload.notes && <p className="text-xs text-gray-500 mt-0.5">{b.payload.notes}</p>}
+                  <p className="text-[11px] text-text-muted">{b.payload.type}{b.payload.location ? ` · ${b.payload.location}` : ''}</p>
+                  {b.payload.notes && <p className="text-xs text-text-secondary mt-0.5">{b.payload.notes}</p>}
                 </div>
                 <div className="flex items-center gap-2">
                   <a href={`tel:${b.payload.phone}`} className="p-2 rounded-full bg-green-600 text-white" aria-label={`Call ${b.payload.name}`}>
                     <Phone className="h-4 w-4" />
                   </a>
-                  <button onClick={() => removeVendor(b.payload.name)} className="p-2 text-gray-400 hover:text-red-500" aria-label={`Remove ${b.payload.name}`}>
+                  <button onClick={() => removeVendor(b.payload.name)} className="p-2 text-text-muted hover:text-red-500" aria-label={`Remove ${b.payload.name}`}>
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

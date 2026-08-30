@@ -187,24 +187,24 @@ export default function Diagnose() {
         {step > 1 && (
           <button
             onClick={() => setStep(step - 1)}
-            className="h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
+            className="h-8 w-8 flex items-center justify-center rounded-full bg-surface-hover text-text-secondary"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
         )}
         <Camera className="h-5 w-5 text-green-600" />
-        <h1 className="text-xl font-bold text-gray-800">Diagnose</h1>
+        <h1 className="text-xl font-bold text-text-primary">Diagnose</h1>
       </div>
 
       {step === 1 && (
-        <p className="text-gray-500 text-sm mb-3">AI-powered crop &amp; livestock diagnosis</p>
+        <p className="text-text-secondary text-sm mb-3">AI-powered crop &amp; livestock diagnosis</p>
       )}
 
       <div className="flex items-center gap-1 mb-1">
         {STEPS.map((s, i) => (
           <div
             key={s.id}
-            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-green-500' : 'bg-gray-200'}`}
+            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-mint/100' : 'bg-gray-200'}`}
           />
         ))}
       </div>
@@ -212,45 +212,45 @@ export default function Diagnose() {
         {STEPS.map((s) => (
           <span
             key={s.id}
-            className={`text-[11px] ${step >= s.id ? 'text-green-700 font-medium' : 'text-gray-400'}`}
+            className={`text-[11px] ${step >= s.id ? 'text-mint font-medium' : 'text-text-muted'}`}
           >
             {s.id}. {s.label}
           </span>
         ))}
       </div>
 
-      <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg mb-4">
+      <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-200 rounded-lg mb-4">
         <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-700">AI-assisted — not a guaranteed diagnosis</p>
+        <p className="text-xs text-amber-400">AI-assisted — not a guaranteed diagnosis</p>
       </div>
 
       {/* STEP 1 — Take a photo */}
       {step === 1 && (
         <div className="space-y-4">
-          <div className="border-2 border-dashed border-green-300 bg-green-50/40 rounded-xl p-6 text-center hover:border-green-400 transition-colors">
+          <div className="border-2 border-dashed border-mint/40 bg-mint/10/40 rounded-xl p-6 text-center hover:border-green-400 transition-colors">
             {preview ? (
               <div className="relative">
                 <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg object-contain" />
                 <button
                   onClick={removeFile}
-                  className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                  className="absolute top-2 right-2 bg-red-500/100 text-white p-1 rounded-full hover:bg-red-600"
                 >
                   <X size={20} />
                 </button>
-                <p className="text-sm text-gray-500 mt-2">{file.name}</p>
+                <p className="text-sm text-text-secondary mt-2">{file.name}</p>
               </div>
             ) : (
               <label className="cursor-pointer block">
                 <Camera className="h-10 w-10 mx-auto text-green-500" />
-                <p className="text-green-700 font-medium mt-2">Take / upload photo</p>
-                <p className="text-xs text-gray-400 mt-1">Supports JPG, PNG, WEBP</p>
+                <p className="text-mint font-medium mt-2">Take / upload photo</p>
+                <p className="text-xs text-text-muted mt-1">Supports JPG, PNG, WEBP</p>
                 <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
               </label>
             )}
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="p-3 bg-red-500/10 border border-red-200 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
@@ -268,11 +268,11 @@ export default function Diagnose() {
       {/* STEP 2 — Confirm crop / animal */}
       {step === 2 && (
         <div className="space-y-4">
-          <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+          <div className="flex rounded-lg border border-border overflow-hidden">
             <button
               onClick={() => { setDomain('crop'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'crop' ? 'bg-green-600 text-white' : 'bg-white text-gray-600'
+                domain === 'crop' ? 'bg-green-600 text-white' : 'bg-surface text-text-secondary'
               }`}
             >
               <Sprout className="h-4 w-4" /> Crop
@@ -280,7 +280,7 @@ export default function Diagnose() {
             <button
               onClick={() => { setDomain('livestock'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'livestock' ? 'bg-green-600 text-white' : 'bg-white text-gray-600'
+                domain === 'livestock' ? 'bg-green-600 text-white' : 'bg-surface text-text-secondary'
               }`}
             >
               <PawPrint className="h-4 w-4" /> Animal / Livestock
@@ -288,13 +288,13 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+            <label className="block text-sm font-medium text-text-primary mb-1.5">
               Select {domain === 'crop' ? 'crop' : 'animal'} <span className="text-red-500">*</span>
             </label>
             <select
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+              className="w-full p-3 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent bg-surface"
             >
               <option value="">Select {domain === 'crop' ? 'crop' : 'animal'}</option>
               {Object.entries(groupedSubjectOptions).map(([category, opts]) => (
@@ -308,11 +308,11 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Select plot (optional)</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">Select plot (optional)</label>
             <select
               value={plotId}
               onChange={(e) => setPlotId(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+              className="w-full p-3 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent bg-surface"
             >
               <option value="">Select plot (optional)</option>
               {plots.map((p) => (
@@ -322,20 +322,20 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Describe symptoms (optional)</label>
+            <label className="block text-sm font-medium text-text-primary mb-1.5">Describe symptoms (optional)</label>
             <div className="relative">
               <textarea
                 value={symptoms}
                 onChange={(e) => setSymptoms(e.target.value)}
                 placeholder="e.g. leaves turning yellow with brown spots"
                 rows={3}
-                className="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                className="w-full p-3 pr-12 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent resize-none"
               />
               <button
                 type="button"
                 onClick={toggleMic}
                 className={`absolute bottom-2.5 right-2.5 h-8 w-8 rounded-full flex items-center justify-center transition ${
-                  listening ? 'bg-red-500 text-white animate-pulse' : 'bg-green-600 text-white'
+                  listening ? 'bg-red-500/100 text-white animate-pulse' : 'bg-green-600 text-white'
                 }`}
               >
                 <Mic className="h-4 w-4" />
@@ -344,7 +344,7 @@ export default function Diagnose() {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="p-3 bg-red-500/10 border border-red-200 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
@@ -352,7 +352,7 @@ export default function Diagnose() {
           <div className="flex gap-2">
             <button
               onClick={() => setStep(1)}
-              className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              className="flex-1 border border-border-strong text-text-primary py-3 rounded-lg font-semibold hover:bg-surface-hover transition-colors"
             >
               Back
             </button>
@@ -371,30 +371,30 @@ export default function Diagnose() {
       {step === 3 && (
         <div className="space-y-3">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="p-3 bg-red-500/10 border border-red-200 rounded-lg">
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
 
           {result && result.source !== 'unavailable' && (
             <>
-              <div className="border border-gray-200 rounded-xl p-4">
+              <div className="border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
                     <Leaf className="h-4 w-4 text-green-600" /> Likely issue
                   </h3>
                   {confidencePct !== null && (
-                    <span className="text-xs font-medium bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
+                    <span className="text-xs font-medium bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full">
                       Confidence: {confidencePct}%
                     </span>
                   )}
                 </div>
-                <p className="text-lg font-semibold text-gray-800">{likelyIssue}</p>
+                <p className="text-lg font-semibold text-text-primary">{likelyIssue}</p>
 
                 {alternatives.length > 0 && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Other possibilities</p>
-                    <ul className="list-disc list-inside text-sm text-gray-600 space-y-0.5">
+                    <p className="text-xs font-medium text-text-secondary mb-1">Other possibilities</p>
+                    <ul className="list-disc list-inside text-sm text-text-secondary space-y-0.5">
                       {alternatives.map((a, i) => <li key={i}>{a}</li>)}
                     </ul>
                   </div>
@@ -402,15 +402,15 @@ export default function Diagnose() {
 
                 {evidence && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-gray-500 mb-1">Evidence</p>
-                    <p className="text-sm text-gray-700">{evidence}</p>
+                    <p className="text-xs font-medium text-text-secondary mb-1">Evidence</p>
+                    <p className="text-sm text-text-primary">{evidence}</p>
                   </div>
                 )}
               </div>
 
               {organicTreatment && (
-                <div className="p-3 bg-green-50 border border-green-100 rounded-xl">
-                  <p className="text-xs font-semibold text-green-700 flex items-center gap-1.5 mb-1">
+                <div className="p-3 bg-mint/10 border border-green-100 rounded-xl">
+                  <p className="text-xs font-semibold text-mint flex items-center gap-1.5 mb-1">
                     <Leaf className="h-4 w-4" /> Organic (try first)
                   </p>
                   <p className="text-sm text-green-800">{organicTreatment}</p>
@@ -418,8 +418,8 @@ export default function Diagnose() {
               )}
 
               {chemicalTreatment && (
-                <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl">
-                  <p className="text-xs font-semibold text-blue-700 flex items-center gap-1.5 mb-1">
+                <div className="p-3 bg-cyan-500/10 border border-blue-100 rounded-xl">
+                  <p className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5 mb-1">
                     <FlaskConical className="h-4 w-4" /> Chemical
                   </p>
                   <p className="text-sm text-blue-800">{chemicalTreatment}</p>
@@ -427,23 +427,23 @@ export default function Diagnose() {
               )}
 
               {precautions && (
-                <div className="p-3 bg-amber-50 border border-amber-100 rounded-xl">
-                  <p className="text-xs font-semibold text-amber-700 flex items-center gap-1.5 mb-1">
+                <div className="p-3 bg-amber-500/10 border border-amber-100 rounded-xl">
+                  <p className="text-xs font-semibold text-amber-400 flex items-center gap-1.5 mb-1">
                     <ShieldAlert className="h-4 w-4" /> Precautions
                   </p>
                   <p className="text-sm text-amber-800">{precautions}</p>
                 </div>
               )}
 
-              <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <div className="flex items-start gap-2 p-3 bg-amber-500/10 rounded-lg border border-amber-200">
                 <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                <p className="text-xs text-amber-700">
+                <p className="text-xs text-amber-400">
                   {result.disclaimer || 'AI-assisted estimate only. Confirm with a KVK expert before applying treatment.'}
                 </p>
               </div>
 
               {(result.source || result.model_name) && (
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-text-muted">
                   Source: {result.source} {result.model_name ? `| Model: ${result.model_name}` : ''}
                 </p>
               )}
@@ -451,8 +451,8 @@ export default function Diagnose() {
           )}
 
           {result && result.source === 'unavailable' && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-amber-700 text-sm">
+            <div className="p-4 bg-amber-500/10 border border-amber-200 rounded-lg">
+              <p className="text-amber-400 text-sm">
                 {result.description || 'Diagnosis service temporarily unavailable'}
               </p>
             </div>
@@ -460,7 +460,7 @@ export default function Diagnose() {
 
           <button
             onClick={startOver}
-            className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors mt-2"
+            className="w-full border border-border-strong text-text-primary py-3 rounded-lg font-semibold hover:bg-surface-hover transition-colors mt-2"
           >
             Diagnose another
           </button>

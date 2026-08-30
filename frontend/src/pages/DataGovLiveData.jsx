@@ -109,21 +109,21 @@ function ResourceCard({
   const count = result?.records?.length ?? 0;
 
   let badgeClass =
-    'bg-gray-100 text-gray-700 border-gray-200';
+    'bg-surface-hover text-text-primary border-border';
 
   if (status === LIVE_STATUS) {
     badgeClass =
-      'bg-green-50 text-green-700 border-green-200';
+      'bg-mint/10 text-mint border-green-200';
   }
 
   if (status === EMPTY_STATUS) {
     badgeClass =
-      'bg-yellow-50 text-yellow-700 border-yellow-200';
+      'bg-amber-500/10 text-amber-400 border-yellow-200';
   }
 
   if (status === ERROR_STATUS) {
     badgeClass =
-      'bg-red-50 text-red-700 border-red-200';
+      'bg-red-500/10 text-red-400 border-red-200';
   }
 
   return (
@@ -135,16 +135,16 @@ function ResourceCard({
         'hover:shadow-sm',
         selected
           ? 'border-green-500 ring-2 ring-green-100'
-          : 'border-gray-200',
+          : 'border-border',
       ].join(' ')}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="font-semibold text-gray-900 break-words">
+          <h3 className="font-semibold text-text-primary break-words">
             {title}
           </h3>
 
-          <p className="mt-1 text-xs text-gray-500 break-all">
+          <p className="mt-1 text-xs text-text-secondary break-all">
             {key}
           </p>
         </div>
@@ -156,7 +156,7 @@ function ResourceCard({
         </span>
       </div>
 
-      <div className="mt-3 text-sm text-gray-600">
+      <div className="mt-3 text-sm text-text-secondary">
         {status === LIVE_STATUS && (
           <span>{count} live records</span>
         )}
@@ -183,7 +183,7 @@ function ResourceCard({
               event.stopPropagation();
               onRetry(key);
             }}
-            className="inline-flex rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+            className="inline-flex rounded-lg border border-red-200 bg-surface px-3 py-1.5 text-xs font-medium text-red-400 hover:bg-red-500/10"
           >
             Retry
           </span>
@@ -208,21 +208,21 @@ function ResourceTable({ records }) {
 
   if (!records.length) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-8 text-center text-gray-500">
+      <div className="rounded-xl border border-border bg-surface p-8 text-center text-text-secondary">
         No records available for this resource.
       </div>
     );
   }
 
   return (
-    <div className="overflow-auto rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-auto rounded-xl border border-border bg-surface">
       <table className="min-w-full text-sm">
-        <thead className="bg-gray-50">
+        <thead className="bg-surface-hover">
           <tr>
             {columns.map((column) => (
               <th
                 key={column}
-                className="whitespace-nowrap border-b px-4 py-3 text-left font-semibold text-gray-700"
+                className="whitespace-nowrap border-b px-4 py-3 text-left font-semibold text-text-primary"
               >
                 {column}
               </th>
@@ -234,12 +234,12 @@ function ResourceTable({ records }) {
           {records.map((record, index) => (
             <tr
               key={record?.id ?? record?._id ?? index}
-              className="border-b last:border-b-0 hover:bg-gray-50"
+              className="border-b last:border-b-0 hover:bg-surface-hover"
             >
               {columns.map((column) => (
                 <td
                   key={column}
-                  className="max-w-[360px] px-4 py-3 align-top text-gray-700"
+                  className="max-w-[360px] px-4 py-3 align-top text-text-primary"
                 >
                   {formatValue(record?.[column])}
                 </td>
@@ -369,7 +369,7 @@ export default function DataGovLiveData() {
   if (loadingResources) {
     return (
       <div className="p-6">
-        <div className="rounded-xl border bg-white p-8 text-center">
+        <div className="rounded-xl border bg-surface p-8 text-center">
           Loading Data.gov resources…
         </div>
       </div>
@@ -379,24 +379,24 @@ export default function DataGovLiveData() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-text-primary">
           Data.gov Live Agriculture Data
         </h1>
 
-        <p className="mt-1 text-sm text-gray-600">
+        <p className="mt-1 text-sm text-text-secondary">
           Live resource registry and API data from Agrisaathi.
         </p>
       </div>
 
       {globalError && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-500/10 p-4 text-sm text-red-400">
           {globalError}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs text-gray-500">
+        <div className="rounded-xl border bg-surface p-4">
+          <div className="text-xs text-text-secondary">
             Registered
           </div>
           <div className="mt-1 text-2xl font-bold">
@@ -404,8 +404,8 @@ export default function DataGovLiveData() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs text-gray-500">
+        <div className="rounded-xl border bg-surface p-4">
+          <div className="text-xs text-text-secondary">
             Loaded
           </div>
           <div className="mt-1 text-2xl font-bold">
@@ -413,20 +413,20 @@ export default function DataGovLiveData() {
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs text-gray-500">
+        <div className="rounded-xl border bg-surface p-4">
+          <div className="text-xs text-text-secondary">
             Live data
           </div>
-          <div className="mt-1 text-2xl font-bold text-green-700">
+          <div className="mt-1 text-2xl font-bold text-mint">
             {summary.live}
           </div>
         </div>
 
-        <div className="rounded-xl border bg-white p-4">
-          <div className="text-xs text-gray-500">
+        <div className="rounded-xl border bg-surface p-4">
+          <div className="text-xs text-text-secondary">
             API errors
           </div>
-          <div className="mt-1 text-2xl font-bold text-red-700">
+          <div className="mt-1 text-2xl font-bold text-red-400">
             {summary.errors}
           </div>
         </div>
@@ -435,14 +435,14 @@ export default function DataGovLiveData() {
       <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">
+            <h2 className="font-semibold text-text-primary">
               All registered resources
             </h2>
 
             <button
               type="button"
               onClick={loadResources}
-              className="rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-gray-50"
+              className="rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-surface-hover"
             >
               Refresh registry
             </button>
@@ -469,14 +469,14 @@ export default function DataGovLiveData() {
         <section>
           {selectedResource ? (
             <div className="space-y-4">
-              <div className="rounded-xl border bg-white p-5">
+              <div className="rounded-xl border bg-surface p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-text-primary">
                       {getResourceTitle(selectedResource)}
                     </h2>
 
-                    <p className="mt-1 break-all text-xs text-gray-500">
+                    <p className="mt-1 break-all text-xs text-text-secondary">
                       {selectedKey}
                     </p>
                   </div>
@@ -494,14 +494,14 @@ export default function DataGovLiveData() {
                 </div>
 
                 {getResourceDescription(selectedResource) && (
-                  <p className="mt-4 text-sm text-gray-600">
+                  <p className="mt-4 text-sm text-text-secondary">
                     {getResourceDescription(selectedResource)}
                   </p>
                 )}
               </div>
 
               {loadingKey === selectedKey && (
-                <div className="rounded-xl border bg-white p-8 text-center text-gray-500">
+                <div className="rounded-xl border bg-surface p-8 text-center text-text-secondary">
                   Loading live Data.gov records…
                 </div>
               )}
@@ -515,7 +515,7 @@ export default function DataGovLiveData() {
 
               {!loadingKey &&
                 selectedResult?.status === EMPTY_STATUS && (
-                  <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-6">
+                  <div className="rounded-xl border border-yellow-200 bg-amber-500/10 p-6">
                     <h3 className="font-semibold text-yellow-900">
                       Resource available but currently empty
                     </h3>
@@ -529,7 +529,7 @@ export default function DataGovLiveData() {
 
               {!loadingKey &&
                 selectedResult?.status === ERROR_STATUS && (
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-6">
+                  <div className="rounded-xl border border-red-200 bg-red-500/10 p-6">
                     <h3 className="font-semibold text-red-900">
                       Data.gov API temporarily unavailable
                     </h3>
@@ -544,7 +544,7 @@ export default function DataGovLiveData() {
                     <button
                       type="button"
                       onClick={() => loadResource(selectedKey)}
-                      className="mt-4 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+                      className="mt-4 rounded-lg border border-red-300 bg-surface px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-100"
                     >
                       Retry resource
                     </button>
@@ -552,7 +552,7 @@ export default function DataGovLiveData() {
                 )}
             </div>
           ) : (
-            <div className="rounded-xl border bg-white p-8 text-center text-gray-500">
+            <div className="rounded-xl border bg-surface p-8 text-center text-text-secondary">
               Select a Data.gov resource.
             </div>
           )}

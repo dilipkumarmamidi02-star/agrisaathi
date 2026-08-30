@@ -78,17 +78,17 @@ export default function InventoryTracker() {
   return (
     <div>
       <PageHeader title={t('inventoryTrackerTitle')} icon={Package} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Log seed, fertilizer, pesticide and equipment stock. Set a low-stock threshold to get warned before you run out.
       </p>
 
       {lowStockItems.length > 0 && (
-        <Card className="mb-3 border-amber-300 bg-amber-50">
+        <Card className="mb-3 border-amber-300 bg-amber-500/10">
           <CardContent className="pt-3">
             <p className="text-sm font-semibold text-amber-800 flex items-center gap-1">
               <AlertTriangle className="h-4 w-4" /> {lowStockItems.length} item{lowStockItems.length > 1 ? 's' : ''} running low
             </p>
-            <ul className="text-xs text-amber-700 mt-1 space-y-0.5">
+            <ul className="text-xs text-amber-400 mt-1 space-y-0.5">
               {lowStockItems.map((b) => (
                 <li key={b.payload.item}>{b.payload.item}: {b.payload.quantity} {b.payload.unit} left (threshold {b.payload.low_stock_at})</li>
               ))}
@@ -152,9 +152,9 @@ export default function InventoryTracker() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading inventory…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading inventory…</p>
       ) : currentStock.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No inventory logged yet. Add your first item above.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No inventory logged yet. Add your first item above.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {currentStock.map((b) => (
@@ -162,7 +162,7 @@ export default function InventoryTracker() {
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{b.payload.item}</p>
-                  <p className="text-[11px] text-gray-400">{b.payload.category} · updated {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                  <p className="text-[11px] text-text-muted">{b.payload.category} · updated {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
                 </div>
                 <p className="text-sm font-bold">{b.payload.quantity} {b.payload.unit}</p>
               </CardContent>

@@ -968,12 +968,12 @@ export default function MarketPrices() {
         type="button"
         key={resource.key}
         onClick={() => openResourceViewer(resource)}
-        className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        className="w-full rounded-2xl border border-border bg-surface p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-mint/40 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent/50"
         title={`Open ${resource.title}`}
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-slate-100 p-2">
+            <div className="rounded-xl bg-surface-hover p-2">
               {resource.key.includes(
                 'fertilizer'
               ) ? (
@@ -997,16 +997,16 @@ export default function MarketPrices() {
 
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-slate-900">
+                <h3 className="font-semibold text-text-primary">
                   {resource.title}
                 </h3>
 
-                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium uppercase text-slate-600">
+                <span className="rounded-full bg-surface-hover px-2 py-0.5 text-xs font-medium uppercase text-text-secondary">
                   {resource.type}
                 </span>
               </div>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 {resource.description}
               </p>
             </div>
@@ -1015,8 +1015,8 @@ export default function MarketPrices() {
           <span
             className={
               data?.connected === false
-                ? 'rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700'
-                : 'rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700'
+                ? 'rounded-full bg-red-500/10 px-2 py-1 text-xs font-medium text-red-400'
+                : 'rounded-full bg-mint/10 px-2 py-1 text-xs font-medium text-mint'
             }
           >
             {data?.connected === false
@@ -1025,17 +1025,17 @@ export default function MarketPrices() {
           </span>
         </div>
 
-        <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 text-sm">
-          <span className="text-slate-500">
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-sm">
+          <span className="text-text-secondary">
             Resource key:
           </span>
 
-          <code className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700">
+          <code className="rounded bg-surface-hover px-2 py-1 text-xs text-text-primary">
             {resource.key}
           </code>
         </div>
 
-        <div className="mt-3 text-sm text-slate-500">
+        <div className="mt-3 text-sm text-text-secondary">
           {data?.total !== undefined
             ? `${Number(data.total).toLocaleString(
                 'en-IN'
@@ -1046,7 +1046,7 @@ export default function MarketPrices() {
         </div>
 
         {data?.error && (
-          <div className="mt-3 rounded-lg bg-red-50 p-3 text-xs text-red-700">
+          <div className="mt-3 rounded-lg bg-red-500/10 p-3 text-xs text-red-400">
             {data.error}
           </div>
         )}
@@ -1055,7 +1055,7 @@ export default function MarketPrices() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-ink">
       <div className="mx-auto max-w-7xl px-4 py-8">
         {/* HEADER */}
 
@@ -1067,16 +1067,16 @@ export default function MarketPrices() {
                   size={24}
                 />
 
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-text-primary">
                   Market Prices
                 </h1>
 
-                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                <span className="rounded-full bg-mint/20 px-3 py-1 text-xs font-semibold text-mint">
                   LIVE
                 </span>
               </div>
 
-              <p className="mt-2 text-slate-600">
+              <p className="mt-2 text-text-secondary">
                 Live Data.gov.in Market Intelligence
               </p>
             </div>
@@ -1085,7 +1085,7 @@ export default function MarketPrices() {
               type="button"
               onClick={() => loadAll(true)}
               disabled={loading || refreshing}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-slate-50 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-border-strong bg-surface px-4 py-2 text-sm font-medium shadow-sm hover:bg-surface-hover disabled:opacity-50"
             >
               <RefreshCw
                 size={16}
@@ -1103,14 +1103,14 @@ export default function MarketPrices() {
 
         {/* LOCATION */}
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="font-semibold text-slate-900">
+              <h2 className="font-semibold text-text-primary">
                 Market location
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Filter government market data by
                 State, District, Market and
                 Commodity.
@@ -1121,7 +1121,7 @@ export default function MarketPrices() {
               type="button"
               onClick={useMyLocation}
               disabled={locationLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+              className="inline-flex items-center gap-2 rounded-xl border border-border-strong bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-hover"
             >
               <MapPin size={16} />
 
@@ -1132,7 +1132,7 @@ export default function MarketPrices() {
           </div>
 
           {detectedLocation && (
-            <div className="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
+            <div className="mt-4 rounded-xl bg-surface-hover p-3 text-sm text-text-secondary">
               Location detected (
               {detectedLocation.latitude.toFixed(
                 5
@@ -1147,7 +1147,7 @@ export default function MarketPrices() {
           )}
 
           {locationError && (
-            <div className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-700">
+            <div className="mt-4 rounded-xl bg-amber-500/10 p-3 text-sm text-amber-400">
               {locationError}
             </div>
           )}
@@ -1156,7 +1156,7 @@ export default function MarketPrices() {
             {/* STATE */}
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">
+              <span className="mb-2 block text-sm font-medium text-text-primary">
                 State
               </span>
 
@@ -1167,7 +1167,7 @@ export default function MarketPrices() {
                     event.target.value
                   )
                 }
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+                className="w-full rounded-xl border border-border-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-accent"
               >
                 <option value="">
                   All States
@@ -1187,7 +1187,7 @@ export default function MarketPrices() {
             {/* DISTRICT */}
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">
+              <span className="mb-2 block text-sm font-medium text-text-primary">
                 District
               </span>
 
@@ -1198,7 +1198,7 @@ export default function MarketPrices() {
                     event.target.value
                   )
                 }
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+                className="w-full rounded-xl border border-border-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-accent"
               >
                 <option value="">
                   All Districts
@@ -1220,7 +1220,7 @@ export default function MarketPrices() {
             {/* MARKET */}
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">
+              <span className="mb-2 block text-sm font-medium text-text-primary">
                 Market
               </span>
 
@@ -1231,7 +1231,7 @@ export default function MarketPrices() {
                     event.target.value
                   )
                 }
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+                className="w-full rounded-xl border border-border-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-accent"
               >
                 <option value="">
                   All Markets
@@ -1251,7 +1251,7 @@ export default function MarketPrices() {
             {/* COMMODITY */}
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-slate-700">
+              <span className="mb-2 block text-sm font-medium text-text-primary">
                 Commodity
               </span>
 
@@ -1262,7 +1262,7 @@ export default function MarketPrices() {
                     event.target.value
                   )
                 }
-                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-slate-500"
+                className="w-full rounded-xl border border-border-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-accent"
               >
                 <option value="">
                   All Commodities
@@ -1286,8 +1286,8 @@ export default function MarketPrices() {
         {/* SUMMARY */}
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="text-sm text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <div className="text-sm text-text-secondary">
               Records
             </div>
 
@@ -1296,8 +1296,8 @@ export default function MarketPrices() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="text-sm text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <div className="text-sm text-text-secondary">
               Markets
             </div>
 
@@ -1306,8 +1306,8 @@ export default function MarketPrices() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="text-sm text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <div className="text-sm text-text-secondary">
               Varieties
             </div>
 
@@ -1322,29 +1322,29 @@ export default function MarketPrices() {
              ================================================== */}
 
         {selectedResource && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
-            <div className="flex max-h-[90vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4">
+            <div className="flex max-h-[90vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl bg-surface shadow-2xl">
 
               {/* VIEWER HEADER */}
 
-              <div className="flex items-start justify-between gap-4 border-b border-slate-200 p-5">
+              <div className="flex items-start justify-between gap-4 border-b border-border p-5">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-xl font-bold text-slate-900">
+                    <h2 className="text-xl font-bold text-text-primary">
                       {selectedResource.title}
                     </h2>
 
-                    <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold uppercase text-emerald-700">
+                    <span className="rounded-full bg-mint/20 px-2 py-1 text-xs font-semibold uppercase text-mint">
                       {selectedResource.type}
                     </span>
                   </div>
 
-                  <p className="mt-1 text-sm text-slate-500">
+                  <p className="mt-1 text-sm text-text-secondary">
                     {selectedResource.description}
                   </p>
 
                   <div className="mt-2">
-                    <code className="rounded bg-slate-100 px-2 py-1 text-xs text-slate-700">
+                    <code className="rounded bg-surface-hover px-2 py-1 text-xs text-text-primary">
                       {selectedResource.key}
                     </code>
                   </div>
@@ -1353,7 +1353,7 @@ export default function MarketPrices() {
                 <button
                   type="button"
                   onClick={closeResourceViewer}
-                  className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  className="rounded-xl border border-border-strong bg-surface px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-hover"
                 >
                   Close
                 </button>
@@ -1364,11 +1364,11 @@ export default function MarketPrices() {
               <div className="min-h-0 flex-1 overflow-auto p-5">
 
                 {resourceViewerLoading ? (
-                  <div className="p-10 text-center text-slate-500">
+                  <div className="p-10 text-center text-text-secondary">
                     Loading {selectedResource.title} records...
                   </div>
                 ) : resourceViewerError ? (
-                  <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                  <div className="rounded-xl bg-red-500/10 p-4 text-sm text-red-400">
                     <div className="font-semibold">
                       Unable to load this resource
                     </div>
@@ -1378,15 +1378,15 @@ export default function MarketPrices() {
                     </div>
                   </div>
                 ) : resourceViewerRecords.length === 0 ? (
-                  <div className="rounded-xl bg-slate-50 p-10 text-center text-slate-500">
+                  <div className="rounded-xl bg-surface-hover p-10 text-center text-text-secondary">
                     No records returned for this resource.
                   </div>
                 ) : (
                   <>
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-sm text-slate-600">
+                      <div className="text-sm text-text-secondary">
                         Showing{" "}
-                        <span className="font-semibold text-slate-900">
+                        <span className="font-semibold text-text-primary">
                           {resourceViewerRecords.length.toLocaleString('en-IN')}
                         </span>{" "}
                         records
@@ -1397,23 +1397,23 @@ export default function MarketPrices() {
                         onClick={() =>
                           openResourceViewer(selectedResource)
                         }
-                        className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50"
+                        className="inline-flex items-center gap-2 rounded-xl border border-border-strong bg-surface px-3 py-2 text-sm font-medium hover:bg-surface-hover"
                       >
                         <RefreshCw size={15} />
                         Reload
                       </button>
                     </div>
 
-                    <div className="overflow-x-auto rounded-xl border border-slate-200">
+                    <div className="overflow-x-auto rounded-xl border border-border">
                       <table className="min-w-full text-sm">
-                        <thead className="sticky top-0 bg-slate-100 text-left">
+                        <thead className="sticky top-0 bg-surface-hover text-left">
                           <tr>
                             {Object.keys(
                               resourceViewerRecords[0] || {}
                             ).map((field) => (
                               <th
                                 key={field}
-                                className="whitespace-nowrap border-b border-slate-200 px-4 py-3 font-semibold text-slate-700"
+                                className="whitespace-nowrap border-b border-border px-4 py-3 font-semibold text-text-primary"
                               >
                                 {field}
                               </th>
@@ -1426,14 +1426,14 @@ export default function MarketPrices() {
                             (record, rowIndex) => (
                               <tr
                                 key={`${selectedResource.key}-${rowIndex}`}
-                                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                                className="border-b border-border last:border-0 hover:bg-surface-hover"
                               >
                                 {Object.keys(
                                   resourceViewerRecords[0] || {}
                                 ).map((field) => (
                                   <td
                                     key={field}
-                                    className="whitespace-nowrap px-4 py-3 text-slate-700"
+                                    className="whitespace-nowrap px-4 py-3 text-text-primary"
                                   >
                                     {record[field] === null ||
                                     record[field] === undefined ||
@@ -1457,13 +1457,13 @@ export default function MarketPrices() {
 
         {/* PRIMARY PRICE TABLE */}
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-200 p-5">
+        <div className="mt-6 rounded-2xl border border-border bg-surface shadow-sm">
+          <div className="border-b border-border p-5">
             <h2 className="text-lg font-semibold">
               Current Market Prices
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-text-secondary">
               Primary price display uses
               variety_market_prices because it
               contains State, District, Market,
@@ -1473,16 +1473,16 @@ export default function MarketPrices() {
           </div>
 
           {loading ? (
-            <div className="p-8 text-center text-slate-500">
+            <div className="p-8 text-center text-text-secondary">
               Loading market prices...
             </div>
           ) : displayRecords.length === 0 ? (
             <div className="p-8 text-center">
-              <p className="font-medium text-slate-800">
+              <p className="font-medium text-text-primary">
                 No market price records found
               </p>
 
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Try another state, district,
                 market, or commodity.
               </p>
@@ -1490,7 +1490,7 @@ export default function MarketPrices() {
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
-                <thead className="bg-slate-50 text-left">
+                <thead className="bg-surface-hover text-left">
                   <tr>
                     <th className="px-4 py-3">
                       Arrival Date
@@ -1543,7 +1543,7 @@ export default function MarketPrices() {
                         )}-${getMarket(
                           record
                         )}-${index}`}
-                        className="border-t border-slate-100"
+                        className="border-t border-border"
                       >
                         <td className="px-4 py-3 whitespace-nowrap">
                           {getDate(record) ||
@@ -1624,14 +1624,14 @@ export default function MarketPrices() {
         {/* LATEST RECORD */}
 
         {latestRecord && (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <div className="mt-6 rounded-2xl border border-border bg-surface p-5">
             <h2 className="font-semibold">
               Latest market observation
             </h2>
 
             <div className="mt-4 grid gap-4 md:grid-cols-5">
               <div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-text-secondary">
                   Commodity
                 </div>
 
@@ -1643,7 +1643,7 @@ export default function MarketPrices() {
               </div>
 
               <div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-text-secondary">
                   District
                 </div>
 
@@ -1655,7 +1655,7 @@ export default function MarketPrices() {
               </div>
 
               <div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-text-secondary">
                   Market
                 </div>
 
@@ -1667,7 +1667,7 @@ export default function MarketPrices() {
               </div>
 
               <div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-text-secondary">
                   Variety
                 </div>
 
@@ -1679,7 +1679,7 @@ export default function MarketPrices() {
               </div>
 
               <div>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-text-secondary">
                   Modal Price
                 </div>
 
@@ -1702,17 +1702,17 @@ export default function MarketPrices() {
 
         <div className="mt-10">
           <div className="mb-5">
-            <h2 className="text-xl font-bold text-slate-900">
+            <h2 className="text-xl font-bold text-text-primary">
               Additional Market Intelligence
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-text-secondary">
               Live Data.gov.in resources assigned to
               Market Prices. All 8 registered market
               resources remain visible independently.
             </p>
 
-            <div className="mt-3 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+            <div className="mt-3 inline-flex rounded-full bg-mint/10 px-3 py-1 text-xs font-semibold text-mint">
               {MARKET_RESOURCES.length}/
               {MARKET_RESOURCES.length} Market
               Prices resources connected
@@ -1734,14 +1734,14 @@ export default function MarketPrices() {
 
         {/* DATA.GOV RESOURCE TABLE */}
 
-        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="font-semibold text-slate-900">
+        <div className="mt-8 rounded-2xl border border-border bg-surface p-5 shadow-sm">
+          <h2 className="font-semibold text-text-primary">
             Active Data.gov.in Market Resources
           </h2>
 
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full text-sm">
-              <thead className="bg-slate-50 text-left">
+              <thead className="bg-surface-hover text-left">
                 <tr>
                   <th className="px-4 py-3">
                     Resource
@@ -1777,7 +1777,7 @@ export default function MarketPrices() {
                     return (
                       <tr
                         key={resource.key}
-                        className="border-t border-slate-100"
+                        className="border-t border-border"
                       >
                         <td className="px-4 py-3 font-medium">
                           {resource.title}
@@ -1794,7 +1794,7 @@ export default function MarketPrices() {
                         </td>
 
                         <td className="px-4 py-3">
-                          <span className="text-emerald-700">
+                          <span className="text-mint">
                             {data?.connected ===
                             false
                               ? 'ERROR'
@@ -1811,7 +1811,7 @@ export default function MarketPrices() {
         </div>
 
         {error && (
-          <div className="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+          <div className="mt-6 rounded-xl bg-red-500/10 p-4 text-sm text-red-400">
             {error}
           </div>
         )}

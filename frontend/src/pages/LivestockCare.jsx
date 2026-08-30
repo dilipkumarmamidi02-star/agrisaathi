@@ -68,31 +68,31 @@ export default function LivestockCare() {
   const pending = logs.filter((l) => l.status === 'pending');
   const done = logs.filter((l) => l.status === 'done');
 
-  const careColor = (c) => ({ feed: 'bg-blue-100 text-blue-700', health: 'bg-rose-100 text-rose-700', milestone: 'bg-purple-100 text-purple-700', vaccination: 'bg-teal-100 text-teal-700' }[c] || 'bg-gray-100');
+  const careColor = (c) => ({ feed: 'bg-blue-100 text-cyan-400', health: 'bg-rose-100 text-rose-700', milestone: 'bg-purple-100 text-purple-700', vaccination: 'bg-teal-100 text-teal-700' }[c] || 'bg-surface-hover');
 
   return (
     <div>
       <PageHeader titleKey="livestockCare" icon={Leaf} />
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-blue-50 border-blue-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-blue-700">{logs.filter((l) => l.care_type === 'feed').length}</div><div className="text-[10px] text-gray-500">{t('feed')}</div></CardContent></Card>
-        <Card className="bg-rose-50 border-rose-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-rose-700">{logs.filter((l) => l.care_type === 'health').length}</div><div className="text-[10px] text-gray-500">{t('health')}</div></CardContent></Card>
-        <Card className="bg-teal-50 border-teal-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-teal-700">{logs.filter((l) => l.care_type === 'vaccination').length}</div><div className="text-[10px] text-gray-500">{t('vaccination')}</div></CardContent></Card>
+        <Card className="bg-cyan-500/10 border-blue-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-cyan-400">{logs.filter((l) => l.care_type === 'feed').length}</div><div className="text-[10px] text-text-secondary">{t('feed')}</div></CardContent></Card>
+        <Card className="bg-rose-50 border-rose-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-rose-700">{logs.filter((l) => l.care_type === 'health').length}</div><div className="text-[10px] text-text-secondary">{t('health')}</div></CardContent></Card>
+        <Card className="bg-teal-50 border-teal-100"><CardContent className="pt-3 text-center"><div className="text-xl font-bold text-teal-700">{logs.filter((l) => l.care_type === 'vaccination').length}</div><div className="text-[10px] text-text-secondary">{t('vaccination')}</div></CardContent></Card>
       </div>
 
-      <h3 className="text-sm font-semibold text-gray-700 mb-2">{t('pending')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary mb-2">{t('pending')}</h3>
       <div className="space-y-2 mb-4">
-        {pending.length === 0 ? <p className="text-sm text-gray-400">No pending care items.</p> : pending.map((l) => (
+        {pending.length === 0 ? <p className="text-sm text-text-muted">No pending care items.</p> : pending.map((l) => (
           <Card key={l.id}><CardContent className="pt-3">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <Badge className={careColor(l.care_type)}>{t(l.care_type)}</Badge>
-                  <span className="text-xs text-gray-400">{l.animal_type}</span>
+                  <span className="text-xs text-text-muted">{l.animal_type}</span>
                 </div>
                 <p className="text-sm font-medium mt-1">{l.title}</p>
-                {l.scheduled_date && <p className="text-xs text-gray-400 flex items-center gap-1"><Calendar className="h-3 w-3" />{l.scheduled_date}</p>}
-                {l.notes && <p className="text-xs text-gray-500 mt-0.5">{l.notes}</p>}
+                {l.scheduled_date && <p className="text-xs text-text-muted flex items-center gap-1"><Calendar className="h-3 w-3" />{l.scheduled_date}</p>}
+                {l.notes && <p className="text-xs text-text-secondary mt-0.5">{l.notes}</p>}
               </div>
               <Button size="sm" onClick={() => markDone(l)} className="bg-green-600 hover:bg-green-700 shrink-0"><Check className="h-4 w-4" /></Button>
             </div>
@@ -100,11 +100,11 @@ export default function LivestockCare() {
         ))}
       </div>
 
-      <h3 className="text-sm font-semibold text-gray-500 mb-2">{t('done')}</h3>
+      <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('done')}</h3>
       <div className="space-y-2 mb-4">
         {done.map((l) => (
           <Card key={l.id} className="opacity-60"><CardContent className="pt-3">
-            <div className="flex items-center gap-1.5"><Badge className="bg-gray-100 text-gray-500">{t(l.care_type)}</Badge><span className="text-xs text-gray-400">{l.animal_type}</span></div>
+            <div className="flex items-center gap-1.5"><Badge className="bg-surface-hover text-text-secondary">{t(l.care_type)}</Badge><span className="text-xs text-text-muted">{l.animal_type}</span></div>
             <p className="text-sm line-through">{l.title}</p>
           </CardContent></Card>
         ))}
@@ -133,7 +133,7 @@ export default function LivestockCare() {
           </div>
         </CardContent></Card>
       ) : (
-        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-green-300 text-green-700"><Plus className="h-4 w-4 mr-1" />{t('addEntry')}</Button>
+        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-mint/40 text-mint"><Plus className="h-4 w-4 mr-1" />{t('addEntry')}</Button>
       )}
     </div>
   );

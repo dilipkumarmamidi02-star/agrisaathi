@@ -10,11 +10,11 @@ import cropData from '@/data/cropEncyclopedia.json';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CATEGORY_COLORS = {
-  amber: 'bg-amber-50 border-amber-100 text-amber-700',
-  blue: 'bg-blue-50 border-blue-100 text-blue-700',
+  amber: 'bg-amber-500/10 border-amber-100 text-amber-400',
+  blue: 'bg-cyan-500/10 border-blue-100 text-cyan-400',
   orange: 'bg-orange-50 border-orange-100 text-orange-700',
-  green: 'bg-green-50 border-green-100 text-green-700',
-  yellow: 'bg-yellow-50 border-yellow-100 text-yellow-700',
+  green: 'bg-mint/10 border-green-100 text-mint',
+  yellow: 'bg-amber-500/10 border-yellow-100 text-amber-400',
   pink: 'bg-pink-50 border-pink-100 text-pink-700',
   violet: 'bg-violet-50 border-violet-100 text-violet-700',
 };
@@ -46,12 +46,12 @@ export default function Crops() {
   return (
     <div>
       <PageHeader titleKey="cropEncyclopedia" icon={Sprout} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         {t('cropEncyclopediaIntro')}
       </p>
 
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -66,7 +66,7 @@ export default function Crops() {
           className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition ${
             activeCategory === 'all'
               ? 'bg-green-600 text-white border-green-600'
-              : 'bg-white text-gray-600 border-gray-200'
+              : 'bg-surface text-text-secondary border-border'
           }`}
         >
           {t('allCategories')}
@@ -78,7 +78,7 @@ export default function Crops() {
             className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition ${
               activeCategory === c.id
                 ? 'bg-green-600 text-white border-green-600'
-                : 'bg-white text-gray-600 border-gray-200'
+                : 'bg-surface text-text-secondary border-border'
             }`}
           >
             {c.name}
@@ -87,12 +87,12 @@ export default function Crops() {
       </div>
 
       {filteredCategories.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-8">{t('noCropTypesFound')}</p>
+        <p className="text-sm text-text-muted text-center py-8">{t('noCropTypesFound')}</p>
       )}
 
       {filteredCategories.map((c) => (
         <div key={c.id} className="mb-5">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">{c.name}</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-2">{c.name}</h3>
           <div className="grid grid-cols-1 gap-2">
             {c.types.map((tItem) => (
               <Card
@@ -103,21 +103,21 @@ export default function Crops() {
                 <CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold truncate">{tItem.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{tItem.category_use}</p>
+                    <p className="text-xs text-text-secondary truncate">{tItem.category_use}</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {tItem.varieties.slice(0, 2).map((v) => (
-                        <Badge key={v.name} className="bg-white/70 text-gray-600 border border-gray-200 text-[10px]">
+                        <Badge key={v.name} className="bg-surface/70 text-text-secondary border border-border text-[10px]">
                           {v.name}
                         </Badge>
                       ))}
                       {tItem.varieties.length > 2 && (
-                        <Badge className="bg-white/70 text-gray-500 border border-gray-200 text-[10px]">
+                        <Badge className="bg-surface/70 text-text-secondary border border-border text-[10px]">
                           +{tItem.varieties.length - 2}
                         </Badge>
                       )}
                     </div>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-400 shrink-0" />
+                  <ChevronRight className="h-4 w-4 text-text-muted shrink-0" />
                 </CardContent>
               </Card>
             ))}

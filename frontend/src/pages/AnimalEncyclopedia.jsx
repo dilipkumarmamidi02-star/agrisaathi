@@ -69,7 +69,7 @@ export default function AnimalEncyclopedia() {
   return (
     <div>
       <PageHeader titleKey="animalEncyclopedia" icon={BookOpen} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Standard husbandry reference — vaccination schedules, feed and environment needs. Always confirm specifics with your local Veterinarian or KVK.
       </p>
 
@@ -79,7 +79,7 @@ export default function AnimalEncyclopedia() {
             key={c}
             onClick={() => setActiveCategory(c)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${
-              activeCategory === c ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-200'
+              activeCategory === c ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'
             }`}
           >
             {CATEGORY_LABELS[c] || c}
@@ -92,7 +92,7 @@ export default function AnimalEncyclopedia() {
           <Loader2 className="h-5 w-5 animate-spin text-green-600" />
         </div>
       ) : entries.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No entries for this category yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No entries for this category yet.</CardContent></Card>
       ) : (
         <div className="space-y-3">
           {entries.map((entry) => {
@@ -104,14 +104,14 @@ export default function AnimalEncyclopedia() {
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <h3 className="font-semibold text-sm">{entry.name_en}</h3>
-                        <p className="text-xs text-gray-500">{entry.purpose}</p>
+                        <p className="text-xs text-text-secondary">{entry.purpose}</p>
                       </div>
-                      <Badge className="bg-gray-100 text-gray-600 shrink-0">{expanded ? '−' : '+'}</Badge>
+                      <Badge className="bg-surface-hover text-text-secondary shrink-0">{expanded ? '−' : '+'}</Badge>
                     </div>
                   </button>
 
                   {expanded && (
-                    <div className="mt-3 space-y-3 text-xs text-gray-700">
+                    <div className="mt-3 space-y-3 text-xs text-text-primary">
                       <div className="flex items-start gap-2">
                         <TrendingUp className="h-3.5 w-3.5 text-green-600 shrink-0 mt-0.5" />
                         <div><span className="font-medium">Maturity & yield: </span>{entry.maturity_yield}</div>
@@ -132,7 +132,7 @@ export default function AnimalEncyclopedia() {
                             <span className="font-medium">Vaccination schedule:</span>
                             <ul className="mt-1 space-y-0.5">
                               {entry.vaccination_schedule.map((v, i) => (
-                                <li key={i} className="text-gray-600">• {v.age} — {v.vaccine}</li>
+                                <li key={i} className="text-text-secondary">• {v.age} — {v.vaccine}</li>
                               ))}
                             </ul>
                           </div>
@@ -140,7 +140,7 @@ export default function AnimalEncyclopedia() {
                       )}
 
                       {entry.care_notes && (
-                        <div className="bg-blue-50 rounded-lg p-2 text-blue-700">{entry.care_notes}</div>
+                        <div className="bg-cyan-500/10 rounded-lg p-2 text-cyan-400">{entry.care_notes}</div>
                       )}
 
                       {entry.common_risks?.length > 0 && (
@@ -153,7 +153,7 @@ export default function AnimalEncyclopedia() {
                         </div>
                       )}
 
-                      <p className="text-[10px] text-gray-400 pt-1 border-t border-gray-100">{entry.source}</p>
+                      <p className="text-[10px] text-text-muted pt-1 border-t border-border">{entry.source}</p>
                     </div>
                   )}
                 </CardContent>

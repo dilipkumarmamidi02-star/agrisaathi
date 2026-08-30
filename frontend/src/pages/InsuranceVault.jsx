@@ -6,7 +6,7 @@ export default function InsuranceVault() {
   return (
     <div>
       <PageHeader title={t('insuranceVaultTitle')} />
-      <p className="text-sm text-gray-500">This section is coming soon.</p>
+      <p className="text-sm text-text-secondary">This section is coming soon.</p>
     </div>
   );
 }

@@ -62,7 +62,7 @@ export default function SupportTickets() {
   return (
     <div>
       <PageHeader title={t('supportTicketsTitle')} icon={LifeBuoy} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Report an issue or ask for help. Every ticket is recorded so you can track its status over time.
       </p>
 
@@ -100,9 +100,9 @@ export default function SupportTickets() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading tickets…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading tickets…</p>
       ) : tickets.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No tickets yet. Raise one above if you run into a problem.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No tickets yet. Raise one above if you run into a problem.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {tickets.map((b) => (
@@ -115,8 +115,8 @@ export default function SupportTickets() {
                     {b.payload?.status || 'open'}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-gray-400 mt-0.5">{b.payload?.category} · {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                <p className="text-xs text-gray-600 mt-1">{b.payload?.description}</p>
+                <p className="text-[11px] text-text-muted mt-0.5">{b.payload?.category} · {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                <p className="text-xs text-text-secondary mt-1">{b.payload?.description}</p>
               </CardContent>
             </Card>
           ))}

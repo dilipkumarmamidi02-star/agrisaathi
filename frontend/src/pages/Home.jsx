@@ -37,19 +37,19 @@ export default function Home() {
   };
 
   const quickLinks = [
-    { to: '/fertilizer', icon: Droplets, label: t('fertilizer'), color: 'bg-blue-50 text-blue-700' },
-    { to: '/soil-passport', icon: Sprout, label: t('soil'), color: 'bg-green-50 text-green-700' },
+    { to: '/fertilizer', icon: Droplets, label: t('fertilizer'), color: 'bg-cyan-500/10 text-cyan-400' },
+    { to: '/soil-passport', icon: Sprout, label: t('soil'), color: 'bg-mint/10 text-mint' },
     { to: '/crop-planner', icon: TrendingUp, label: t('planner'), color: 'bg-purple-50 text-purple-700' },
     { to: '/livestock-care', icon: Stethoscope, label: t('livestock'), color: 'bg-rose-50 text-rose-700' },
     { to: '/market-prices', icon: Wallet, label: t('marketPrices'), color: 'bg-orange-50 text-orange-700' },
     { to: '/farm-ledger', icon: FileSpreadsheet, label: t('ledger'), color: 'bg-lime-50 text-lime-700' },
-    { to: '/crop-passport', icon: ShieldCheck, label: t('cropPassportTitle'), color: 'bg-emerald-50 text-emerald-700' },
-    { to: '/schemes', icon: Landmark, label: t('govSchemes'), color: 'bg-blue-50 text-blue-700' },
+    { to: '/crop-passport', icon: ShieldCheck, label: t('cropPassportTitle'), color: 'bg-mint/10 text-mint' },
+    { to: '/schemes', icon: Landmark, label: t('govSchemes'), color: 'bg-cyan-500/10 text-cyan-400' },
     { to: '/sensor-lab', icon: FlaskConical, label: t('sensorLab'), color: 'bg-cyan-50 text-cyan-700' },
     { to: '/irrigation-planner', icon: Droplets, label: t('irrigation'), color: 'bg-cyan-50 text-cyan-700' },
     { to: '/training-center', icon: GraduationCap, label: t('training'), color: 'bg-teal-50 text-teal-700' },
-    { to: '/pest-library', icon: Bug, label: t('pestLibrary'), color: 'bg-red-50 text-red-700' },
-    { to: '/expert-directory', icon: UserCheck, label: t('experts'), color: 'bg-blue-50 text-blue-700' },
+    { to: '/pest-library', icon: Bug, label: t('pestLibrary'), color: 'bg-red-500/10 text-red-400' },
+    { to: '/expert-directory', icon: UserCheck, label: t('experts'), color: 'bg-cyan-500/10 text-cyan-400' },
     { to: '/farm-notifications', icon: BellRing, label: t('notifications'), color: 'bg-cyan-50 text-cyan-700' },
   ];
 
@@ -58,38 +58,38 @@ export default function Home() {
       <div className="flex justify-between items-center mb-2">
         <div>
           <h1 className="text-2xl font-bold text-green-800">🌾 AgriSaathi</h1>
-          <p className="text-sm text-gray-500">One Voice, Every Acre, Every Plot</p>
+          <p className="text-sm text-text-secondary">One Voice, Every Acre, Every Plot</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/alerts-center"><Bell className="h-5 w-5 text-gray-500" /></Link>
-          <Link to="/profile-settings"><User className="h-5 w-5 text-gray-500" /></Link>
+          <Link to="/alerts-center"><Bell className="h-5 w-5 text-text-secondary" /></Link>
+          <Link to="/profile-settings"><User className="h-5 w-5 text-text-secondary" /></Link>
         </div>
       </div>
 
       {health && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
-          <span className="text-sm text-green-700">✅ Backend: {health.status} ({health.version})</span>
+        <div className="bg-mint/10 border border-green-200 rounded-xl p-3 flex items-center gap-2">
+          <span className="text-sm text-mint">✅ Backend: {health.status} ({health.version})</span>
         </div>
       )}
 
       <div className="text-center py-2">
-        <h2 className="text-lg font-semibold text-gray-700">{t('speakToAgriSaathi')}</h2>
-        <p className="text-sm text-gray-500">{t('tapAndSpeak')}</p>
+        <h2 className="text-lg font-semibold text-text-primary">{t('speakToAgriSaathi')}</h2>
+        <p className="text-sm text-text-secondary">{t('tapAndSpeak')}</p>
       </div>
 
       <div className="flex flex-col items-center gap-3">
         <button
           onClick={startVoice}
-          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${listening ? 'bg-red-500 animate-pulse scale-105' : 'bg-green-600 hover:bg-green-700'}`}
+          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${listening ? 'bg-red-500/100 animate-pulse scale-105' : 'bg-green-600 hover:bg-green-700'}`}
         >
           <Mic className="h-10 w-10" />
         </button>
-        <span className="text-sm font-medium text-gray-500">{listening ? 'Listening…' : 'Tap to speak'}</span>
+        <span className="text-sm font-medium text-text-secondary">{listening ? 'Listening…' : 'Tap to speak'}</span>
       </div>
 
       {transcript && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-          <p className="text-sm text-gray-700">"{transcript}"</p>
+        <div className="bg-mint/10 border border-green-200 rounded-xl p-4">
+          <p className="text-sm text-text-primary">"{transcript}"</p>
         </div>
       )}
 
@@ -114,14 +114,14 @@ export default function Home() {
       </Link>
 
       <div>
-        <h3 className="text-sm font-semibold text-gray-500 mb-3">{t('allTools')}</h3>
+        <h3 className="text-sm font-semibold text-text-secondary mb-3">{t('allTools')}</h3>
         <div className="grid grid-cols-4 gap-3">
           {quickLinks.map(({ to, icon: Icon, label, color }) => (
             <Link key={to} to={to} className="flex flex-col items-center gap-1.5">
               <span className={`flex h-14 w-14 items-center justify-center rounded-2xl ${color}`}>
                 <Icon className="h-6 w-6" />
               </span>
-              <span className="text-[11px] text-gray-600 text-center leading-tight">{label}</span>
+              <span className="text-[11px] text-text-secondary text-center leading-tight">{label}</span>
             </Link>
           ))}
         </div>

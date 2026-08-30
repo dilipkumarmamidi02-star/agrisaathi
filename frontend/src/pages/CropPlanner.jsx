@@ -122,7 +122,7 @@ export default function CropPlanner() {
   return (
     <div>
       <PageHeader titleKey="cropPlanner" icon={TrendingUp} />
-      <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('estimate')}</p>
+      <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('estimate')}</p>
 
       <div className="mb-4">
         <YieldEstimator />
@@ -157,10 +157,10 @@ export default function CropPlanner() {
       </div>
 
       {(soilCtx || waterCtx) && (
-        <Card className="mb-4 bg-green-50 border-green-100"><CardContent className="pt-3 text-xs">
-          <p className="font-semibold text-green-700 flex items-center gap-1 mb-1"><FlaskConical className="h-3 w-3" />{t('soilWaterContext')}</p>
-          {soilCtx && <p className="text-gray-600">pH {soilCtx.ph ?? '—'} · N {soilCtx.nitrogen ?? '—'} · P {soilCtx.phosphorus ?? '—'} · K {soilCtx.potassium ?? '—'}</p>}
-          {waterCtx && <p className="text-gray-600">Water pH {waterCtx.water_ph ?? '—'} · EC {waterCtx.water_ec ?? '—'}</p>}
+        <Card className="mb-4 bg-mint/10 border-green-100"><CardContent className="pt-3 text-xs">
+          <p className="font-semibold text-mint flex items-center gap-1 mb-1"><FlaskConical className="h-3 w-3" />{t('soilWaterContext')}</p>
+          {soilCtx && <p className="text-text-secondary">pH {soilCtx.ph ?? '—'} · N {soilCtx.nitrogen ?? '—'} · P {soilCtx.phosphorus ?? '—'} · K {soilCtx.potassium ?? '—'}</p>}
+          {waterCtx && <p className="text-text-secondary">Water pH {waterCtx.water_ph ?? '—'} · EC {waterCtx.water_ec ?? '—'}</p>}
         </CardContent></Card>
       )}
 
@@ -171,23 +171,23 @@ export default function CropPlanner() {
             <Card key={c.id}><CardContent className="pt-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-green-700 text-xs font-bold">{i + 1}</span>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/20 text-mint text-xs font-bold">{i + 1}</span>
                   <div>
                     <p className="text-sm font-medium">{c.name_en}</p>
-                    <p className="text-xs text-gray-400">{c.category}</p>
+                    <p className="text-xs text-text-muted">{c.category}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <Badge className="bg-blue-50 text-blue-700">{c.water_requirement}</Badge>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{c.season} · {c.duration_days}</p>
+                  <Badge className="bg-cyan-500/10 text-cyan-400">{c.water_requirement}</Badge>
+                  <p className="text-[10px] text-text-muted mt-0.5">{c.season} · {c.duration_days}</p>
                 </div>
               </div>
-              {loading && <p className="text-xs text-gray-400 mt-1">{t('loading')}</p>}
+              {loading && <p className="text-xs text-text-muted mt-1">{t('loading')}</p>}
               {est && (
                 <div className="grid grid-cols-3 gap-1 mt-2 text-center text-xs">
-                  <div className="bg-red-50 rounded p-1"><div className="text-gray-400">{t('cost')}</div><div className="font-medium">{est.cost}</div></div>
-                  <div className="bg-green-50 rounded p-1"><div className="text-gray-400">{t('revenue')}</div><div className="font-medium">{est.revenue}</div></div>
-                  <div className="bg-amber-50 rounded p-1"><div className="text-gray-400">{t('margin')}</div><div className="font-medium">{est.margin}</div></div>
+                  <div className="bg-red-500/10 rounded p-1"><div className="text-text-muted">{t('cost')}</div><div className="font-medium">{est.cost}</div></div>
+                  <div className="bg-mint/10 rounded p-1"><div className="text-text-muted">{t('revenue')}</div><div className="font-medium">{est.revenue}</div></div>
+                  <div className="bg-amber-500/10 rounded p-1"><div className="text-text-muted">{t('margin')}</div><div className="font-medium">{est.margin}</div></div>
                 </div>
               )}
             </CardContent></Card>

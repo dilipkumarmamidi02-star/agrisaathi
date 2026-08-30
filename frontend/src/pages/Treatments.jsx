@@ -48,7 +48,7 @@ export default function Treatments() {
   return (
     <div>
       <PageHeader titleKey="treatments" icon={FlaskConical} />
-      <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('aiAssisted')}</p>
+      <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('aiAssisted')}</p>
 
       <div className="space-y-3 mb-4">
         <div><Label className="mb-1.5 block">{t('selectCrop')}</Label>
@@ -66,13 +66,13 @@ export default function Treatments() {
       {result && (
         <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
           <h3 className="font-bold">{result.summary}</h3>
-          {result.organic_treatment && <div className="bg-green-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-green-700 flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
-          {result.chemical_treatment && <div className="bg-blue-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-blue-700">{t('chemical')}</p><p className="text-sm mt-0.5">{result.chemical_treatment}</p></div>}
-          {result.application_method && <div><p className="text-xs font-semibold text-gray-500">{t('method')}</p><p className="text-sm">{result.application_method}</p></div>}
-          {result.timing && <div><p className="text-xs font-semibold text-gray-500">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
-          {result.precautions && <div className="bg-amber-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-700 flex items-center gap-1"><Shield className="h-3 w-3" />{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
-          {result.pre_harvest_interval && <p className="text-xs text-gray-500">{t('preHarvestInterval')}: {result.pre_harvest_interval}</p>}
-          {result.source && <p className="text-[10px] text-gray-400">{t('source')}: {result.source}</p>}
+          {result.organic_treatment && <div className="bg-mint/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-mint flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
+          {result.chemical_treatment && <div className="bg-cyan-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-cyan-400">{t('chemical')}</p><p className="text-sm mt-0.5">{result.chemical_treatment}</p></div>}
+          {result.application_method && <div><p className="text-xs font-semibold text-text-secondary">{t('method')}</p><p className="text-sm">{result.application_method}</p></div>}
+          {result.timing && <div><p className="text-xs font-semibold text-text-secondary">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
+          {result.precautions && <div className="bg-amber-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-400 flex items-center gap-1"><Shield className="h-3 w-3" />{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
+          {result.pre_harvest_interval && <p className="text-xs text-text-secondary">{t('preHarvestInterval')}: {result.pre_harvest_interval}</p>}
+          {result.source && <p className="text-[10px] text-text-muted">{t('source')}: {result.source}</p>}
         </CardContent></Card>
       )}
     </div>

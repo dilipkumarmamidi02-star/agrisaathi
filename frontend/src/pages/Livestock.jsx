@@ -930,7 +930,7 @@ export default function Livestock() {
 
       {/* Error */}
       {error && (
-        <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-xl border border-red-300 bg-red-500/10 p-4 text-sm text-red-400">
           <strong>
             Livestock data error
           </strong>

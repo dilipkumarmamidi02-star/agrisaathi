@@ -57,16 +57,16 @@ export default function HarvestRecords() {
   return (
     <div>
       <PageHeader titleKey="harvestRecords" icon={Wheat} />
-      <p className="text-xs text-gray-500 mb-3">{t('harvestIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('harvestIntro')}</p>
 
       <div className="grid grid-cols-2 gap-2 mb-3">
-        <Card><CardContent className="pt-3"><p className="text-xs text-gray-500">{t('totalHarvested')}</p><p className="text-lg font-bold text-green-700">{totalQty.toFixed(1)} q</p></CardContent></Card>
-        <Card><CardContent className="pt-3"><p className="text-xs text-gray-500">{t('estValue')}</p><p className="text-lg font-bold text-green-700">₹{totalValue.toLocaleString('en-IN')}</p></CardContent></Card>
+        <Card><CardContent className="pt-3"><p className="text-xs text-text-secondary">{t('totalHarvested')}</p><p className="text-lg font-bold text-mint">{totalQty.toFixed(1)} q</p></CardContent></Card>
+        <Card><CardContent className="pt-3"><p className="text-xs text-text-secondary">{t('estValue')}</p><p className="text-lg font-bold text-mint">₹{totalValue.toLocaleString('en-IN')}</p></CardContent></Card>
       </div>
 
       {records.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5"><Wheat className="h-4 w-4 text-green-600" />{t('yieldByCropSeason')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><Wheat className="h-4 w-4 text-green-600" />{t('yieldByCropSeason')}</h3>
           {(() => {
             const byKey = {};
             records.forEach((r) => {
@@ -134,7 +134,7 @@ export default function HarvestRecords() {
 
       {plots.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5"><TrendingUp className="h-4 w-4 text-green-600" />{t('yieldTrend')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><TrendingUp className="h-4 w-4 text-green-600" />{t('yieldTrend')}</h3>
           {plots.length > 1 && (
             <Select value={trendPlot} onValueChange={setTrendPlot}>
               <SelectTrigger className="h-8 text-sm mb-2"><SelectValue /></SelectTrigger>
@@ -154,24 +154,24 @@ export default function HarvestRecords() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-xs text-gray-400">{t('yieldTrendEmpty')}</p>
+            <p className="text-xs text-text-muted">{t('yieldTrendEmpty')}</p>
           )}
         </CardContent></Card>
       )}
 
-      <h3 className="text-sm font-semibold text-gray-500 mb-2">{t('history')}</h3>
+      <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('history')}</h3>
       {records.length === 0 ? (
-        <p className="text-xs text-gray-400">{t('noRecords')}</p>
+        <p className="text-xs text-text-muted">{t('noRecords')}</p>
       ) : (
         <div className="space-y-2">
           {records.map((r) => (
             <Card key={r.id}><CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-medium truncate">{r.crop_name} · {r.plot_name}</p>
-                <p className="text-xs text-gray-500">{r.harvest_date} · {r.quantity || 0} {r.quantity_unit}{r.sale_price_per_unit ? ` · ₹${r.sale_price_per_unit}/unit` : ''}</p>
+                <p className="text-xs text-text-secondary">{r.harvest_date} · {r.quantity || 0} {r.quantity_unit}{r.sale_price_per_unit ? ` · ₹${r.sale_price_per_unit}/unit` : ''}</p>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
-                {r.quality_grade && <Badge className="bg-green-100 text-green-700">{r.quality_grade}</Badge>}
+                {r.quality_grade && <Badge className="bg-mint/20 text-mint">{r.quality_grade}</Badge>}
                 <Button size="icon" variant="ghost" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
               </div>
             </CardContent></Card>

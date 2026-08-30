@@ -15,7 +15,7 @@ export default function ExpertDirectory() {
   return (
     <div>
       <PageHeader title={t('expertDirectoryTitle')} icon={Users} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Connect with the right expert for your farm issue. For a KVK scientist near you specifically, use Near Me — it lists actual KVK contacts from the ICAR directory.
       </p>
 
@@ -23,12 +23,12 @@ export default function ExpertDirectory() {
         {EXPERT_TYPES.map((e) => (
           <Card key={e.title}>
             <CardContent className="pt-4 pb-4 flex items-center gap-3">
-              <div className="p-2 rounded-full bg-green-50">
-                <e.icon className="h-5 w-5 text-green-700" />
+              <div className="p-2 rounded-full bg-mint/10">
+                <e.icon className="h-5 w-5 text-mint" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold">{e.title}</p>
-                <p className="text-xs text-gray-500">{e.description}</p>
+                <p className="text-xs text-text-secondary">{e.description}</p>
               </div>
               {e.helpline && (
                 <a href={`tel:${e.helpline}`} className="p-2 rounded-full bg-green-600 text-white shrink-0" aria-label={`Call ${e.title} helpline`}>

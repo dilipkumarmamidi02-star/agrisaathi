@@ -69,7 +69,7 @@ export default function Fertilize() {
   return (
     <div>
       <PageHeader titleKey="fertilize" icon={Droplets} />
-      <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 mb-4">Estimate based on general crop reference data. Confirm with a soil test where possible.</p>
+      <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">Estimate based on general crop reference data. Confirm with a soil test where possible.</p>
 
       <div className="space-y-4">
         <div>
@@ -100,7 +100,7 @@ export default function Fertilize() {
         <div>
           <Label className="mb-1.5 block">{t('state')} / Location</Label>
           <PincodeLocationFields />
-          {stateDefault && <p className="text-xs text-gray-400 mt-2">Default soil: {stateDefault.dominant_soil_type} (pH {stateDefault.typical_ph_range})</p>}
+          {stateDefault && <p className="text-xs text-text-muted mt-2">Default soil: {stateDefault.dominant_soil_type} (pH {stateDefault.typical_ph_range})</p>}
         </div>
 
         <div className="grid grid-cols-4 gap-2">
@@ -111,20 +111,20 @@ export default function Fertilize() {
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-400">{t('soilTestOptionalNote')}</p>
+        <p className="text-xs text-text-muted">{t('soilTestOptionalNote')}</p>
         <Button onClick={calc} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 h-12">{loading ? t('analyzing') : t('analyze')}</Button>
       </div>
 
       {result && (
         <Card className="mt-5 border-green-200">
           <CardContent className="pt-4 space-y-3">
-            <h3 className="font-bold text-gray-900">{result.summary}</h3>
-            {result.dosage && <div><p className="text-xs font-semibold text-gray-500">{t('dosage')}</p><p className="text-sm">{result.dosage}</p></div>}
-            {result.method && <div><p className="text-xs font-semibold text-gray-500">{t('method')}</p><p className="text-sm">{result.method}</p></div>}
-            {result.timing && <div><p className="text-xs font-semibold text-gray-500">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
-            {result.organic_option && <div className="bg-green-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-green-700 flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organic')}</p><p className="text-sm mt-0.5">{result.organic_option}</p></div>}
-            {result.precautions && <div className="bg-amber-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-700">{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
-            {result.assumptions && <div><p className="text-xs font-semibold text-gray-400">{t('assumptions')}</p><p className="text-xs text-gray-500">{result.assumptions}</p></div>}
+            <h3 className="font-bold text-text-primary">{result.summary}</h3>
+            {result.dosage && <div><p className="text-xs font-semibold text-text-secondary">{t('dosage')}</p><p className="text-sm">{result.dosage}</p></div>}
+            {result.method && <div><p className="text-xs font-semibold text-text-secondary">{t('method')}</p><p className="text-sm">{result.method}</p></div>}
+            {result.timing && <div><p className="text-xs font-semibold text-text-secondary">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
+            {result.organic_option && <div className="bg-mint/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-mint flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organic')}</p><p className="text-sm mt-0.5">{result.organic_option}</p></div>}
+            {result.precautions && <div className="bg-amber-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-400">{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
+            {result.assumptions && <div><p className="text-xs font-semibold text-text-muted">{t('assumptions')}</p><p className="text-xs text-text-secondary">{result.assumptions}</p></div>}
           </CardContent>
         </Card>
       )}

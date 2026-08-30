@@ -72,18 +72,18 @@ export default function SustainabilityScore() {
   return (
     <div>
       <PageHeader title={t('sustainabilityScoreTitle')} icon={Leaf} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         A simple self-assessment based on practices you actually follow — not an automated guess.
       </p>
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading…</p>
       ) : (
         <>
           <Card className="mb-4">
             <CardContent className="pt-4 text-center">
-              <p className="text-4xl font-bold text-green-700">{score}<span className="text-lg text-gray-400">/100</span></p>
-              <p className="text-xs text-gray-500 mt-1">{Object.values(checked).filter(Boolean).length} of {PRACTICES.length} practices checked</p>
+              <p className="text-4xl font-bold text-mint">{score}<span className="text-lg text-text-muted">/100</span></p>
+              <p className="text-xs text-text-secondary mt-1">{Object.values(checked).filter(Boolean).length} of {PRACTICES.length} practices checked</p>
             </CardContent>
           </Card>
 

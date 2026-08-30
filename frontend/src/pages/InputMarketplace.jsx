@@ -48,20 +48,20 @@ export default function InputMarketplace() {
   return (
     <div>
       <PageHeader titleKey="inputMarketplace" icon={Store} />
-      <p className="text-xs text-gray-500 mb-3">{t('marketplaceIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('marketplaceIntro')}</p>
 
       <Button onClick={useLocation} className="w-full mb-3 bg-green-600 hover:bg-green-700"><Navigation className="h-4 w-4 mr-1" />{t('useMyLocation')}</Button>
 
       <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
         {CATEGORIES.map((c) => (
-          <button key={c.value} onClick={() => setFilter(c.value)} className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${filter === c.value ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600'}`}>
+          <button key={c.value} onClick={() => setFilter(c.value)} className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${filter === c.value ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>
             {t(c.label)}
           </button>
         ))}
       </div>
 
       {list.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">{t('noShops')}</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">{t('noShops')}</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {list.map((s) => (
@@ -72,8 +72,8 @@ export default function InputMarketplace() {
                     <h3 className="font-semibold text-sm truncate">{s.name}</h3>
                     {s.verified && <BadgeCheck className="h-4 w-4 text-green-600 shrink-0" />}
                   </div>
-                  <p className="text-xs text-gray-500">{[s.category && t(s.category), s.district, s.state].filter(Boolean).join(' · ')}</p>
-                  {s.address && <p className="text-xs text-gray-400 mt-0.5">{s.address}</p>}
+                  <p className="text-xs text-text-secondary">{[s.category && t(s.category), s.district, s.state].filter(Boolean).join(' · ')}</p>
+                  {s.address && <p className="text-xs text-text-muted mt-0.5">{s.address}</p>}
                 </div>
                 <div className="text-right shrink-0">
                   {s._dist != null && <Badge variant="secondary">{s._dist < 1 ? `${Math.round(s._dist * 1000)}m` : `${s._dist.toFixed(1)}km`}</Badge>}

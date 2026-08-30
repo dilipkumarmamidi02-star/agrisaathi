@@ -72,9 +72,9 @@ export default function GovernmentSchemes() {
   };
 
   const statusStyle = (s) =>
-    s === 'likely_eligible' ? 'bg-green-100 text-green-700' :
-    s === 'likely_not_eligible' ? 'bg-red-100 text-red-700' :
-    'bg-amber-100 text-amber-700';
+    s === 'likely_eligible' ? 'bg-mint/20 text-mint' :
+    s === 'likely_not_eligible' ? 'bg-red-100 text-red-400' :
+    'bg-amber-100 text-amber-400';
   const statusIcon = (s) =>
     s === 'likely_eligible' ? <CheckCircle2 className="h-3 w-3" /> :
     s === 'likely_not_eligible' ? <XCircle className="h-3 w-3" /> :
@@ -87,7 +87,7 @@ export default function GovernmentSchemes() {
   return (
     <div>
       <PageHeader titleKey="govSchemes" icon={Landmark} />
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-secondary mb-3">
         Central + state scheme reference. Eligibility is checked against each scheme's published rules — not a live government
         decision. Always confirm on the official portal before relying on a result.
       </p>
@@ -109,7 +109,7 @@ export default function GovernmentSchemes() {
       ) : error ? (
         <Card><CardContent className="pt-6 text-center text-sm text-red-500">{error}</CardContent></Card>
       ) : schemes.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No schemes found for this state yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No schemes found for this state yet.</CardContent></Card>
       ) : (
         <div className="space-y-3">
           {schemes.map((s) => {
@@ -122,25 +122,25 @@ export default function GovernmentSchemes() {
                   <h3 className="font-semibold text-sm leading-tight">{s.name}</h3>
                   {result && <Badge className={`flex items-center gap-1 ${statusStyle(result.status)}`}>{statusIcon(result.status)}{statusLabel(result.status)}</Badge>}
                 </div>
-                {s.ministry && <p className="text-xs text-gray-500">{s.ministry}</p>}
-                <p className="text-sm text-gray-700">{s.benefit_summary}</p>
-                <p className="text-xs text-gray-500"><span className="font-medium">Eligibility:</span> {s.eligibility_summary}</p>
+                {s.ministry && <p className="text-xs text-text-secondary">{s.ministry}</p>}
+                <p className="text-sm text-text-primary">{s.benefit_summary}</p>
+                <p className="text-xs text-text-secondary"><span className="font-medium">Eligibility:</span> {s.eligibility_summary}</p>
 
-                {result?.reason && <div className="bg-gray-50 rounded-lg p-2 text-xs text-gray-600">{result.reason}</div>}
-                {result?.next_steps && <div className="bg-green-50 rounded-lg p-2 text-xs text-green-700">{result.next_steps}</div>}
+                {result?.reason && <div className="bg-surface-hover rounded-lg p-2 text-xs text-text-secondary">{result.reason}</div>}
+                {result?.next_steps && <div className="bg-mint/10 rounded-lg p-2 text-xs text-mint">{result.next_steps}</div>}
 
                 {isOpen && questions.length > 0 && (
-                  <div className="space-y-2 bg-gray-50 rounded-lg p-3">
+                  <div className="space-y-2 bg-surface-hover rounded-lg p-3">
                     {questions.map((q) => (
                       <div key={q.field} className="flex items-center justify-between gap-2">
-                        <span className="text-xs text-gray-700 flex-1">{q.label}</span>
+                        <span className="text-xs text-text-primary flex-1">{q.label}</span>
                         <div className="flex gap-1 shrink-0">
                           {[['Yes', true], ['No', false]].map(([label, val]) => (
                             <button
                               key={label}
                               onClick={() => setAnswer(s.id, q.field, val)}
                               className={`px-2 py-1 rounded text-xs border ${
-                                answers[s.id]?.[q.field] === val ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-200'
+                                answers[s.id]?.[q.field] === val ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'
                               }`}
                             >
                               {label}

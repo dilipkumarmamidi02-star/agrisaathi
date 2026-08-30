@@ -6,7 +6,7 @@ export default function TrainingAcademy() {
   return (
     <div>
       <PageHeader title={t('trainingAcademyTitle')} />
-      <p className="text-sm text-gray-500">This section is coming soon.</p>
+      <p className="text-sm text-text-secondary">This section is coming soon.</p>
     </div>
   );
 }

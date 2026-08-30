@@ -114,17 +114,17 @@ export default function Dashboard() {
       <PageHeader titleKey="dashboard" icon={LayoutGrid} />
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-green-50 border-green-100"><CardContent className="pt-3 text-center">
-          <div className="text-2xl font-bold text-green-700">{farms.length}</div>
-          <div className="text-[11px] text-gray-500">{t('myPlots')}</div>
+        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+          <div className="text-2xl font-bold text-mint">{farms.length}</div>
+          <div className="text-[11px] text-text-secondary">{t('myPlots')}</div>
         </CardContent></Card>
-        <Card className="bg-amber-50 border-amber-100"><CardContent className="pt-3 text-center">
-          <div className="text-2xl font-bold text-amber-700">{upcoming.length}</div>
-          <div className="text-[11px] text-gray-500">{t('upcomingHarvests')}</div>
+        <Card className="bg-amber-500/10 border-amber-100"><CardContent className="pt-3 text-center">
+          <div className="text-2xl font-bold text-amber-400">{upcoming.length}</div>
+          <div className="text-[11px] text-text-secondary">{t('upcomingHarvests')}</div>
         </CardContent></Card>
-        <Card className="bg-red-50 border-red-100"><CardContent className="pt-3 text-center">
+        <Card className="bg-red-500/10 border-red-100"><CardContent className="pt-3 text-center">
           <div className="text-2xl font-bold text-red-600">{alerts.length + urgentCycles.length}</div>
-          <div className="text-[11px] text-gray-500">{t('urgentAlerts')}</div>
+          <div className="text-[11px] text-text-secondary">{t('urgentAlerts')}</div>
         </CardContent></Card>
       </div>
 
@@ -132,7 +132,7 @@ export default function Dashboard() {
         <ProfitCalculator />
       </div>
 
-      <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-500" />{t('costVsMarket')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-500" />{t('costVsMarket')}</h3>
       <Card className="mb-4"><CardContent className="pt-4">
         {(() => {
           const totalCost = ledger.filter((e) => e.kind === 'expense').reduce((s, e) => s + (e.amount || 0), 0);
@@ -144,44 +144,44 @@ export default function Dashboard() {
               <div className="space-y-2 mb-3">
                 <div>
                   <div className="flex justify-between text-xs mb-1"><span className="text-red-600 font-medium">{t('productionCost')}</span><span className="font-bold text-red-600">₹{totalCost.toLocaleString('en-IN')}</span></div>
-                  <div className="bg-gray-100 rounded-full h-2.5 overflow-hidden"><div className="bg-red-500 h-full rounded-full" style={{ width: `${(totalCost / maxVal) * 100}%` }} /></div>
+                  <div className="bg-surface-hover rounded-full h-2.5 overflow-hidden"><div className="bg-red-500/100 h-full rounded-full" style={{ width: `${(totalCost / maxVal) * 100}%` }} /></div>
                 </div>
                 <div>
                   <div className="flex justify-between text-xs mb-1"><span className="text-green-600 font-medium">{t('harvestMarketValue')}</span><span className="font-bold text-green-600">₹{harvestValue.toLocaleString('en-IN')}</span></div>
-                  <div className="bg-gray-100 rounded-full h-2.5 overflow-hidden"><div className="bg-green-500 h-full rounded-full" style={{ width: `${(harvestValue / maxVal) * 100}%` }} /></div>
+                  <div className="bg-surface-hover rounded-full h-2.5 overflow-hidden"><div className="bg-mint/100 h-full rounded-full" style={{ width: `${(harvestValue / maxVal) * 100}%` }} /></div>
                 </div>
               </div>
-              <div className={`rounded-lg p-2 text-center ${diff >= 0 ? 'bg-green-50' : 'bg-amber-50'}`}>
-                <div className={`text-sm font-bold ${diff >= 0 ? 'text-green-700' : 'text-amber-700'}`}>{diff >= 0 ? t('surplus') : t('deficit')}: ₹{Math.abs(diff).toLocaleString('en-IN')}</div>
-                <div className="text-[10px] text-gray-400">{t('costVsMarketNote')}</div>
+              <div className={`rounded-lg p-2 text-center ${diff >= 0 ? 'bg-mint/10' : 'bg-amber-500/10'}`}>
+                <div className={`text-sm font-bold ${diff >= 0 ? 'text-mint' : 'text-amber-400'}`}>{diff >= 0 ? t('surplus') : t('deficit')}: ₹{Math.abs(diff).toLocaleString('en-IN')}</div>
+                <div className="text-[10px] text-text-muted">{t('costVsMarketNote')}</div>
               </div>
             </>
           );
         })()}
       </CardContent></Card>
 
-      <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-green-500" />{t('calendar')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-green-500" />{t('calendar')}</h3>
       <div className="mb-4">
         <DashboardCalendar harvestEvents={harvestEvents} milestoneEvents={milestoneEvents} />
       </div>
 
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5"><AlertTriangle className="h-4 w-4 text-red-500" />{t('urgentAlerts')}</h3>
+        <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5"><AlertTriangle className="h-4 w-4 text-red-500" />{t('urgentAlerts')}</h3>
       </div>
       {alerts.length === 0 && urgentCycles.length === 0 ? (
-        <p className="text-sm text-gray-400 mb-4">{t('noAlerts')}</p>
+        <p className="text-sm text-text-muted mb-4">{t('noAlerts')}</p>
       ) : (
         <div className="space-y-2 mb-4">
           {urgentCycles.map((c) => (
-            <Card key={c.id} className="border-red-200 bg-red-50/50"><CardContent className="pt-3">
-              <p className="text-sm font-medium text-red-700">{c.plot_name} · {c.crop_name}</p>
+            <Card key={c.id} className="border-red-200 bg-red-500/10/50"><CardContent className="pt-3">
+              <p className="text-sm font-medium text-red-400">{c.plot_name} · {c.crop_name}</p>
               <p className="text-xs text-red-600">{c.alert_note || 'Urgent attention needed'}</p>
             </CardContent></Card>
           ))}
           {alerts.map((a) => (
             <Link to="/diagnose" key={a.id}>
-              <Card className="border-red-200 bg-red-50/50 hover:shadow-md"><CardContent className="pt-3">
-                <p className="text-sm font-medium text-red-700">{a.subject || 'Diagnosis'}</p>
+              <Card className="border-red-200 bg-red-500/10/50 hover:shadow-md"><CardContent className="pt-3">
+                <p className="text-sm font-medium text-red-400">{a.subject || 'Diagnosis'}</p>
                 <p className="text-xs text-red-600 truncate">{a.likely_issue} — {a.escalation_note || 'Expert review recommended'}</p>
               </CardContent></Card>
             </Link>
@@ -189,19 +189,19 @@ export default function Dashboard() {
         </div>
       )}
 
-      <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-amber-500" />{t('upcomingHarvests')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-amber-500" />{t('upcomingHarvests')}</h3>
       <div className="space-y-2 mb-4">
         {upcoming.length === 0 ? (
-          <p className="text-sm text-gray-400">No scheduled harvests. Add a plot to start tracking.</p>
+          <p className="text-sm text-text-muted">No scheduled harvests. Add a plot to start tracking.</p>
         ) : upcoming.map((c) => {
           const d = daysUntil(c.expected_harvest_date);
           return (
             <Card key={c.id}><CardContent className="pt-3 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">{c.plot_name} · {c.crop_name}</p>
-                <p className="text-xs text-gray-400">{c.expected_harvest_date}</p>
+                <p className="text-xs text-text-muted">{c.expected_harvest_date}</p>
               </div>
-              <Badge className={d <= 7 ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}>
+              <Badge className={d <= 7 ? 'bg-amber-100 text-amber-400' : 'bg-mint/20 text-mint'}>
                 {d > 0 ? `${d} days` : 'Ready'}
               </Badge>
             </CardContent></Card>
@@ -209,16 +209,16 @@ export default function Dashboard() {
         })}
       </div>
 
-      <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><Leaf className="h-4 w-4 text-green-500" />{t('myPlots')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><Leaf className="h-4 w-4 text-green-500" />{t('myPlots')}</h3>
       <div className="space-y-2 mb-4">
         {farms.length === 0 ? (
-          <p className="text-sm text-gray-400">No plots yet.</p>
+          <p className="text-sm text-text-muted">No plots yet.</p>
         ) : farms.map((f) => (
           <Card key={f.id}><CardContent className="pt-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">{f.plot_name}</p>
-                <p className="text-xs text-gray-400">{f.current_crop || '—'} · {f.state || ''} {f.area_value ? `· ${f.area_value} ${f.area_unit}` : ''}</p>
+                <p className="text-xs text-text-muted">{f.current_crop || '—'} · {f.state || ''} {f.area_value ? `· ${f.area_value} ${f.area_unit}` : ''}</p>
               </div>
               <Link to="/livestock-care"><Stethoscope className="h-4 w-4 text-gray-300" /></Link>
             </div>
@@ -242,7 +242,7 @@ export default function Dashboard() {
           </div>
         </CardContent></Card>
       ) : (
-        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-green-300 text-green-700">
+        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-mint/40 text-mint">
           <Plus className="h-4 w-4 mr-1" />{t('addPlot')}
         </Button>
       )}

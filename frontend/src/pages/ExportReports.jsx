@@ -91,7 +91,7 @@ export default function ExportReports() {
   return (
     <div>
       <PageHeader titleKey="exportReports" icon={FileDown} />
-      <p className="text-xs text-gray-500 mb-3">{t('exportReportsIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('exportReportsIntro')}</p>
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">
         <Label>{t('selectSections')}</Label>

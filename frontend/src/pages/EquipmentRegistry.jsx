@@ -64,7 +64,7 @@ export default function EquipmentRegistry() {
   return (
     <div>
       <PageHeader title={t('equipmentRegistryTitle')} icon={Wrench} />
-      <p className="text-xs text-gray-500 mb-3">Track your machinery and its maintenance schedule.</p>
+      <p className="text-xs text-text-secondary mb-3">Track your machinery and its maintenance schedule.</p>
 
       <div className="flex justify-end mb-3">
         <Button size="sm" onClick={() => setShowForm((s) => !s)}>
@@ -101,23 +101,23 @@ export default function EquipmentRegistry() {
       )}
 
       {loading ? (
-        <p className="text-sm text-gray-400 text-center py-8">Loading equipment…</p>
+        <p className="text-sm text-text-muted text-center py-8">Loading equipment…</p>
       ) : equipment.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">No equipment registered yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No equipment registered yet.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {equipment.map((b) => {
             const overdue = b.payload.next_maintenance && b.payload.next_maintenance < today;
             return (
-              <Card key={b.payload.name} className={overdue ? 'border-amber-300 bg-amber-50' : ''}>
+              <Card key={b.payload.name} className={overdue ? 'border-amber-300 bg-amber-500/10' : ''}>
                 <CardContent className="pt-3 pb-3">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium">{b.payload.name}</p>
                     {overdue && <AlertTriangle className="h-4 w-4 text-amber-600" />}
                   </div>
-                  <p className="text-[11px] text-gray-400">{b.payload.type}</p>
+                  <p className="text-[11px] text-text-muted">{b.payload.type}</p>
                   {b.payload.next_maintenance && (
-                    <p className={`text-xs mt-1 ${overdue ? 'text-amber-700 font-medium' : 'text-gray-500'}`}>
+                    <p className={`text-xs mt-1 ${overdue ? 'text-amber-400 font-medium' : 'text-text-secondary'}`}>
                       Next service: {new Date(b.payload.next_maintenance).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       {overdue ? ' — overdue' : ''}
                     </p>

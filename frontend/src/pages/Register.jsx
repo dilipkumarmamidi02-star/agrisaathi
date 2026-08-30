@@ -80,15 +80,15 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create your AgriSaathi account</h1>
-        <p className="text-sm text-gray-500 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-surface-hover px-4 py-10">
+      <div className="w-full max-w-md bg-surface rounded-2xl shadow-sm border border-border p-6">
+        <h1 className="text-2xl font-bold text-text-primary mb-1">Create your AgriSaathi account</h1>
+        <p className="text-sm text-text-secondary mb-6">
           Step {step} of 2 — {step === 1 ? 'account details' : 'language & land details'}
         </p>
 
         {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3">
+          <div className="mb-4 bg-red-500/10 border border-red-200 text-red-400 text-sm rounded-lg p-3">
             {error}
           </div>
         )}
@@ -96,33 +96,33 @@ export default function Register() {
         {step === 1 && (
           <form onSubmit={handleAccountSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+              <label className="block text-sm font-medium text-text-primary mb-1">Full name</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={update('name')}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
               <input
                 type="email"
                 value={form.email}
                 onChange={update('email')}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-text-primary mb-1">Password</label>
               <input
                 type="password"
                 value={form.password}
                 onChange={update('password')}
                 minLength={6}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
                 required
               />
             </div>
@@ -138,11 +138,11 @@ export default function Register() {
         {step === 2 && (
           <form onSubmit={handleFinalSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Preferred language</label>
+              <label className="block text-sm font-medium text-text-primary mb-1">Preferred language</label>
               <select
                 value={form.language}
                 onChange={update('language')}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
               >
                 {LANGUAGES.map((l) => (
                   <option key={l.code} value={l.code}>{l.label}</option>
@@ -154,27 +154,27 @@ export default function Register() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Land size (acres)</label>
+                <label className="block text-sm font-medium text-text-primary mb-1">Land size (acres)</label>
                 <input
                   type="number"
                   step="0.1"
                   value={form.landSizeAcres}
                   onChange={update('landSizeAcres')}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Primary crop</label>
+                <label className="block text-sm font-medium text-text-primary mb-1">Primary crop</label>
                 <input
                   type="text"
                   value={form.primaryCrop}
                   onChange={update('primaryCrop')}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
                 />
               </div>
             </div>
 
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-text-muted">
               You can change any of these later from Profile Settings.
             </p>
 
@@ -182,7 +182,7 @@ export default function Register() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 border border-gray-300 text-gray-700 font-medium py-2.5 rounded-lg text-sm"
+                className="flex-1 border border-border-strong text-text-primary font-medium py-2.5 rounded-lg text-sm"
               >
                 Back
               </button>
@@ -197,9 +197,9 @@ export default function Register() {
           </form>
         )}
 
-        <p className="text-sm text-gray-500 text-center mt-6">
+        <p className="text-sm text-text-secondary text-center mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-green-700 font-medium">Sign in</Link>
+          <Link to="/login" className="text-mint font-medium">Sign in</Link>
         </p>
       </div>
     </div>

@@ -64,7 +64,7 @@ export default function CommunityForum() {
   if (view === 'detail' && active) {
     return (
       <div>
-        <button onClick={() => { setView('list'); setActive(null); }} className="flex items-center gap-2 text-sm text-green-700 mb-3">
+        <button onClick={() => { setView('list'); setActive(null); }} className="flex items-center gap-2 text-sm text-mint mb-3">
           <ArrowLeft className="h-4 w-4" /> {t('backToForum')}
         </button>
         <Card className="mb-4"><CardContent className="pt-4 space-y-2">
@@ -72,20 +72,20 @@ export default function CommunityForum() {
             <h2 className="font-bold text-base">{active.title}</h2>
             <Badge variant="secondary">{active.category}</Badge>
           </div>
-          <p className="text-xs text-gray-400">{active.author_name} · {new Date(active.created_date).toLocaleDateString('en-IN')}</p>
-          <p className="text-sm text-gray-700">{active.body}</p>
+          <p className="text-xs text-text-muted">{active.author_name} · {new Date(active.created_date).toLocaleDateString('en-IN')}</p>
+          <p className="text-sm text-text-primary">{active.body}</p>
           <Button size="sm" variant="ghost" onClick={() => upvote(active)}><ThumbsUp className="h-3 w-3 mr-1" />{active.upvotes || 0}</Button>
         </CardContent></Card>
 
-        <h3 className="text-sm font-semibold text-gray-500 mb-2">{t('replies')} ({(active.replies || []).length})</h3>
+        <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('replies')} ({(active.replies || []).length})</h3>
         <div className="space-y-2 mb-3">
           {(active.replies || []).map((r, i) => (
             <Card key={i}><CardContent className="pt-3">
-              <p className="text-xs text-gray-400 mb-0.5">{r.author_name} · {new Date(r.ts).toLocaleDateString('en-IN')}</p>
-              <p className="text-sm text-gray-700">{r.body}</p>
+              <p className="text-xs text-text-muted mb-0.5">{r.author_name} · {new Date(r.ts).toLocaleDateString('en-IN')}</p>
+              <p className="text-sm text-text-primary">{r.body}</p>
             </CardContent></Card>
           ))}
-          {(active.replies || []).length === 0 && <p className="text-xs text-gray-400">{t('noReplies')}</p>}
+          {(active.replies || []).length === 0 && <p className="text-xs text-text-muted">{t('noReplies')}</p>}
         </div>
 
         <div className="flex gap-2">
@@ -99,7 +99,7 @@ export default function CommunityForum() {
   if (view === 'new') {
     return (
       <div>
-        <button onClick={() => setView('list')} className="flex items-center gap-2 text-sm text-green-700 mb-3">
+        <button onClick={() => setView('list')} className="flex items-center gap-2 text-sm text-mint mb-3">
           <ArrowLeft className="h-4 w-4" /> {t('backToForum')}
         </button>
         <Card><CardContent className="pt-4 space-y-3">
@@ -107,7 +107,7 @@ export default function CommunityForum() {
           <div><Label className="mb-1 block">{t('category')}</Label>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map((c) => (
-                <button key={c} onClick={() => setForm({ ...form, category: c })} className={`px-2.5 py-1 rounded-full text-xs ${form.category === c ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600'}`}>{c}</button>
+                <button key={c} onClick={() => setForm({ ...form, category: c })} className={`px-2.5 py-1 rounded-full text-xs ${form.category === c ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>{c}</button>
               ))}
             </div>
           </div>
@@ -121,25 +121,25 @@ export default function CommunityForum() {
   return (
     <div>
       <PageHeader titleKey="communityForum" icon={MessageSquare} />
-      <p className="text-xs text-gray-500 mb-3">{t('forumIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('forumIntro')}</p>
 
       <Button onClick={() => setView('new')} className="w-full mb-3 bg-green-600 hover:bg-green-700">
         <Plus className="h-4 w-4" /> {t('newPost')}
       </Button>
 
       {posts.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-gray-400">{t('noPosts')}</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">{t('noPosts')}</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {posts.map((p) => (
-            <Card key={p.id} className="cursor-pointer hover:border-green-300" onClick={() => { setActive(p); setView('detail'); }}>
+            <Card key={p.id} className="cursor-pointer hover:border-mint/40" onClick={() => { setActive(p); setView('detail'); }}>
               <CardContent className="pt-3 pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-semibold text-sm leading-tight">{p.title}</h3>
                   <Badge variant="secondary">{p.category}</Badge>
                 </div>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">{p.body}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+                <p className="text-xs text-text-secondary mt-1 line-clamp-2">{p.body}</p>
+                <div className="flex items-center gap-3 mt-2 text-xs text-text-muted">
                   <span>{p.author_name}</span>
                   <span className="flex items-center gap-0.5"><ThumbsUp className="h-3 w-3" />{p.upvotes || 0}</span>
                   <span className="flex items-center gap-0.5"><MessageSquare className="h-3 w-3" />{(p.replies || []).length}</span>

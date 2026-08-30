@@ -138,14 +138,14 @@ export default function WeatherAnalytics() {
       </div>
 
       {loading && (
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-text-muted">
           Loading weather analytics…
         </p>
       )}
 
       {error && (
-        <Card className="border-red-200 bg-red-50 mb-3">
-          <CardContent className="pt-4 text-sm text-red-700">
+        <Card className="border-red-200 bg-red-500/10 mb-3">
+          <CardContent className="pt-4 text-sm text-red-400">
             {error}
           </CardContent>
         </Card>
@@ -156,7 +156,7 @@ export default function WeatherAnalytics() {
           <Card className="mb-3">
             <CardContent className="pt-4">
 
-              <p className="text-xs text-gray-500 flex items-center gap-1">
+              <p className="text-xs text-text-secondary flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
                 {current.location ||
                   'Your location'}
@@ -173,7 +173,7 @@ export default function WeatherAnalytics() {
                     )}°C
                   </p>
 
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[11px] text-text-muted">
                     Temperature
                   </p>
                 </div>
@@ -185,7 +185,7 @@ export default function WeatherAnalytics() {
                     {current.humidity ?? '—'}%
                   </p>
 
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[11px] text-text-muted">
                     Humidity
                   </p>
                 </div>
@@ -197,7 +197,7 @@ export default function WeatherAnalytics() {
                     {current.wind_speed ?? '—'}
                   </p>
 
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[11px] text-text-muted">
                     Wind m/s
                   </p>
                 </div>
@@ -215,7 +215,7 @@ export default function WeatherAnalytics() {
                   5-day forecast
                 </p>
 
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-text-secondary">
                   {highRainDays} high-rain day
                   {highRainDays === 1 ? '' : 's'}
                 </span>
@@ -233,7 +233,7 @@ export default function WeatherAnalytics() {
                         {day.date}
                       </p>
 
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-text-secondary">
                         {day.description}
                       </p>
                     </div>

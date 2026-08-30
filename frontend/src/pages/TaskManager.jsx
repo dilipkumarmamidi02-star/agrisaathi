@@ -12,13 +12,13 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import PageHeader from '../components/PageHeader';
 
 const CATEGORIES = [
-  { value: 'planting', label: 'Planting', color: 'bg-green-100 text-green-700' },
-  { value: 'weeding', label: 'Weeding', color: 'bg-amber-100 text-amber-700' },
+  { value: 'planting', label: 'Planting', color: 'bg-mint/20 text-mint' },
+  { value: 'weeding', label: 'Weeding', color: 'bg-amber-100 text-amber-400' },
   { value: 'feeding', label: 'Feeding', color: 'bg-rose-100 text-rose-700' },
   { value: 'irrigation', label: 'Irrigation', color: 'bg-cyan-100 text-cyan-700' },
   { value: 'harvest', label: 'Harvest', color: 'bg-orange-100 text-orange-700' },
-  { value: 'maintenance', label: 'Maintenance', color: 'bg-blue-100 text-blue-700' },
-  { value: 'other', label: 'Other', color: 'bg-gray-100 text-gray-700' },
+  { value: 'maintenance', label: 'Maintenance', color: 'bg-blue-100 text-cyan-400' },
+  { value: 'other', label: 'Other', color: 'bg-surface-hover text-text-primary' },
 ];
 const meta = (v) => CATEGORIES.find((c) => c.value === v) || CATEGORIES[6];
 const today = new Date().toISOString().slice(0, 10);
@@ -56,11 +56,11 @@ export default function TaskManager() {
   return (
     <div>
       <PageHeader titleKey="taskManager" icon={ListTodo} />
-      <p className="text-xs text-gray-500 mb-3">{t('taskManagerIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('taskManagerIntro')}</p>
 
       <div className="space-y-2 mb-4">
         {sorted.length === 0 ? (
-          <p className="text-sm text-gray-400">{t('noTasks')}</p>
+          <p className="text-sm text-text-muted">{t('noTasks')}</p>
         ) : sorted.map((task) => {
           const m = meta(task.category);
           const d = task.due_date ? daysUntil(task.due_date) : null;
@@ -72,15 +72,15 @@ export default function TaskManager() {
                   {task.status === 'done' ? <CheckCircle2 className="h-5 w-5 text-green-600" /> : <Circle className="h-5 w-5 text-gray-300" />}
                 </button>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium ${task.status === 'done' ? 'line-through text-gray-400' : ''}`}>{task.title}</p>
+                  <p className={`text-sm font-medium ${task.status === 'done' ? 'line-through text-text-muted' : ''}`}>{task.title}</p>
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     <Badge className={m.color}>{m.label}</Badge>
-                    {task.priority === 'high' && <Badge className="bg-red-100 text-red-700">{t('highPriority')}</Badge>}
+                    {task.priority === 'high' && <Badge className="bg-red-100 text-red-400">{t('highPriority')}</Badge>}
                     {task.plot_name && <Badge variant="outline">{task.plot_name}</Badge>}
-                    {d != null && !overdue && task.status !== 'done' && <Badge className={d <= 2 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}>{d === 0 ? t('today') : `${d} ${t('daysLeft')}`}</Badge>}
-                    {overdue && <Badge className="bg-red-100 text-red-700 flex items-center gap-1"><AlertCircle className="h-3 w-3" />{t('overdue')}</Badge>}
+                    {d != null && !overdue && task.status !== 'done' && <Badge className={d <= 2 ? 'bg-amber-100 text-amber-400' : 'bg-surface-hover text-text-secondary'}>{d === 0 ? t('today') : `${d} ${t('daysLeft')}`}</Badge>}
+                    {overdue && <Badge className="bg-red-100 text-red-400 flex items-center gap-1"><AlertCircle className="h-3 w-3" />{t('overdue')}</Badge>}
                   </div>
-                  {task.notes && <p className="text-xs text-gray-500 mt-1">{task.notes}</p>}
+                  {task.notes && <p className="text-xs text-text-secondary mt-1">{task.notes}</p>}
                 </div>
                 <button onClick={() => remove(task.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
               </div>
@@ -120,7 +120,7 @@ export default function TaskManager() {
           </div>
         </CardContent></Card>
       ) : (
-        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-green-300 text-green-700"><Plus className="h-4 w-4 mr-1" />{t('addTask')}</Button>
+        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-mint/40 text-mint"><Plus className="h-4 w-4 mr-1" />{t('addTask')}</Button>
       )}
     </div>
   );

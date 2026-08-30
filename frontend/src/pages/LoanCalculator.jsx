@@ -40,7 +40,7 @@ export default function LoanCalculator() {
   return (
     <div>
       <PageHeader titleKey="loanCalculator" icon={Calculator} />
-      <p className="text-xs text-gray-500 mb-3">{t('loanCalcIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('loanCalcIntro')}</p>
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">
         <div><Label className="mb-1 block text-xs">{t('loanAmount')} (₹)</Label><Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} /></div>
@@ -51,23 +51,23 @@ export default function LoanCalculator() {
       </CardContent></Card>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-green-50 border-green-100"><CardContent className="pt-3 text-center">
-          <div className="text-base font-bold text-green-700">{fmt(emi)}</div>
-          <div className="text-[10px] text-gray-500">{t('monthlyEmi')}</div>
+        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+          <div className="text-base font-bold text-mint">{fmt(emi)}</div>
+          <div className="text-[10px] text-text-secondary">{t('monthlyEmi')}</div>
         </CardContent></Card>
-        <Card className="bg-amber-50 border-amber-100"><CardContent className="pt-3 text-center">
-          <div className="text-base font-bold text-amber-700">{fmt(totalInterest)}</div>
-          <div className="text-[10px] text-gray-500">{t('totalInterest')}</div>
+        <Card className="bg-amber-500/10 border-amber-100"><CardContent className="pt-3 text-center">
+          <div className="text-base font-bold text-amber-400">{fmt(totalInterest)}</div>
+          <div className="text-[10px] text-text-secondary">{t('totalInterest')}</div>
         </CardContent></Card>
-        <Card className="bg-blue-50 border-blue-100"><CardContent className="pt-3 text-center">
-          <div className="text-base font-bold text-blue-700">{fmt(totalPayable)}</div>
-          <div className="text-[10px] text-gray-500">{t('totalPayable')}</div>
+        <Card className="bg-cyan-500/10 border-blue-100"><CardContent className="pt-3 text-center">
+          <div className="text-base font-bold text-cyan-400">{fmt(totalPayable)}</div>
+          <div className="text-[10px] text-text-secondary">{t('totalPayable')}</div>
         </CardContent></Card>
       </div>
 
       {schedule.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-600" />{t('repaymentSchedule')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-600" />{t('repaymentSchedule')}</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={schedule} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
@@ -83,7 +83,7 @@ export default function LoanCalculator() {
           </div>
         </CardContent></Card>
       )}
-      <p className="text-[11px] text-gray-400">{t('loanCalcDisclaimer')}</p>
+      <p className="text-[11px] text-text-muted">{t('loanCalcDisclaimer')}</p>
     </div>
   );
 }

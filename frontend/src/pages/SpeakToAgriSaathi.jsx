@@ -229,14 +229,14 @@ export default function SpeakToAgriSaathi() {
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-10 text-center">
-      <h1 className="text-2xl font-bold text-gray-900 mb-1">Speak to AgriSaathi</h1>
-      <p className="text-gray-500 mb-6">Tap and speak your problem</p>
+      <h1 className="text-2xl font-bold text-text-primary mb-1">Speak to AgriSaathi</h1>
+      <p className="text-text-secondary mb-6">Tap and speak your problem</p>
 
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
         disabled={isBusy}
-        className="mb-8 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+        className="mb-8 border border-border-strong rounded-lg px-3 py-2 text-sm"
       >
         {VOICE_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>{lang.label}</option>
@@ -247,13 +247,13 @@ export default function SpeakToAgriSaathi() {
         onClick={state === STATES.LISTENING ? stopListening : startListening}
         disabled={isBusy && state !== STATES.LISTENING}
         className={`w-28 h-28 rounded-full flex items-center justify-center text-white text-lg font-semibold shadow-lg transition-colors
-          ${state === STATES.LISTENING ? 'bg-red-500 animate-pulse' : 'bg-green-600 hover:bg-green-700'}
+          ${state === STATES.LISTENING ? 'bg-red-500/100 animate-pulse' : 'bg-green-600 hover:bg-green-700'}
           ${isBusy && state !== STATES.LISTENING ? 'opacity-60 cursor-not-allowed' : ''}`}
       >
         {state === STATES.LISTENING ? 'Stop' : '🎤'}
       </button>
 
-      <p className="mt-4 text-sm text-gray-500">
+      <p className="mt-4 text-sm text-text-secondary">
         {state === STATES.IDLE && 'Tap to speak'}
         {state === STATES.LISTENING && 'Listening…'}
         {state === STATES.TRANSCRIBING && 'Transcribing…'}
@@ -264,30 +264,30 @@ export default function SpeakToAgriSaathi() {
       </p>
 
       {transcript && (
-        <div className="mt-8 w-full max-w-lg bg-gray-50 border border-gray-200 rounded-lg p-4 text-left">
-          <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">You said</p>
-          <p className="text-gray-800">{transcript}</p>
+        <div className="mt-8 w-full max-w-lg bg-surface-hover border border-border rounded-lg p-4 text-left">
+          <p className="text-xs uppercase tracking-wide text-text-muted mb-1">You said</p>
+          <p className="text-text-primary">{transcript}</p>
         </div>
       )}
 
       {state === STATES.ERROR && (
-        <div className="mt-6 w-full max-w-lg bg-red-50 border border-red-200 rounded-lg p-4 text-left">
-          <p className="text-red-700 text-sm">{errorMessage}</p>
-          <button onClick={retry} className="mt-3 text-sm font-medium text-red-700 underline">
+        <div className="mt-6 w-full max-w-lg bg-red-500/10 border border-red-200 rounded-lg p-4 text-left">
+          <p className="text-red-400 text-sm">{errorMessage}</p>
+          <button onClick={retry} className="mt-3 text-sm font-medium text-red-400 underline">
             Retry
           </button>
         </div>
       )}
 
       {responseText && state === STATES.RESPONDING && (
-        <div className="mt-6 w-full max-w-lg bg-white border border-gray-200 rounded-lg p-4 text-left shadow-sm">
+        <div className="mt-6 w-full max-w-lg bg-surface border border-border rounded-lg p-4 text-left shadow-sm">
           <p className="text-xs uppercase tracking-wide text-amber-600 mb-1">
             {matchedRecords.length > 0 ? 'Historical KCC Reference' : 'No Verified Match'}
           </p>
-          <p className="text-gray-800 mb-3">{responseText}</p>
+          <p className="text-text-primary mb-3">{responseText}</p>
 
           {matchedRecords.length > 0 && (
-            <div className="text-xs text-gray-400 border-t border-gray-100 pt-2 space-y-1">
+            <div className="text-xs text-text-muted border-t border-border pt-2 space-y-1">
               <p>Source: Data.gov.in — Kisan Call Centre (KCC) transcripts</p>
               <p>resource_id: cef25fe2-9231-4128-8aec-2c948fedd43f</p>
               <p>Status: Historical — not a current recommendation</p>
@@ -297,11 +297,11 @@ export default function SpeakToAgriSaathi() {
           <div className="mt-3 flex gap-3">
             <button
               onClick={() => speak(responseText)}
-              className="text-sm font-medium text-green-700 underline"
+              className="text-sm font-medium text-mint underline"
             >
               🔊 Speak answer
             </button>
-            <button onClick={retry} className="text-sm font-medium text-gray-500 underline">
+            <button onClick={retry} className="text-sm font-medium text-text-secondary underline">
               Ask another question
             </button>
           </div>

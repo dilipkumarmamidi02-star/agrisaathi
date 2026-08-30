@@ -78,15 +78,15 @@ export default function SensorHub() {
   return (
     <div>
       <PageHeader titleKey="sensorHub" icon={Activity} />
-      <p className="text-xs text-gray-500 mb-3">{t('sensorHubIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('sensorHubIntro')}</p>
 
       {latest && (
         <Card className="mb-4 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200"><CardContent className="pt-4">
           <h3 className="text-sm font-semibold text-cyan-800 flex items-center gap-1.5 mb-2"><Radio className="h-4 w-4 animate-pulse" />{t('latestReading')}</h3>
           <div className="grid grid-cols-4 gap-2 text-center">
             {[['pH', latest.soil_ph], ['Moisture', latest.soil_moisture], ['EC', latest.soil_ec], ['N', latest.soil_nitrogen]].map(([k, v]) => (
-              <div key={k} className="bg-white rounded-lg p-2">
-                <div className="text-[10px] text-gray-400">{k}</div>
+              <div key={k} className="bg-surface rounded-lg p-2">
+                <div className="text-[10px] text-text-muted">{k}</div>
                 <div className="text-sm font-bold text-cyan-700">{v ?? '—'}</div>
               </div>
             ))}
@@ -96,7 +96,7 @@ export default function SensorHub() {
 
       {trendData.length >= 2 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5 mb-2">{t('sensorTrend')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2">{t('sensorTrend')}</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
@@ -117,12 +117,12 @@ export default function SensorHub() {
 
       <div className="space-y-2 mb-4">
         {readings.length === 0 ? (
-          <p className="text-sm text-gray-400">{t('noReadings')}</p>
+          <p className="text-sm text-text-muted">{t('noReadings')}</p>
         ) : readings.map((r) => (
           <Card key={r.id}><CardContent className="pt-3 flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-400">{r.test_date}</p>
-              <p className="text-xs text-gray-600">pH {r.soil_ph ?? '—'} · Moisture {r.soil_moisture ?? '—'} · EC {r.soil_ec ?? '—'} · N {r.soil_nitrogen ?? '—'}</p>
+              <p className="text-xs text-text-muted">{r.test_date}</p>
+              <p className="text-xs text-text-secondary">pH {r.soil_ph ?? '—'} · Moisture {r.soil_moisture ?? '—'} · EC {r.soil_ec ?? '—'} · N {r.soil_nitrogen ?? '—'}</p>
             </div>
             <button onClick={() => remove(r.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
           </CardContent></Card>

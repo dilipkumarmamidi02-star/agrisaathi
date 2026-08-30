@@ -9,10 +9,10 @@ import PageHeader from '../components/PageHeader';
 const WMO = {
   0: { label: 'Clear', icon: Sun, color: 'text-amber-500' },
   1: { label: 'Mainly clear', icon: Sun, color: 'text-amber-500' },
-  2: { label: 'Partly cloudy', icon: Cloud, color: 'text-gray-400' },
-  3: { label: 'Overcast', icon: Cloud, color: 'text-gray-400' },
-  45: { label: 'Fog', icon: Cloud, color: 'text-gray-400' },
-  48: { label: 'Rime fog', icon: Cloud, color: 'text-gray-400' },
+  2: { label: 'Partly cloudy', icon: Cloud, color: 'text-text-muted' },
+  3: { label: 'Overcast', icon: Cloud, color: 'text-text-muted' },
+  45: { label: 'Fog', icon: Cloud, color: 'text-text-muted' },
+  48: { label: 'Rime fog', icon: Cloud, color: 'text-text-muted' },
   51: { label: 'Light drizzle', icon: CloudRain, color: 'text-blue-400' },
   53: { label: 'Drizzle', icon: CloudRain, color: 'text-blue-400' },
   55: { label: 'Heavy drizzle', icon: CloudRain, color: 'text-blue-500' },
@@ -24,7 +24,7 @@ const WMO = {
   75: { label: 'Heavy snow', icon: Cloud, color: 'text-cyan-600' },
   80: { label: 'Rain showers', icon: CloudRain, color: 'text-blue-500' },
   81: { label: 'Heavy showers', icon: CloudRain, color: 'text-blue-600' },
-  82: { label: 'Violent showers', icon: CloudRain, color: 'text-blue-700' },
+  82: { label: 'Violent showers', icon: CloudRain, color: 'text-cyan-400' },
   95: { label: 'Thunderstorm', icon: AlertTriangle, color: 'text-red-500' },
   96: { label: 'Thunderstorm + hail', icon: AlertTriangle, color: 'text-red-600' },
   99: { label: 'Severe thunderstorm', icon: AlertTriangle, color: 'text-red-600' },
@@ -73,14 +73,14 @@ export default function WeatherAlerts() {
   return (
     <div>
       <PageHeader titleKey="weatherAlerts" icon={CloudRain} />
-      <p className="text-xs text-gray-500 mb-3">{t('weatherAlertsIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('weatherAlertsIntro')}</p>
 
       <Button onClick={fetchWeather} variant="outline" size="sm" className="mb-3"><Navigation className="h-3 w-3 mr-1" />{t('refresh')}</Button>
 
       {plantedCrops.length > 0 && (
-        <Card className="mb-3 bg-green-50 border-green-200"><CardContent className="pt-3">
-          <p className="text-xs font-semibold text-green-700 mb-1">{t('currentlyPlanted')}</p>
-          <div className="flex flex-wrap gap-1.5">{plantedCrops.map((c, i) => <Badge key={i} className="bg-green-100 text-green-700">{c}</Badge>)}</div>
+        <Card className="mb-3 bg-mint/10 border-green-200"><CardContent className="pt-3">
+          <p className="text-xs font-semibold text-mint mb-1">{t('currentlyPlanted')}</p>
+          <div className="flex flex-wrap gap-1.5">{plantedCrops.map((c, i) => <Badge key={i} className="bg-mint/20 text-mint">{c}</Badge>)}</div>
         </CardContent></Card>
       )}
 
@@ -88,24 +88,24 @@ export default function WeatherAlerts() {
       {error && <Card><CardContent className="pt-6 text-center text-sm text-red-500">{error}</CardContent></Card>}
 
       {extremes.length > 0 && (
-        <Card className="mb-3 border-red-200 bg-red-50"><CardContent className="pt-3 space-y-2">
-          <h3 className="text-sm font-bold text-red-700 flex items-center gap-1.5"><AlertTriangle className="h-4 w-4" />{t('extremeAlerts')}</h3>
+        <Card className="mb-3 border-red-200 bg-red-500/10"><CardContent className="pt-3 space-y-2">
+          <h3 className="text-sm font-bold text-red-400 flex items-center gap-1.5"><AlertTriangle className="h-4 w-4" />{t('extremeAlerts')}</h3>
           {extremes.map((d, i) => (
-            <div key={i} className="bg-white rounded-lg p-2">
+            <div key={i} className="bg-surface rounded-lg p-2">
               <p className="text-xs font-semibold text-red-600">{new Date(d.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
               {d.alerts.map((a, j) => <p key={j} className="text-xs text-red-600">• {a}</p>)}
             </div>
           ))}
-          {cropImpact && <div className="bg-amber-50 rounded-lg p-2 text-xs text-amber-700 border border-amber-200">{cropImpact}</div>}
+          {cropImpact && <div className="bg-amber-500/10 rounded-lg p-2 text-xs text-amber-400 border border-amber-200">{cropImpact}</div>}
         </CardContent></Card>
       )}
 
       {forecast && !loading && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-500 mb-2">{t('fiveDayForecast')}</h3>
+          <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('fiveDayForecast')}</h3>
           <div className="space-y-2">
             {days.map((d, i) => {
-              const w = WMO[forecast.weather_code[i]] || { label: '—', icon: Cloud, color: 'text-gray-400' };
+              const w = WMO[forecast.weather_code[i]] || { label: '—', icon: Cloud, color: 'text-text-muted' };
               const Icon = w.icon;
               return (
                 <Card key={d}><CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
@@ -113,11 +113,11 @@ export default function WeatherAlerts() {
                     <Icon className={`h-7 w-7 ${w.color}`} />
                     <div>
                       <p className="text-sm font-medium">{new Date(d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' })}</p>
-                      <p className="text-xs text-gray-500">{w.label}</p>
+                      <p className="text-xs text-text-secondary">{w.label}</p>
                     </div>
                   </div>
-                  <div className="text-right text-xs text-gray-500 space-y-0.5">
-                    <p className="text-sm font-semibold text-gray-700">{Math.round(forecast.temperature_2m_max?.[i])}° / {Math.round(forecast.temperature_2m_min?.[i])}°</p>
+                  <div className="text-right text-xs text-text-secondary space-y-0.5">
+                    <p className="text-sm font-semibold text-text-primary">{Math.round(forecast.temperature_2m_max?.[i])}° / {Math.round(forecast.temperature_2m_min?.[i])}°</p>
                     <p className="flex items-center justify-end gap-1"><Droplets className="h-3 w-3 text-blue-400" />{(forecast.precipitation_sum?.[i] || 0).toFixed(1)}mm</p>
                     <p className="flex items-center justify-end gap-1"><Wind className="h-3 w-3" />{Math.round(forecast.wind_speed_10m_max?.[i] || 0)}km/h</p>
                   </div>

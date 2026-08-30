@@ -876,15 +876,15 @@ export default function SoilPassport() {
         <CardContent className="pt-4">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div>
-              <h2 className="text-base font-semibold text-gray-800">
+              <h2 className="text-base font-semibold text-text-primary">
                 Soil intelligence by location
               </h2>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-text-secondary">
                 Use your location or select State and District to filter government soil-moisture observations.
               </p>
             </div>
 
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-mint/20 text-mint">
               Data.gov.in
             </Badge>
           </div>
@@ -898,13 +898,13 @@ export default function SoilPassport() {
           </Button>
 
           {detectedLocation && (
-            <p className="text-[10px] text-gray-400 mb-2">
+            <p className="text-[10px] text-text-muted mb-2">
               Coordinates detected: {detectedLocation}
             </p>
           )}
 
           {locationMessage && (
-            <p className="text-xs text-gray-500 mb-3">
+            <p className="text-xs text-text-secondary mb-3">
               {locationMessage}
             </p>
           )}
@@ -983,30 +983,30 @@ export default function SoilPassport() {
         <CardContent className="pt-4">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h3 className="text-sm font-semibold text-gray-700">
+              <h3 className="text-sm font-semibold text-text-primary">
                 Government Soil Moisture
               </h3>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-muted">
                 Daily soil-moisture observations at 15 cm depth.
               </p>
             </div>
 
-            <Badge className="bg-amber-100 text-amber-700">
+            <Badge className="bg-amber-100 text-amber-400">
               HISTORICAL
             </Badge>
           </div>
 
           {loadingGovernment && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-text-muted">
               Loading government observations...
             </p>
           )}
 
           {!loadingGovernment &&
             governmentError && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-xs text-red-700">
+              <div className="bg-red-500/10 border border-red-200 rounded-lg p-3">
+                <p className="text-xs text-red-400">
                   {governmentError}
                 </p>
               </div>
@@ -1015,8 +1015,8 @@ export default function SoilPassport() {
           {!loadingGovernment &&
             !governmentError &&
             !filteredGovernmentRecords.length && (
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                <p className="text-xs text-amber-700">
+              <div className="bg-amber-500/10 border border-amber-200 rounded-lg p-3">
+                <p className="text-xs text-amber-400">
                   {selectedState
                     ? `No government soil-moisture observation was found for ${selectedState}${selectedDistrict ? ` / ${selectedDistrict}` : ''} in the loaded historical dataset.`
                     : 'Select a State and District to view matching government soil-moisture observations.'}
@@ -1027,13 +1027,13 @@ export default function SoilPassport() {
           {!loadingGovernment &&
             !governmentError &&
             latestGovernmentRecord && (
-              <div className="border border-gray-100 rounded-lg p-3">
+              <div className="border border-border rounded-lg p-3">
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="bg-blue-50 rounded-lg p-2">
-                    <p className="text-[10px] text-gray-400">
+                  <div className="bg-cyan-500/10 rounded-lg p-2">
+                    <p className="text-[10px] text-text-muted">
                       Moisture at 15 cm
                     </p>
-                    <p className="text-lg font-semibold text-blue-700">
+                    <p className="text-lg font-semibold text-cyan-400">
                       {Number(
                         latestGovernmentRecord?.Avg_smlvl_at15cm ??
                         latestGovernmentRecord?.avg_smlvl_at15cm ??
@@ -1047,8 +1047,8 @@ export default function SoilPassport() {
                     </p>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-2">
-                    <p className="text-[10px] text-gray-400">
+                  <div className="bg-surface-hover rounded-lg p-2">
+                    <p className="text-[10px] text-text-muted">
                       Observation Date
                     </p>
                     <p className="text-sm font-medium">
@@ -1059,9 +1059,9 @@ export default function SoilPassport() {
                   </div>
                 </div>
 
-                <div className="mt-2 text-xs text-gray-500">
+                <div className="mt-2 text-xs text-text-secondary">
                   <p>
-                    <span className="text-gray-400">
+                    <span className="text-text-muted">
                       State:
                     </span>{' '}
                     {latestGovernmentRecord?.State ??
@@ -1070,7 +1070,7 @@ export default function SoilPassport() {
                   </p>
 
                   <p>
-                    <span className="text-gray-400">
+                    <span className="text-text-muted">
                       District:
                     </span>{' '}
                     {latestGovernmentRecord?.District ??
@@ -1079,7 +1079,7 @@ export default function SoilPassport() {
                   </p>
 
                   <p>
-                    <span className="text-gray-400">
+                    <span className="text-text-muted">
                       Agency:
                     </span>{' '}
                     {latestGovernmentRecord?.Agency_name ??
@@ -1100,30 +1100,30 @@ export default function SoilPassport() {
         <CardContent className="pt-4">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h3 className="text-sm font-semibold text-gray-700">
+              <h3 className="text-sm font-semibold text-text-primary">
                 Land Utilisation Context
               </h3>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-muted">
                 Government land-use statistics supporting soil and crop planning.
               </p>
             </div>
 
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-mint/20 text-mint">
               CURRENT
             </Badge>
           </div>
 
           {loadingLand && (
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-text-muted">
               Loading land-use statistics...
             </p>
           )}
 
           {!loadingLand &&
             landError && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-xs text-red-700">
+              <div className="bg-red-500/10 border border-red-200 rounded-lg p-3">
+                <p className="text-xs text-red-400">
                   {landError}
                 </p>
               </div>
@@ -1134,7 +1134,7 @@ export default function SoilPassport() {
             latestLandRecord && (
               <>
                 <div className="mb-3">
-                  <p className="text-[10px] text-gray-400">
+                  <p className="text-[10px] text-text-muted">
                     Reporting year
                   </p>
                   <p className="text-sm font-semibold">
@@ -1173,9 +1173,9 @@ export default function SoilPassport() {
                     ([label, value]) => (
                       <div
                         key={label}
-                        className="bg-gray-50 rounded-lg p-2"
+                        className="bg-surface-hover rounded-lg p-2"
                       >
-                        <p className="text-[10px] text-gray-400">
+                        <p className="text-[10px] text-text-muted">
                           {label}
                         </p>
                         <p className="text-sm font-semibold">
@@ -1193,8 +1193,8 @@ export default function SoilPassport() {
                   )}
                 </div>
 
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-2 mt-3">
-                  <p className="text-[10px] text-blue-700">
+                <div className="bg-cyan-500/10 border border-blue-100 rounded-lg p-2 mt-3">
+                  <p className="text-[10px] text-cyan-400">
                     This resource does not return State or District fields. It is therefore shown as government land-use context rather than pretending it is specific to the selected location.
                   </p>
                 </div>
@@ -1210,7 +1210,7 @@ export default function SoilPassport() {
       {soilProfiles.length > 0 && (
         <Card className="border-blue-200">
           <CardContent className="pt-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+            <h3 className="text-sm font-semibold text-text-primary mb-2">
               Government soil reference
             </h3>
 
@@ -1239,7 +1239,7 @@ export default function SoilPassport() {
             {refProfile && (
               <div className="text-sm space-y-1">
                 <p>
-                  <span className="text-gray-400">
+                  <span className="text-text-muted">
                     Dominant soil type:
                   </span>{' '}
                   {refProfile.dominant_soil_type ||
@@ -1247,7 +1247,7 @@ export default function SoilPassport() {
                 </p>
 
                 <p>
-                  <span className="text-gray-400">
+                  <span className="text-text-muted">
                     Typical pH range:
                   </span>{' '}
                   {refProfile.typical_ph_range ||
@@ -1255,7 +1255,7 @@ export default function SoilPassport() {
                 </p>
 
                 <p>
-                  <span className="text-gray-400">
+                  <span className="text-text-muted">
                     Characteristics:
                   </span>{' '}
                   {refProfile.characteristics ||
@@ -1263,7 +1263,7 @@ export default function SoilPassport() {
                 </p>
 
                 <p>
-                  <span className="text-gray-400">
+                  <span className="text-text-muted">
                     Suitable crops:
                   </span>{' '}
                   {refProfile.suitable_crops ||
@@ -1282,18 +1282,18 @@ export default function SoilPassport() {
       <Card>
         <CardContent className="pt-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-700">
+            <h3 className="text-sm font-semibold text-text-primary">
               My Soil Records
             </h3>
 
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-mint/20 text-mint">
               Farmer Data
             </Badge>
           </div>
 
           <div className="space-y-2">
             {records.length === 0 ? (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-text-muted">
                 No soil records yet. Add one or scan a Soil Health Card.
               </p>
             ) : (
@@ -1306,14 +1306,14 @@ export default function SoilPassport() {
                       </p>
 
                       {r.record_hash && (
-                        <Badge className="bg-green-100 text-green-700 flex items-center gap-1">
+                        <Badge className="bg-mint/20 text-mint flex items-center gap-1">
                           <ShieldCheck className="h-3 w-3" />
                           {t('verifiedBadge')}
                         </Badge>
                       )}
                     </div>
 
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-text-muted">
                       {r.test_date ||
                         'No date'}
                       {r.testing_organization
@@ -1332,9 +1332,9 @@ export default function SoilPassport() {
                         ([key, value]) => (
                           <div
                             key={key}
-                            className="bg-gray-50 rounded p-1"
+                            className="bg-surface-hover rounded p-1"
                           >
-                            <div className="text-[10px] text-gray-400">
+                            <div className="text-[10px] text-text-muted">
                               {key}
                             </div>
 
@@ -1347,7 +1347,7 @@ export default function SoilPassport() {
                     </div>
 
                     {r.notes && (
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-text-secondary mt-2">
                         {r.notes}
                       </p>
                     )}
@@ -1366,7 +1366,7 @@ export default function SoilPassport() {
       {plots.length > 0 && (
         <Card>
           <CardContent className="pt-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
+            <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
               <LineChartIcon className="h-4 w-4 text-green-600" />
               {t('soilTrend')}
             </h3>
@@ -1475,7 +1475,7 @@ export default function SoilPassport() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-muted">
                 {t('soilTrendEmpty')}
               </p>
             )}
@@ -1483,7 +1483,7 @@ export default function SoilPassport() {
         </Card>
       )}
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-text-muted">
         ⚠️ {t('blockchainUnavailable')}
       </p>
 
@@ -1496,7 +1496,7 @@ export default function SoilPassport() {
               </Label>
 
               <label className="cursor-pointer">
-                <span className="inline-flex items-center gap-1 text-xs bg-blue-50 text-blue-700 px-2.5 py-1.5 rounded-lg">
+                <span className="inline-flex items-center gap-1 text-xs bg-cyan-500/10 text-cyan-400 px-2.5 py-1.5 rounded-lg">
                   <ScanLine className="h-3.5 w-3.5" />
                   {scanning
                     ? t('loading')
@@ -1639,7 +1639,7 @@ export default function SoilPassport() {
             setShowAdd(true)
           }
           variant="outline"
-          className="w-full border-green-300 text-green-700"
+          className="w-full border-mint/40 text-mint"
         >
           <Plus className="h-4 w-4 mr-1" />
           {t('addSoilRecord')}

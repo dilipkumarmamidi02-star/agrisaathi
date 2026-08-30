@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import heroImage from '../assets/hero.png';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -78,16 +79,15 @@ export default function Login() {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center px-4 py-12 bg-ink overflow-hidden">
-      {/* Placeholder field backdrop — swap for a real photo later by
-          replacing this gradient with a background-image on this div. */}
+      {/* Real farm photo background, with a dark readability overlay so
+          text never fights the image for contrast (WCAG-AA target). */}
       <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(circle at 30% 20%, #1a2a12 0%, #0a0e0a 55%, #05070a 100%)',
-        }}
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImage})` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-ink/70" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/60 via-transparent to-transparent" />
 
       <div className="relative w-full max-w-sm">
         <div className="text-2xl font-display font-bold mb-8">

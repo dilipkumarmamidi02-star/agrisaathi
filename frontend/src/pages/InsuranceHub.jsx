@@ -39,11 +39,11 @@ import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CLAIM_STATUS = {
-  none: { label: 'No claim', color: 'bg-gray-100 text-gray-600' },
-  filed: { label: 'Filed', color: 'bg-amber-100 text-amber-700' },
-  under_review: { label: 'Under review', color: 'bg-blue-100 text-blue-700' },
-  approved: { label: 'Approved', color: 'bg-green-100 text-green-700' },
-  rejected: { label: 'Rejected', color: 'bg-red-100 text-red-700' },
+  none: { label: 'No claim', color: 'bg-surface-hover text-text-secondary' },
+  filed: { label: 'Filed', color: 'bg-amber-100 text-amber-400' },
+  under_review: { label: 'Under review', color: 'bg-blue-100 text-cyan-400' },
+  approved: { label: 'Approved', color: 'bg-mint/20 text-mint' },
+  rejected: { label: 'Rejected', color: 'bg-red-100 text-red-400' },
 };
 
 export default function InsuranceHub() {
@@ -77,22 +77,22 @@ export default function InsuranceHub() {
   return (
     <div>
       <PageHeader titleKey="insuranceHub" icon={ShieldPlus} />
-      <p className="text-xs text-gray-500 mb-3">{t('insuranceIntro')}</p>
+      <p className="text-xs text-text-secondary mb-3">{t('insuranceIntro')}</p>
 
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <Card className="bg-green-50 border-green-100"><CardContent className="pt-3 text-center">
-          <div className="text-2xl font-bold text-green-700">{active.length}</div>
-          <div className="text-[11px] text-gray-500">{t('activePolicies')}</div>
+        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+          <div className="text-2xl font-bold text-mint">{active.length}</div>
+          <div className="text-[11px] text-text-secondary">{t('activePolicies')}</div>
         </CardContent></Card>
-        <Card className="bg-amber-50 border-amber-100"><CardContent className="pt-3 text-center">
-          <div className="text-2xl font-bold text-amber-700">{filedClaims.length}</div>
-          <div className="text-[11px] text-gray-500">{t('filedClaims')}</div>
+        <Card className="bg-amber-500/10 border-amber-100"><CardContent className="pt-3 text-center">
+          <div className="text-2xl font-bold text-amber-400">{filedClaims.length}</div>
+          <div className="text-[11px] text-text-secondary">{t('filedClaims')}</div>
         </CardContent></Card>
       </div>
 
       <div className="space-y-2 mb-4">
         {policies.length === 0 ? (
-          <p className="text-sm text-gray-400">{t('noPolicies')}</p>
+          <p className="text-sm text-text-muted">{t('noPolicies')}</p>
         ) : policies.map((p) => {
           const cs = CLAIM_STATUS[p.claim_status] || CLAIM_STATUS.none;
           return (
@@ -100,7 +100,7 @@ export default function InsuranceHub() {
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
                   <p className="text-sm font-medium truncate">{p.policy_name}</p>
-                  <p className="text-xs text-gray-400">{p.provider}{p.crop_name ? ` · ${p.crop_name}` : ''}{p.plot_name ? ` · ${p.plot_name}` : ''}</p>
+                  <p className="text-xs text-text-muted">{p.provider}{p.crop_name ? ` · ${p.crop_name}` : ''}{p.plot_name ? ` · ${p.plot_name}` : ''}</p>
                 </div>
                 <button onClick={() => remove(p.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
               </div>
@@ -148,7 +148,7 @@ export default function InsuranceHub() {
           </div>
         </CardContent></Card>
       ) : (
-        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-green-300 text-green-700"><Plus className="h-4 w-4 mr-1" />{t('addPolicy')}</Button>
+        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-mint/40 text-mint"><Plus className="h-4 w-4 mr-1" />{t('addPolicy')}</Button>
       )}
       <DataGovFeaturePanel feature="Insurance" />
     </div>

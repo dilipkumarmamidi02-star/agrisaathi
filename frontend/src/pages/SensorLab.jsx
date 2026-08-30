@@ -89,14 +89,14 @@ export default function SensorLab() {
           </div>
           <Button variant="outline" onClick={connectSensor}>{t('connect')}</Button>
         </div>
-        <p className="text-[10px] text-gray-300 mt-2">
+        <p className="text-[10px] text-lt-border mt-2">
           Pairs with compatible Bluetooth soil/water sensors (Web Bluetooth). USB sensors aren't readable in-browser — connect a BLE device or enter readings manually below; all values are saved to your analysis.
         </p>
       </CardContent></Card>
 
       <div className="flex gap-2 mb-3">
-        <button onClick={() => setTab('soil')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'soil' ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>Soil (15)</button>
-        <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>Water (5)</button>
+        <button onClick={() => setTab('soil')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'soil' ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>Soil (15)</button>
+        <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>Water (5)</button>
       </div>
 
       {tab === 'soil' ? (
@@ -117,7 +117,7 @@ export default function SensorLab() {
             <div><p className="text-xs mb-1">{t('organicCarbon')}</p><Input type="number" value={oc} onChange={(e) => setOc(e.target.value)} /></div>
             <div><p className="text-xs mb-1">EC (dS/m)</p><Input type="number" value={soilEc} onChange={(e) => setSoilEc(e.target.value)} /></div>
           </div>
-          <Button onClick={analyzeSoil} className="w-full bg-green-600 hover:bg-green-700 mb-4">{t('analyzeSoil')}</Button>
+          <Button onClick={analyzeSoil} className="w-full bg-lt-primary hover:bg-lt-primary-dark mb-4">{t('analyzeSoil')}</Button>
           {soilError && <p className="text-sm text-red-500 mb-3">{soilError}</p>}
           {soilResult && (
             <Card><CardContent className="pt-4 space-y-2">

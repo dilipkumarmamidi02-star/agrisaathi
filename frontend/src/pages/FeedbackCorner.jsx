@@ -67,7 +67,7 @@ export default function FeedbackCorner() {
 
       {submitted && !showForm && (
         <Card className="mb-3 border-mint/40 bg-mint/10">
-          <CardContent className="pt-3 text-sm text-green-800">Thank you — your feedback was recorded.</CardContent>
+          <CardContent className="pt-3 text-sm text-lt-primary">Thank you — your feedback was recorded.</CardContent>
         </Card>
       )}
 
@@ -85,7 +85,7 @@ export default function FeedbackCorner() {
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button key={n} onClick={() => setRating(n)} aria-label={`${n} star`}>
-                    <Star className={`h-6 w-6 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} />
+                    <Star className={`h-6 w-6 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-lt-border'}`} />
                   </button>
                 ))}
               </div>
@@ -109,7 +109,7 @@ export default function FeedbackCorner() {
               <CardContent className="pt-3 pb-3">
                 <div className="flex items-center gap-1 mb-1">
                   {[1, 2, 3, 4, 5].map((n) => (
-                    <Star key={n} className={`h-3.5 w-3.5 ${n <= (b.payload?.rating || 0) ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
+                    <Star key={n} className={`h-3.5 w-3.5 ${n <= (b.payload?.rating || 0) ? 'fill-amber-400 text-amber-400' : 'text-lt-border'}`} />
                   ))}
                   <span className="text-[11px] text-text-muted ml-2">{new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>

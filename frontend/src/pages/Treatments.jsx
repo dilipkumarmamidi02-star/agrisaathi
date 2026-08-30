@@ -60,11 +60,11 @@ export default function Treatments() {
         <div><Label className="mb-1.5 block">{t('diseasePestIssueLabel')}</Label>
           <Input value={issue} onChange={(e) => setIssue(e.target.value)} placeholder="e.g. powdery mildew, aphids, yellow leaves" />
         </div>
-        <Button onClick={search} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 h-12"><Search className="h-4 w-4 mr-1" />{loading ? t('analyzing') : t('search')}</Button>
+        <Button onClick={search} disabled={loading} className="w-full bg-lt-primary hover:bg-lt-primary-dark h-12"><Search className="h-4 w-4 mr-1" />{loading ? t('analyzing') : t('search')}</Button>
       </div>
 
       {result && (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <h3 className="font-bold">{result.summary}</h3>
           {result.organic_treatment && <div className="bg-mint/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-mint flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
           {result.chemical_treatment && <div className="bg-cyan-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-cyan-400">{t('chemical')}</p><p className="text-sm mt-0.5">{result.chemical_treatment}</p></div>}

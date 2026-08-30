@@ -100,7 +100,7 @@ export default function SuccessStories() {
             <Card key={b.hash}>
               <CardContent className="pt-3 pb-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sprout className="h-4 w-4 text-green-600" />
+                  <Sprout className="h-4 w-4 text-lt-primary" />
                   <p className="text-sm font-medium">{b.payload?.farmer_name} · {b.payload?.crop}</p>
                 </div>
                 <p className="text-xs text-text-secondary">{b.payload?.story}</p>

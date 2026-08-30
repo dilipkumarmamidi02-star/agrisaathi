@@ -110,7 +110,7 @@ export default function FarmNotifications() {
             <Card key={`${b.payload.title}-${b.payload.due_date}`} className={b.payload.done ? 'opacity-50' : ''}>
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <button onClick={() => !b.payload.done && markDone(b.payload.title, b.payload.due_date)} className="flex items-center gap-2 text-left flex-1">
-                  {b.payload.done ? <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" /> : <Circle className="h-5 w-5 text-gray-300 shrink-0" />}
+                  {b.payload.done ? <CheckCircle2 className="h-5 w-5 text-lt-primary shrink-0" /> : <Circle className="h-5 w-5 text-lt-border shrink-0" />}
                   <div>
                     <p className={`text-sm font-medium ${b.payload.done ? 'line-through' : ''}`}>{b.payload.title}</p>
                     <p className="text-[11px] text-text-muted">{new Date(b.payload.due_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>

@@ -94,7 +94,7 @@ export default function LivestockCare() {
                 {l.scheduled_date && <p className="text-xs text-text-muted flex items-center gap-1"><Calendar className="h-3 w-3" />{l.scheduled_date}</p>}
                 {l.notes && <p className="text-xs text-text-secondary mt-0.5">{l.notes}</p>}
               </div>
-              <Button size="sm" onClick={() => markDone(l)} className="bg-green-600 hover:bg-green-700 shrink-0"><Check className="h-4 w-4" /></Button>
+              <Button size="sm" onClick={() => markDone(l)} className="bg-lt-primary hover:bg-lt-primary-dark shrink-0"><Check className="h-4 w-4" /></Button>
             </div>
           </CardContent></Card>
         ))}
@@ -111,7 +111,7 @@ export default function LivestockCare() {
       </div>
 
       {showAdd ? (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <div><Label className="mb-1 block">{t('animalType')}</Label>
             <Select value={form.animal_type} onValueChange={(v) => setForm({ ...form, animal_type: v })}>
               <SelectTrigger><SelectValue placeholder={t('animalType')} /></SelectTrigger>
@@ -128,7 +128,7 @@ export default function LivestockCare() {
           <div><Label className="mb-1 block">{t('scheduledDate')}</Label><Input type="date" value={form.scheduled_date} onChange={(e) => setForm({ ...form, scheduled_date: e.target.value })} /></div>
           <Textarea placeholder={t('notes')} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} />
           <div className="flex gap-2">
-            <Button onClick={add} className="flex-1 bg-green-600 hover:bg-green-700">{t('save')}</Button>
+            <Button onClick={add} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
             <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1">{t('cancel')}</Button>
           </div>
         </CardContent></Card>

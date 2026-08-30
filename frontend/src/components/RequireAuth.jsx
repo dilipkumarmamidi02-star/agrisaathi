@@ -16,7 +16,7 @@ export default function RequireAuth() {
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0a0f0d]">
-        <p className="text-sm font-mono text-green-500 tracking-widest uppercase animate-pulse">
+        <p className="text-sm font-mono text-lt-primary tracking-widest uppercase animate-pulse">
           Checking session…
         </p>
       </div>

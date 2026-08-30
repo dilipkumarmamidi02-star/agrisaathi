@@ -91,7 +91,7 @@ export default function VoiceNotes() {
       <div className="flex flex-col items-center gap-3 mb-4">
         <button
           onClick={recording ? stopRec : startRec}
-          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${recording ? 'bg-red-500/100 animate-pulse scale-105' : 'bg-green-600 hover:bg-green-700'}`}
+          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${recording ? 'bg-red-500/100 animate-pulse scale-105' : 'bg-lt-primary hover:bg-lt-primary-dark'}`}
         >
           {recording ? <Square className="h-10 w-10" /> : <Mic className="h-10 w-10" />}
         </button>
@@ -99,9 +99,9 @@ export default function VoiceNotes() {
       </div>
 
       {(transcript || interim) && (
-        <Card className="mb-4 bg-mint/10 border-green-200"><CardContent className="pt-4">
+        <Card className="mb-4 bg-mint/10 border-lt-primary/20"><CardContent className="pt-4">
           <p className="text-sm text-text-primary">{transcript} <span className="text-text-muted">{interim}</span></p>
-          <Button onClick={save} disabled={saving || !transcript.trim()} className="mt-3 w-full bg-green-600 hover:bg-green-700">
+          <Button onClick={save} disabled={saving || !transcript.trim()} className="mt-3 w-full bg-lt-primary hover:bg-lt-primary-dark">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} {t('saveNote')}
           </Button>
         </CardContent></Card>

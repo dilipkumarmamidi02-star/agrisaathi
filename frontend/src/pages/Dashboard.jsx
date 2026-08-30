@@ -114,7 +114,7 @@ export default function Dashboard() {
       <PageHeader titleKey="dashboard" icon={LayoutGrid} />
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+        <Card className="bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
           <div className="text-2xl font-bold text-mint">{farms.length}</div>
           <div className="text-[11px] text-text-secondary">{t('myPlots')}</div>
         </CardContent></Card>
@@ -132,7 +132,7 @@ export default function Dashboard() {
         <ProfitCalculator />
       </div>
 
-      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-500" />{t('costVsMarket')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-lt-primary" />{t('costVsMarket')}</h3>
       <Card className="mb-4"><CardContent className="pt-4">
         {(() => {
           const totalCost = ledger.filter((e) => e.kind === 'expense').reduce((s, e) => s + (e.amount || 0), 0);
@@ -147,7 +147,7 @@ export default function Dashboard() {
                   <div className="bg-surface-hover rounded-full h-2.5 overflow-hidden"><div className="bg-red-500/100 h-full rounded-full" style={{ width: `${(totalCost / maxVal) * 100}%` }} /></div>
                 </div>
                 <div>
-                  <div className="flex justify-between text-xs mb-1"><span className="text-green-600 font-medium">{t('harvestMarketValue')}</span><span className="font-bold text-green-600">₹{harvestValue.toLocaleString('en-IN')}</span></div>
+                  <div className="flex justify-between text-xs mb-1"><span className="text-lt-primary font-medium">{t('harvestMarketValue')}</span><span className="font-bold text-lt-primary">₹{harvestValue.toLocaleString('en-IN')}</span></div>
                   <div className="bg-surface-hover rounded-full h-2.5 overflow-hidden"><div className="bg-mint/100 h-full rounded-full" style={{ width: `${(harvestValue / maxVal) * 100}%` }} /></div>
                 </div>
               </div>
@@ -160,7 +160,7 @@ export default function Dashboard() {
         })()}
       </CardContent></Card>
 
-      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-green-500" />{t('calendar')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><CalendarDays className="h-4 w-4 text-lt-primary" />{t('calendar')}</h3>
       <div className="mb-4">
         <DashboardCalendar harvestEvents={harvestEvents} milestoneEvents={milestoneEvents} />
       </div>
@@ -209,7 +209,7 @@ export default function Dashboard() {
         })}
       </div>
 
-      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><Leaf className="h-4 w-4 text-green-500" />{t('myPlots')}</h3>
+      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><Leaf className="h-4 w-4 text-lt-primary" />{t('myPlots')}</h3>
       <div className="space-y-2 mb-4">
         {farms.length === 0 ? (
           <p className="text-sm text-text-muted">No plots yet.</p>
@@ -220,14 +220,14 @@ export default function Dashboard() {
                 <p className="text-sm font-medium">{f.plot_name}</p>
                 <p className="text-xs text-text-muted">{f.current_crop || '—'} · {f.state || ''} {f.area_value ? `· ${f.area_value} ${f.area_unit}` : ''}</p>
               </div>
-              <Link to="/livestock-care"><Stethoscope className="h-4 w-4 text-gray-300" /></Link>
+              <Link to="/livestock-care"><Stethoscope className="h-4 w-4 text-lt-border" /></Link>
             </div>
           </CardContent></Card>
         ))}
       </div>
 
       {showAdd ? (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <div><Label className="mb-1 block">{t('plotName')}</Label><Input value={form.plot_name} onChange={(e) => setForm({ ...form, plot_name: e.target.value })} /></div>
           <div><Label className="mb-1 block">{t('crop')}</Label><Input value={form.crop_name} onChange={(e) => setForm({ ...form, crop_name: e.target.value })} /></div>
           <div><Label className="mb-1.5 block">{t('state')}</Label><PincodeLocationFields /></div>
@@ -237,7 +237,7 @@ export default function Dashboard() {
             <div><Label className="mb-1 block">Exp. harvest</Label><Input type="date" value={form.expected_harvest_date} onChange={(e) => setForm({ ...form, expected_harvest_date: e.target.value })} /></div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={addPlot} className="flex-1 bg-green-600 hover:bg-green-700">{t('save')}</Button>
+            <Button onClick={addPlot} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
             <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1">{t('cancel')}</Button>
           </div>
         </CardContent></Card>

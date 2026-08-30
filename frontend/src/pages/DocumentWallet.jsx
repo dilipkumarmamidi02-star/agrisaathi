@@ -75,7 +75,7 @@ export default function DocumentWallet() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-medium truncate">{d.title}</p>
-                    <button onClick={() => remove(d.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                    <button onClick={() => remove(d.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
                   </div>
                   <Badge className={`${m.color} mb-1`}>{m.label}</Badge>
                   <p className="text-xs text-text-muted">{d.issued_date ? `Issued: ${d.issued_date}` : ''}{d.expiry_date ? ` · Expires: ${d.expiry_date}` : ''}</p>
@@ -89,7 +89,7 @@ export default function DocumentWallet() {
       </div>
 
       {showAdd ? (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <Label>{t('addDocument')}</Label>
           <div><Label className="mb-1 block text-xs">{t('title')}</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
           <div>
@@ -110,7 +110,7 @@ export default function DocumentWallet() {
           </div>
           <Textarea placeholder={t('notes')} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} />
           <div className="flex gap-2">
-            <Button onClick={save} className="flex-1 bg-green-600 hover:bg-green-700">{t('save')}</Button>
+            <Button onClick={save} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
             <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1">{t('cancel')}</Button>
           </div>
         </CardContent></Card>

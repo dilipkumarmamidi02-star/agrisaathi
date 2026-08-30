@@ -164,10 +164,10 @@ export default function CropEncyclopediaDetail() {
       <Card className="mb-3">
         <CardContent className="pt-4">
           <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
-            <TrendingUp className="h-4 w-4 text-green-600" />{t('growthTimeline')}
+            <TrendingUp className="h-4 w-4 text-lt-primary" />{t('growthTimeline')}
           </h3>
           <div className="relative pl-4 space-y-3">
-            <div className="absolute left-1.5 top-1 bottom-1 w-px bg-green-200" />
+            <div className="absolute left-1.5 top-1 bottom-1 w-px bg-lt-primary/20" />
             {crop.growth_timeline.map((g, i) => (
               <div key={i} className="relative">
                 <div className="absolute -left-4 top-1 h-2.5 w-2.5 rounded-full bg-mint/100" />

@@ -91,7 +91,7 @@ export default function SustainabilityScore() {
             {PRACTICES.map((p) => (
               <Card key={p.key} onClick={() => toggle(p.key)} className="cursor-pointer">
                 <CardContent className="pt-3 pb-3 flex items-center gap-3">
-                  <CheckCircle2 className={`h-5 w-5 shrink-0 ${checked[p.key] ? 'text-green-600' : 'text-gray-200'}`} />
+                  <CheckCircle2 className={`h-5 w-5 shrink-0 ${checked[p.key] ? 'text-lt-primary' : 'text-lt-border'}`} />
                   <p className="text-sm">{p.label}</p>
                 </CardContent>
               </Card>

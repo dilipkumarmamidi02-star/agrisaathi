@@ -42,7 +42,7 @@ export default function TrainingCenter() {
 
       <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
         {CATEGORIES.map((c) => (
-          <button key={c.value} onClick={() => setFilter(c.value)} className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${filter === c.value ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>
+          <button key={c.value} onClick={() => setFilter(c.value)} className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${filter === c.value ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>
             {t(c.label)}
           </button>
         ))}
@@ -71,7 +71,7 @@ export default function TrainingCenter() {
                     </div>
                   </div>
                   {r.url && (
-                    <a href={r.url} target="_blank" rel="noreferrer" className="shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-mint/10 text-green-600">
+                    <a href={r.url} target="_blank" rel="noreferrer" className="shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-mint/10 text-lt-primary">
                       <ExternalLink className="h-4 w-4" />
                     </a>
                   )}

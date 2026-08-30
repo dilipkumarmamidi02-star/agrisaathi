@@ -124,7 +124,7 @@ export default function SensorHub() {
               <p className="text-xs text-text-muted">{r.test_date}</p>
               <p className="text-xs text-text-secondary">pH {r.soil_ph ?? '—'} · Moisture {r.soil_moisture ?? '—'} · EC {r.soil_ec ?? '—'} · N {r.soil_nitrogen ?? '—'}</p>
             </div>
-            <button onClick={() => remove(r.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+            <button onClick={() => remove(r.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
           </CardContent></Card>
         ))}
       </div>

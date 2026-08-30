@@ -142,7 +142,7 @@ export default function ProfileSettings() {
           </div>
         )}
         {success && (
-          <div className="mb-4 bg-mint/10 border border-green-200 text-mint text-sm rounded-lg p-3">
+          <div className="mb-4 bg-mint/10 border border-lt-primary/20 text-mint text-sm rounded-lg p-3">
             {success}
           </div>
         )}
@@ -201,7 +201,7 @@ export default function ProfileSettings() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg text-sm"
+            className="w-full bg-lt-primary hover:bg-lt-primary-dark disabled:opacity-60 text-white font-medium py-2.5 rounded-lg text-sm"
           >
             {saving ? 'Saving…' : 'Save changes'}
           </button>

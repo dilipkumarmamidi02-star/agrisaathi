@@ -359,15 +359,15 @@ export default function AgriHelperWidget() {
   return (
     <>
       {greetingBanner && !open && (
-        <div className="fixed bottom-36 right-4 z-50 max-w-xs bg-white border border-gray-200 shadow-lg rounded-xl p-3 text-sm text-gray-800 flex items-start gap-2">
+        <div className="fixed bottom-36 right-4 z-50 max-w-xs bg-lt-card border border-lt-border shadow-lg rounded-xl p-3 text-sm text-lt-text flex items-start gap-2">
           <span className="flex-1">{greetingBanner.text}</span>
           <div className="flex flex-col gap-1 items-end">
             {!greetingSpoken && (
-              <button onClick={() => dismissGreetingBanner(true)} className="text-green-700 text-xs flex items-center gap-1" aria-label="Tap to hear greeting">
+              <button onClick={() => dismissGreetingBanner(true)} className="text-lt-primary-dark text-xs flex items-center gap-1" aria-label="Tap to hear greeting">
                 <Volume2 className="h-3.5 w-3.5" /> Tap to hear
               </button>
             )}
-            <button onClick={() => dismissGreetingBanner(false)} className="text-gray-400 text-xs">{t('dismiss')}</button>
+            <button onClick={() => dismissGreetingBanner(false)} className="text-lt-text-muted text-xs">{t('dismiss')}</button>
           </div>
         </div>
       )}
@@ -375,7 +375,7 @@ export default function AgriHelperWidget() {
       {!open && (
         <button
           onClick={() => { setOpen(true); if (!greetingSpoken) dismissGreetingBanner(true); }}
-          className="fixed bottom-20 right-4 z-50 bg-green-600 text-white rounded-full p-4 shadow-lg hover:bg-green-700"
+          className="fixed bottom-20 right-4 z-50 bg-lt-primary text-white rounded-full p-4 shadow-lg hover:bg-lt-primary-dark"
           aria-label="Open Agri Helper"
         >
           <MessageCircle className="h-6 w-6" />
@@ -383,16 +383,16 @@ export default function AgriHelperWidget() {
       )}
 
       {open && (
-        <div className="fixed bottom-0 right-0 z-50 w-full sm:w-96 h-[70vh] sm:h-[32rem] sm:bottom-20 sm:right-4 bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
-          <div className="flex items-center justify-between p-3 border-b border-gray-100">
+        <div className="fixed bottom-0 right-0 z-50 w-full sm:w-96 h-[70vh] sm:h-[32rem] sm:bottom-20 sm:right-4 bg-lt-card rounded-t-2xl sm:rounded-2xl shadow-2xl border border-lt-border flex flex-col">
+          <div className="flex items-center justify-between p-3 border-b border-lt-bg">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800">{t('agriHelper')}</span>
+              <span className="font-semibold text-lt-text">{t('agriHelper')}</span>
               <div className="flex items-center gap-1">
-                <Languages className="h-3.5 w-3.5 text-gray-400" />
+                <Languages className="h-3.5 w-3.5 text-lt-text-muted" />
                 <select
                   value={lang}
                   onChange={(e) => handleLanguageSwitch(e.target.value)}
-                  className="text-xs border border-gray-200 rounded px-1 py-0.5"
+                  className="text-xs border border-lt-border rounded px-1 py-0.5"
                 >
                   {INDIAN_LANGUAGES.map((l) => (
                     <option key={l.code} value={l.code}>{l.label}</option>
@@ -401,36 +401,36 @@ export default function AgriHelperWidget() {
               </div>
             </div>
             <button onClick={() => setOpen(false)} aria-label="Close">
-              <X className="h-5 w-5 text-gray-500" />
+              <X className="h-5 w-5 text-lt-text-secondary" />
             </button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.role === 'user' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
+                <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${m.role === 'user' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text'}`}>
                   <p>{m.text}</p>
                   {m.role === 'assistant' && m.sources?.length > 0 && (
-                    <p className="mt-1 text-[10px] text-gray-500">Source: {m.sources.join(', ')}</p>
+                    <p className="mt-1 text-[10px] text-lt-text-secondary">Source: {m.sources.join(', ')}</p>
                   )}
                   {m.role === 'assistant' && m.proofHash && (
-                    <p className="mt-1 flex items-center gap-1 text-[10px] text-gray-400" title={m.proofHash}>
+                    <p className="mt-1 flex items-center gap-1 text-[10px] text-lt-text-muted" title={m.proofHash}>
                       <ShieldCheck className="h-3 w-3" /> Tamper-evident record
                     </p>
                   )}
                   {m.role === 'assistant' && m.routeSuggested && (
-                    <button onClick={() => goToSuggestedRoute(m.routeSuggested)} className="mt-1 block text-xs font-medium text-green-700 underline">
+                    <button onClick={() => goToSuggestedRoute(m.routeSuggested)} className="mt-1 block text-xs font-medium text-lt-primary-dark underline">
                       Open {m.routeSuggestedLabel}
                     </button>
                   )}
                 </div>
               </div>
             ))}
-            {loading && <p className="text-xs text-gray-400">Thinking...</p>}
+            {loading && <p className="text-xs text-lt-text-muted">Thinking...</p>}
             <div ref={scrollRef} />
           </div>
 
-          <div className="p-3 border-t border-gray-100 flex items-center gap-2">
+          <div className="p-3 border-t border-lt-bg flex items-center gap-2">
             {isSpeaking ? (
               <button onClick={stopSpeaking} className="p-2 rounded-full bg-red-500 text-white" aria-label="Stop reading">
                 <Square className="h-4 w-4" />
@@ -438,7 +438,7 @@ export default function AgriHelperWidget() {
             ) : (
               <button
                 onClick={startListening}
-                className={`p-2 rounded-full ${listening ? 'bg-red-500' : 'bg-green-600'} text-white`}
+                className={`p-2 rounded-full ${listening ? 'bg-red-500' : 'bg-lt-primary'} text-white`}
                 aria-label="Speak"
               >
                 <Mic className="h-4 w-4" />
@@ -449,9 +449,9 @@ export default function AgriHelperWidget() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
               placeholder={t('typeOrTapMic')}
-              className="flex-1 border border-gray-200 rounded-full px-3 py-2 text-sm"
+              className="flex-1 border border-lt-border rounded-full px-3 py-2 text-sm"
             />
-            <button onClick={() => sendMessage()} className="p-2 rounded-full bg-green-600 text-white" aria-label="Send">
+            <button onClick={() => sendMessage()} className="p-2 rounded-full bg-lt-primary text-white" aria-label="Send">
               <Send className="h-4 w-4" />
             </button>
           </div>

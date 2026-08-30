@@ -93,7 +93,7 @@ export default function GovernmentSchemes() {
       </p>
 
       <div className="flex items-center gap-2 mb-4">
-        <MapPin className="h-4 w-4 text-green-600 shrink-0" />
+        <MapPin className="h-4 w-4 text-lt-primary shrink-0" />
         <Select value={filterState || 'all'} onValueChange={(v) => setFilterState(v === 'all' ? '' : v)}>
           <SelectTrigger className="h-8 text-sm"><SelectValue placeholder={t('allStates')} /></SelectTrigger>
           <SelectContent className="max-h-72">
@@ -105,7 +105,7 @@ export default function GovernmentSchemes() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-10"><Loader2 className="h-5 w-5 animate-spin text-green-600" /></div>
+        <div className="flex items-center justify-center py-10"><Loader2 className="h-5 w-5 animate-spin text-lt-primary" /></div>
       ) : error ? (
         <Card><CardContent className="pt-6 text-center text-sm text-red-500">{error}</CardContent></Card>
       ) : schemes.length === 0 ? (
@@ -140,7 +140,7 @@ export default function GovernmentSchemes() {
                               key={label}
                               onClick={() => setAnswer(s.id, q.field, val)}
                               className={`px-2 py-1 rounded text-xs border ${
-                                answers[s.id]?.[q.field] === val ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'
+                                answers[s.id]?.[q.field] === val ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'
                               }`}
                             >
                               {label}

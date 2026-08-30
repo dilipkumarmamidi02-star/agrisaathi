@@ -53,7 +53,7 @@ export default function IrrigationPlanner() {
       <PageHeader titleKey="irrigationPlanner" icon={Droplets} />
       <p className="text-xs text-text-secondary mb-3">{t('irrigationIntro')}</p>
 
-      <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-green-600 hover:bg-green-700">
+      <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark">
         <Plus className="h-4 w-4" /> {t('logIrrigation')}
       </Button>
 
@@ -86,7 +86,7 @@ export default function IrrigationPlanner() {
             </div>
             <div><Label className="mb-1 block">{t('waterSource')}</Label><Input value={form.water_source} onChange={(e) => setForm({ ...form, water_source: e.target.value })} placeholder="borewell / canal" /></div>
           </div>
-          <Button onClick={submit} className="w-full bg-green-600 hover:bg-green-700">{t('save')}</Button>
+          <Button onClick={submit} className="w-full bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
         </CardContent></Card>
       )}
 
@@ -101,7 +101,7 @@ export default function IrrigationPlanner() {
                   <p className="text-xs text-text-secondary">{s.session_date} · {t(s.method)} · {s.water_litres ? `${s.water_litres}L` : ''}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
-                  <Button size="icon" variant="ghost" onClick={() => markDone(s.id)}><Check className="h-4 w-4 text-green-600" /></Button>
+                  <Button size="icon" variant="ghost" onClick={() => markDone(s.id)}><Check className="h-4 w-4 text-lt-primary" /></Button>
                   <Button size="icon" variant="ghost" onClick={() => remove(s.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
                 </div>
               </CardContent></Card>

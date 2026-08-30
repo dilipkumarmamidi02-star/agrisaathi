@@ -80,7 +80,7 @@ export default function InsuranceHub() {
       <p className="text-xs text-text-secondary mb-3">{t('insuranceIntro')}</p>
 
       <div className="grid grid-cols-2 gap-2 mb-4">
-        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+        <Card className="bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
           <div className="text-2xl font-bold text-mint">{active.length}</div>
           <div className="text-[11px] text-text-secondary">{t('activePolicies')}</div>
         </CardContent></Card>
@@ -102,7 +102,7 @@ export default function InsuranceHub() {
                   <p className="text-sm font-medium truncate">{p.policy_name}</p>
                   <p className="text-xs text-text-muted">{p.provider}{p.crop_name ? ` · ${p.crop_name}` : ''}{p.plot_name ? ` · ${p.plot_name}` : ''}</p>
                 </div>
-                <button onClick={() => remove(p.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                <button onClick={() => remove(p.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
               </div>
               <div className="flex flex-wrap gap-2 text-xs">
                 {p.sum_insured && <Badge variant="secondary">₹{p.sum_insured.toLocaleString('en-IN')} {t('covered')}</Badge>}
@@ -126,7 +126,7 @@ export default function InsuranceHub() {
       </div>
 
       {showAdd ? (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <Label>{t('addPolicy')}</Label>
           <div><Label className="mb-1 block text-xs">{t('policyName')}</Label><Input value={form.policy_name} onChange={(e) => setForm({ ...form, policy_name: e.target.value })} /></div>
           <div><Label className="mb-1 block text-xs">{t('provider')}</Label><Input value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} /></div>
@@ -143,7 +143,7 @@ export default function InsuranceHub() {
             <div><Label className="mb-1 block text-xs">{t('endDate')}</Label><Input type="date" value={form.end_date} onChange={(e) => setForm({ ...form, end_date: e.target.value })} /></div>
           </div>
           <div className="flex gap-2">
-            <Button onClick={save} className="flex-1 bg-green-600 hover:bg-green-700">{t('save')}</Button>
+            <Button onClick={save} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
             <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1">{t('cancel')}</Button>
           </div>
         </CardContent></Card>

@@ -54,9 +54,9 @@ export const SelectTrigger = ({
       type="button"
       aria-haspopup="listbox"
       aria-expanded={open}
-      className={`w-full px-4 py-2 border border-gray-300 rounded-xl
-        focus:ring-2 focus:ring-green-500 focus:border-transparent
-        flex items-center justify-between bg-white ${className}`}
+      className={`w-full px-4 py-2 border border-lt-border rounded-xl
+        focus:ring-2 focus:ring-lt-primary focus:border-transparent
+        flex items-center justify-between bg-lt-card ${className}`}
       onClick={() => setOpen((current) => !current)}
       {...props}
     >
@@ -66,7 +66,7 @@ export const SelectTrigger = ({
 
       <span
         aria-hidden="true"
-        className={`ml-2 shrink-0 text-gray-400 transition-transform ${
+        className={`ml-2 shrink-0 text-lt-text-muted transition-transform ${
           open ? 'rotate-180' : ''
         }`}
       >
@@ -278,8 +278,8 @@ export const SelectContent = ({
       data-agrisaathi-select-content="true"
       role="listbox"
       className={`fixed z-[99999]
-        bg-white
-        border border-gray-200
+        bg-lt-card
+        border border-lt-border
         rounded-xl
         shadow-2xl
         overflow-y-auto
@@ -316,8 +316,8 @@ export const SelectItem = ({
       type="button"
       role="option"
       className="block w-full text-left px-4 py-2
-        hover:bg-green-50
-        active:bg-green-100
+        hover:bg-lt-primary/5
+        active:bg-lt-primary/10
         cursor-pointer
         transition-colors
         text-sm"

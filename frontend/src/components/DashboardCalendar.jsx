@@ -33,14 +33,14 @@ export default function DashboardCalendar({ harvestEvents = [], milestoneEvents 
   const next = () => setView((v) => (v.month === 11 ? { year: v.year + 1, month: 0 } : { ...v, month: v.month + 1 }));
 
   return (
-    <div className="rounded-xl border bg-white p-3">
+    <div className="rounded-xl border bg-lt-card p-3">
       <div className="flex items-center justify-between mb-2">
-        <button onClick={prev} className="p-1 rounded hover:bg-gray-100"><ChevronLeft className="h-4 w-4" /></button>
+        <button onClick={prev} className="p-1 rounded hover:bg-lt-bg"><ChevronLeft className="h-4 w-4" /></button>
         <p className="text-sm font-semibold">{MONTHS[view.month]} {view.year}</p>
-        <button onClick={next} className="p-1 rounded hover:bg-gray-100"><ChevronRight className="h-4 w-4" /></button>
+        <button onClick={next} className="p-1 rounded hover:bg-lt-bg"><ChevronRight className="h-4 w-4" /></button>
       </div>
       <div className="grid grid-cols-7 gap-0.5 mb-1">
-        {DOW.map((d, i) => <div key={i} className="text-[10px] text-center text-gray-400 font-medium">{d}</div>)}
+        {DOW.map((d, i) => <div key={i} className="text-[10px] text-center text-lt-text-muted font-medium">{d}</div>)}
       </div>
       <div className="grid grid-cols-7 gap-0.5">
         {cells.map((d, i) => {
@@ -49,28 +49,28 @@ export default function DashboardCalendar({ harvestEvents = [], milestoneEvents 
           const dayEvents = eventsByDate[dateStr] || [];
           const isToday = dateStr === todayStr;
           return (
-            <div key={i} className={`min-h-9 rounded p-1 ${isToday ? 'bg-green-100 ring-1 ring-green-300' : dayEvents.length ? 'bg-gray-50' : ''}`}>
-              <p className={`text-[10px] ${isToday ? 'font-bold text-green-700' : 'text-gray-500'}`}>{d}</p>
+            <div key={i} className={`min-h-9 rounded p-1 ${isToday ? 'bg-lt-primary/10 ring-1 ring-green-300' : dayEvents.length ? 'bg-lt-bg' : ''}`}>
+              <p className={`text-[10px] ${isToday ? 'font-bold text-lt-primary-dark' : 'text-lt-text-secondary'}`}>{d}</p>
               <div className="flex gap-0.5 flex-wrap">
                 {dayEvents.map((e, j) => (
-                  <span key={j} className={`h-1.5 w-1.5 rounded-full ${e.kind === 'harvest' ? 'bg-green-500' : 'bg-blue-500'}`} />
+                  <span key={j} className={`h-1.5 w-1.5 rounded-full ${e.kind === 'harvest' ? 'bg-lt-primary' : 'bg-blue-500'}`} />
                 ))}
               </div>
             </div>
           );
         })}
       </div>
-      <div className="flex gap-3 mt-2 text-[10px] text-gray-500">
-        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-green-500" />{t('harvest')}</span>
+      <div className="flex gap-3 mt-2 text-[10px] text-lt-text-secondary">
+        <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-lt-primary" />{t('harvest')}</span>
         <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-blue-500" />{t('maintenance')}</span>
       </div>
       {monthEvents.length > 0 && (
         <div className="mt-2 space-y-1 border-t pt-2">
           {monthEvents.slice(0, 5).map((e, i) => (
             <div key={i} className="flex items-center gap-1.5 text-[11px]">
-              <span className={`h-2 w-2 rounded-full shrink-0 ${e.kind === 'harvest' ? 'bg-green-500' : 'bg-blue-500'}`} />
-              <span className="text-gray-400 w-20 shrink-0">{e.date}</span>
-              <span className="text-gray-700 truncate">{e.label}</span>
+              <span className={`h-2 w-2 rounded-full shrink-0 ${e.kind === 'harvest' ? 'bg-lt-primary' : 'bg-blue-500'}`} />
+              <span className="text-lt-text-muted w-20 shrink-0">{e.date}</span>
+              <span className="text-lt-text truncate">{e.label}</span>
             </div>
           ))}
         </div>

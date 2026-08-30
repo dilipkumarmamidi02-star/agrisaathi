@@ -69,7 +69,7 @@ export default function TaskManager() {
             <Card key={task.id} className={task.status === 'done' ? 'opacity-60' : ''}><CardContent className="pt-3">
               <div className="flex items-start gap-2">
                 <button onClick={() => toggle(task)} className="mt-0.5">
-                  {task.status === 'done' ? <CheckCircle2 className="h-5 w-5 text-green-600" /> : <Circle className="h-5 w-5 text-gray-300" />}
+                  {task.status === 'done' ? <CheckCircle2 className="h-5 w-5 text-lt-primary" /> : <Circle className="h-5 w-5 text-lt-border" />}
                 </button>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-medium ${task.status === 'done' ? 'line-through text-text-muted' : ''}`}>{task.title}</p>
@@ -82,7 +82,7 @@ export default function TaskManager() {
                   </div>
                   {task.notes && <p className="text-xs text-text-secondary mt-1">{task.notes}</p>}
                 </div>
-                <button onClick={() => remove(task.id)} className="text-gray-300 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                <button onClick={() => remove(task.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
               </div>
             </CardContent>
             </Card>
@@ -91,7 +91,7 @@ export default function TaskManager() {
       </div>
 
       {showAdd ? (
-        <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
+        <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <div><Label className="mb-1 block text-xs">{t('title')}</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
           <div className="grid grid-cols-2 gap-2">
             <div>
@@ -115,7 +115,7 @@ export default function TaskManager() {
           </div>
           <Textarea placeholder={t('notes')} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} />
           <div className="flex gap-2">
-            <Button onClick={save} className="flex-1 bg-green-600 hover:bg-green-700">{t('save')}</Button>
+            <Button onClick={save} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
             <Button onClick={() => setShowAdd(false)} variant="outline" className="flex-1">{t('cancel')}</Button>
           </div>
         </CardContent></Card>

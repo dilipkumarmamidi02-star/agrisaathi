@@ -27,7 +27,7 @@ export default function YieldEstimator() {
   return (
     <Card>
       <CardContent className="pt-6 space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800">Yield Estimator</h3>
+        <h3 className="text-sm font-semibold text-lt-text">Yield Estimator</h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>{t('cropSingular')}</Label>
@@ -45,9 +45,9 @@ export default function YieldEstimator() {
             <Input type="number" value={area} onChange={(e) => setArea(e.target.value)} />
           </div>
         </div>
-        <div className="pt-2 border-t border-gray-100 text-center">
-          <p className="text-xs text-gray-500">Estimated yield</p>
-          <p className="text-lg font-semibold text-green-600">
+        <div className="pt-2 border-t border-lt-bg text-center">
+          <p className="text-xs text-lt-text-secondary">Estimated yield</p>
+          <p className="text-lg font-semibold text-lt-primary">
             {estimate.toLocaleString('en-IN')} kg
           </p>
         </div>

@@ -24,6 +24,7 @@ import {
   getDataGovResource,
   getDataGovResourceRecords,
 } from '../lib/dataGov';
+import PincodeLocationFields from '../components/PincodeLocationFields';
 
 const MARKET_RESOURCES = [
   {
@@ -885,6 +886,20 @@ export default function MarketPrices() {
     [resolveLocationFilters]
   );
 
+  const { location: contextLocation } = useLocationContext();
+
+  useEffect(() => {
+    if (contextLocation?.state) {
+      handleLocationResolved({
+        State: contextLocation.state,
+        District: contextLocation.district,
+      });
+    }
+    // Only re-run when the resolved pincode location actually changes,
+    // not on every handleLocationResolved re-creation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contextLocation?.state, contextLocation?.district]);
+
   const changeMarket = (value) => {
     setMarketFilter('');
     setMarketFilter(value);
@@ -1130,6 +1145,16 @@ export default function MarketPrices() {
                 : 'Use My Location'}
             </button>
           </div>
+
+          <div className="mt-4">
+            <PincodeLocationFields />
+          </div>
+
+          {locationNotice && (
+            <div className="mt-4 rounded-xl bg-surface-hover p-3 text-sm text-text-secondary">
+              {locationNotice}
+            </div>
+          )}
 
           {detectedLocation && (
             <div className="mt-4 rounded-xl bg-surface-hover p-3 text-sm text-text-secondary">

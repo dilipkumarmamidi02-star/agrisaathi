@@ -22,6 +22,18 @@ export default {
         "text-primary": "#f5f5f0",
         "text-secondary": "#a8b0a0",
         "text-muted": "#6b7264",
+
+        // --- Light theme (sidebar dashboard redesign) ---
+        "lt-bg": "#faf7f1",         // cream page background
+        "lt-card": "#ffffff",       // white card surface
+        "lt-border": "#e7e2d8",     // soft warm border
+        "lt-primary": "#14532d",    // deep forest green (logo, headings, active nav)
+        "lt-primary-dark": "#0d3a20",
+        "lt-accent": "#b45309",     // warm gold/amber accent
+        "lt-text": "#1f2937",       // primary body text
+        "lt-text-secondary": "#6b7280",
+        "lt-text-muted": "#9ca3af",
+        "lt-success": "#16a34a",
       },
       fontFamily: {
         display: ["'Space Grotesk'", "sans-serif"],

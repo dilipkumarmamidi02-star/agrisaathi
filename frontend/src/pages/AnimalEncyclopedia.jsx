@@ -52,7 +52,7 @@ export default function AnimalEncyclopedia() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="h-6 w-6 animate-spin text-green-600" />
+        <Loader2 className="h-6 w-6 animate-spin text-lt-primary" />
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function AnimalEncyclopedia() {
             key={c}
             onClick={() => setActiveCategory(c)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${
-              activeCategory === c ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'
+              activeCategory === c ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'
             }`}
           >
             {CATEGORY_LABELS[c] || c}
@@ -89,7 +89,7 @@ export default function AnimalEncyclopedia() {
 
       {loadingEntries ? (
         <div className="flex items-center justify-center py-10">
-          <Loader2 className="h-5 w-5 animate-spin text-green-600" />
+          <Loader2 className="h-5 w-5 animate-spin text-lt-primary" />
         </div>
       ) : entries.length === 0 ? (
         <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No entries for this category yet.</CardContent></Card>
@@ -113,7 +113,7 @@ export default function AnimalEncyclopedia() {
                   {expanded && (
                     <div className="mt-3 space-y-3 text-xs text-text-primary">
                       <div className="flex items-start gap-2">
-                        <TrendingUp className="h-3.5 w-3.5 text-green-600 shrink-0 mt-0.5" />
+                        <TrendingUp className="h-3.5 w-3.5 text-lt-primary shrink-0 mt-0.5" />
                         <div><span className="font-medium">Maturity & yield: </span>{entry.maturity_yield}</div>
                       </div>
                       <div className="flex items-start gap-2">

@@ -872,7 +872,7 @@ export default function SoilPassport() {
         icon={Sprout}
       />
 
-      <Card className="border-green-200">
+      <Card className="border-lt-primary/20">
         <CardContent className="pt-4">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div>
@@ -891,7 +891,7 @@ export default function SoilPassport() {
 
           <Button
             onClick={detectLocation}
-            className="w-full bg-green-600 hover:bg-green-700 mb-3"
+            className="w-full bg-lt-primary hover:bg-lt-primary-dark mb-3"
           >
             <Navigation className="h-4 w-4 mr-1" />
             Use My Location
@@ -1090,7 +1090,7 @@ export default function SoilPassport() {
               </div>
             )}
 
-          <p className="text-[10px] text-gray-300 mt-2">
+          <p className="text-[10px] text-lt-border mt-2">
             Source: Data.gov.in · Resource: soil_moisture · Historical dataset
           </p>
         </CardContent>
@@ -1201,7 +1201,7 @@ export default function SoilPassport() {
               </>
             )}
 
-          <p className="text-[10px] text-gray-300 mt-2">
+          <p className="text-[10px] text-lt-border mt-2">
             Source: Data.gov.in · Resource: land_utilisation
           </p>
         </CardContent>
@@ -1272,7 +1272,7 @@ export default function SoilPassport() {
               </div>
             )}
 
-            <p className="text-[10px] text-gray-300 mt-2">
+            <p className="text-[10px] text-lt-border mt-2">
               Reference values only — not a substitute for your own soil test.
             </p>
           </CardContent>
@@ -1352,7 +1352,7 @@ export default function SoilPassport() {
                       </p>
                     )}
 
-                    <p className="text-[10px] text-gray-300 mt-1 truncate">
+                    <p className="text-[10px] text-lt-border mt-1 truncate">
                       hash: {r.record_hash?.slice(0, 24)}…
                     </p>
                   </CardContent>
@@ -1367,7 +1367,7 @@ export default function SoilPassport() {
         <Card>
           <CardContent className="pt-4">
             <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
-              <LineChartIcon className="h-4 w-4 text-green-600" />
+              <LineChartIcon className="h-4 w-4 text-lt-primary" />
               {t('soilTrend')}
             </h3>
 
@@ -1488,7 +1488,7 @@ export default function SoilPassport() {
       </p>
 
       {showAdd ? (
-        <Card className="border-green-200">
+        <Card className="border-lt-primary/20">
           <CardContent className="pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <Label>
@@ -1616,7 +1616,7 @@ export default function SoilPassport() {
             <div className="flex gap-2">
               <Button
                 onClick={save}
-                className="flex-1 bg-green-600 hover:bg-green-700"
+                className="flex-1 bg-lt-primary hover:bg-lt-primary-dark"
               >
                 {t('save')}
               </Button>

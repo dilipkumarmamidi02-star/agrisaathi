@@ -66,7 +66,7 @@ export default function HarvestRecords() {
 
       {records.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><Wheat className="h-4 w-4 text-green-600" />{t('yieldByCropSeason')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><Wheat className="h-4 w-4 text-lt-primary" />{t('yieldByCropSeason')}</h3>
           {(() => {
             const byKey = {};
             records.forEach((r) => {
@@ -95,7 +95,7 @@ export default function HarvestRecords() {
         </CardContent></Card>
       )}
 
-      <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-green-600 hover:bg-green-700">
+      <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark">
         <Plus className="h-4 w-4" /> {t('logHarvest')}
       </Button>
 
@@ -128,13 +128,13 @@ export default function HarvestRecords() {
             </div>
             <div><Label className="mb-1 block">{t('pricePerUnit')}</Label><Input type="number" value={form.sale_price_per_unit} onChange={(e) => setForm({ ...form, sale_price_per_unit: e.target.value })} /></div>
           </div>
-          <Button onClick={submit} className="w-full bg-green-600 hover:bg-green-700">{t('save')}</Button>
+          <Button onClick={submit} className="w-full bg-lt-primary hover:bg-lt-primary-dark">{t('save')}</Button>
         </CardContent></Card>
       )}
 
       {plots.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><TrendingUp className="h-4 w-4 text-green-600" />{t('yieldTrend')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5"><TrendingUp className="h-4 w-4 text-lt-primary" />{t('yieldTrend')}</h3>
           {plots.length > 1 && (
             <Select value={trendPlot} onValueChange={setTrendPlot}>
               <SelectTrigger className="h-8 text-sm mb-2"><SelectValue /></SelectTrigger>

@@ -87,7 +87,7 @@ export default function NearbyHelp({ domain = 'crop', farmState = null }) {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm text-gray-500">
+      <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm text-lt-text-secondary">
         Finding nearby help…
       </div>
     );
@@ -95,7 +95,7 @@ export default function NearbyHelp({ domain = 'crop', farmState = null }) {
 
   if (nearestKvks.length === 0 && matchedExperts.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-500">
+      <div className="rounded-xl border border-lt-border bg-lt-bg p-4 text-sm text-lt-text-secondary">
         No experts or KVKs on file yet for your area. Add contacts in Advisers, or check{' '}
         <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener noreferrer" className="underline text-blue-600">
           the official KVK directory
@@ -106,21 +106,21 @@ export default function NearbyHelp({ domain = 'crop', farmState = null }) {
 
   return (
     <div className="rounded-xl border border-blue-200 bg-blue-50/40 p-4 space-y-3">
-      <h3 className="font-bold text-gray-900 flex items-center gap-1.5 text-sm">
+      <h3 className="font-bold text-lt-text flex items-center gap-1.5 text-sm">
         <Stethoscope className="h-4 w-4 text-blue-600" />
         Nearby help for this issue
       </h3>
 
       {matchedExperts.map((e, idx) => (
-        <div key={e.id || idx} className="flex items-center justify-between bg-white rounded-lg p-2.5 border border-gray-100">
+        <div key={e.id || idx} className="flex items-center justify-between bg-lt-card rounded-lg p-2.5 border border-lt-bg">
           <div>
             <p className="text-sm font-medium">{e.name}</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-lt-text-secondary">
               {String(e.specialty || '').replace('_', ' ')} · {e.organization || e.district || e.state || ''}
             </p>
           </div>
           {e.phone && (
-            <a href={`tel:${e.phone}`} className="text-xs font-medium border border-gray-300 rounded-md px-2 py-1 flex items-center gap-1 hover:bg-gray-50">
+            <a href={`tel:${e.phone}`} className="text-xs font-medium border border-lt-border rounded-md px-2 py-1 flex items-center gap-1 hover:bg-lt-bg">
               <Phone className="h-3.5 w-3.5" />Call
             </a>
           )}
@@ -128,26 +128,26 @@ export default function NearbyHelp({ domain = 'crop', farmState = null }) {
       ))}
 
       {nearestKvks.map((k, idx) => (
-        <div key={k.id || idx} className="flex items-center justify-between bg-white rounded-lg p-2.5 border border-gray-100">
+        <div key={k.id || idx} className="flex items-center justify-between bg-lt-card rounded-lg p-2.5 border border-lt-bg">
           <div>
             <p className="text-sm font-medium flex items-center gap-1">
-              <Sprout className="h-3.5 w-3.5 text-green-600" />{k.name || `${k.district} KVK`}
+              <Sprout className="h-3.5 w-3.5 text-lt-primary" />{k.name || `${k.district} KVK`}
             </p>
-            <p className="text-xs text-gray-500">{k.district}, {k.state}</p>
+            <p className="text-xs text-lt-text-secondary">{k.district}, {k.state}</p>
             {k._dist != null && (
-              <span className="inline-block mt-1 text-[10px] bg-gray-100 text-gray-600 rounded px-1.5 py-0.5">
+              <span className="inline-block mt-1 text-[10px] bg-lt-bg text-lt-text-secondary rounded px-1.5 py-0.5">
                 {k._dist.toFixed(1)} km away
               </span>
             )}
           </div>
-          <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-md p-1.5 hover:bg-gray-50">
+          <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener noreferrer" className="border border-lt-border rounded-md p-1.5 hover:bg-lt-bg">
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
       ))}
 
       {!origin && (
-        <p className="text-[11px] text-gray-400 flex items-center gap-1">
+        <p className="text-[11px] text-lt-text-muted flex items-center gap-1">
           <MapPin className="h-3 w-3" />Enable location for distance-sorted results.
         </p>
       )}

@@ -78,13 +78,13 @@ export default function WeatherAlerts() {
       <Button onClick={fetchWeather} variant="outline" size="sm" className="mb-3"><Navigation className="h-3 w-3 mr-1" />{t('refresh')}</Button>
 
       {plantedCrops.length > 0 && (
-        <Card className="mb-3 bg-mint/10 border-green-200"><CardContent className="pt-3">
+        <Card className="mb-3 bg-mint/10 border-lt-primary/20"><CardContent className="pt-3">
           <p className="text-xs font-semibold text-mint mb-1">{t('currentlyPlanted')}</p>
           <div className="flex flex-wrap gap-1.5">{plantedCrops.map((c, i) => <Badge key={i} className="bg-mint/20 text-mint">{c}</Badge>)}</div>
         </CardContent></Card>
       )}
 
-      {loading && <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-green-600" /></div>}
+      {loading && <div className="flex justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-lt-primary" /></div>}
       {error && <Card><CardContent className="pt-6 text-center text-sm text-red-500">{error}</CardContent></Card>}
 
       {extremes.length > 0 && (

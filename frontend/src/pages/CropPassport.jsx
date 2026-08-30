@@ -86,7 +86,7 @@ export default function CropPassport() {
           <button
             onClick={generatePassport}
             disabled={generating}
-            className="w-full bg-green-600 text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
+            className="w-full bg-lt-primary text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50"
           >
             {generating ? 'Recording...' : 'Generate Verified Passport'}
           </button>
@@ -97,7 +97,7 @@ export default function CropPassport() {
         <div className="bg-surface p-3 rounded-lg border">
           <div className="flex items-center gap-2 mb-2">
             {chain.valid ? (
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <CheckCircle2 className="h-4 w-4 text-lt-primary" />
             ) : (
               <XCircle className="h-4 w-4 text-red-600" />
             )}
@@ -107,7 +107,7 @@ export default function CropPassport() {
           </div>
           <div className="space-y-1">
             {chain.blocks.map((b) => (
-              <div key={b.index} className="text-xs text-text-secondary border-b border-gray-50 pb-1">
+              <div key={b.index} className="text-xs text-text-secondary border-b border-lt-bg pb-1">
                 <span className="font-medium text-text-primary">#{b.index} {b.event_type}</span>
                 {' — '}
                 {new Date(b.timestamp).toLocaleString()}

@@ -51,7 +51,7 @@ export default function LoanCalculator() {
       </CardContent></Card>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-mint/10 border-green-100"><CardContent className="pt-3 text-center">
+        <Card className="bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-mint">{fmt(emi)}</div>
           <div className="text-[10px] text-text-secondary">{t('monthlyEmi')}</div>
         </CardContent></Card>
@@ -67,7 +67,7 @@ export default function LoanCalculator() {
 
       {schedule.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-green-600" />{t('repaymentSchedule')}</h3>
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-lt-primary" />{t('repaymentSchedule')}</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={schedule} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>

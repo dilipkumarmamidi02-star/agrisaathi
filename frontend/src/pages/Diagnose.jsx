@@ -192,7 +192,7 @@ export default function Diagnose() {
             <ArrowLeft className="h-4 w-4" />
           </button>
         )}
-        <Camera className="h-5 w-5 text-green-600" />
+        <Camera className="h-5 w-5 text-lt-primary" />
         <h1 className="text-xl font-bold text-text-primary">Diagnose</h1>
       </div>
 
@@ -204,7 +204,7 @@ export default function Diagnose() {
         {STEPS.map((s, i) => (
           <div
             key={s.id}
-            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-mint/100' : 'bg-gray-200'}`}
+            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-mint/100' : 'bg-lt-border'}`}
           />
         ))}
       </div>
@@ -241,7 +241,7 @@ export default function Diagnose() {
               </div>
             ) : (
               <label className="cursor-pointer block">
-                <Camera className="h-10 w-10 mx-auto text-green-500" />
+                <Camera className="h-10 w-10 mx-auto text-lt-primary" />
                 <p className="text-mint font-medium mt-2">Take / upload photo</p>
                 <p className="text-xs text-text-muted mt-1">Supports JPG, PNG, WEBP</p>
                 <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
@@ -258,7 +258,7 @@ export default function Diagnose() {
           <button
             onClick={goNextFromStep1}
             disabled={!file}
-            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1"
+            className="w-full bg-lt-primary text-white py-3 rounded-lg font-semibold hover:bg-lt-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1"
           >
             Next <ChevronRight className="h-4 w-4" />
           </button>
@@ -272,7 +272,7 @@ export default function Diagnose() {
             <button
               onClick={() => { setDomain('crop'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'crop' ? 'bg-green-600 text-white' : 'bg-surface text-text-secondary'
+                domain === 'crop' ? 'bg-lt-primary text-white' : 'bg-surface text-text-secondary'
               }`}
             >
               <Sprout className="h-4 w-4" /> Crop
@@ -280,7 +280,7 @@ export default function Diagnose() {
             <button
               onClick={() => { setDomain('livestock'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'livestock' ? 'bg-green-600 text-white' : 'bg-surface text-text-secondary'
+                domain === 'livestock' ? 'bg-lt-primary text-white' : 'bg-surface text-text-secondary'
               }`}
             >
               <PawPrint className="h-4 w-4" /> Animal / Livestock
@@ -335,7 +335,7 @@ export default function Diagnose() {
                 type="button"
                 onClick={toggleMic}
                 className={`absolute bottom-2.5 right-2.5 h-8 w-8 rounded-full flex items-center justify-center transition ${
-                  listening ? 'bg-red-500/100 text-white animate-pulse' : 'bg-green-600 text-white'
+                  listening ? 'bg-red-500/100 text-white animate-pulse' : 'bg-lt-primary text-white'
                 }`}
               >
                 <Mic className="h-4 w-4" />
@@ -359,7 +359,7 @@ export default function Diagnose() {
             <button
               onClick={analyze}
               disabled={!subject || loading}
-              className="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1"
+              className="flex-1 bg-lt-primary text-white py-3 rounded-lg font-semibold hover:bg-lt-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1"
             >
               {loading ? 'Analyzing...' : <>Analyze <ChevronRight className="h-4 w-4" /></>}
             </button>
@@ -381,7 +381,7 @@ export default function Diagnose() {
               <div className="border border-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
-                    <Leaf className="h-4 w-4 text-green-600" /> Likely issue
+                    <Leaf className="h-4 w-4 text-lt-primary" /> Likely issue
                   </h3>
                   {confidencePct !== null && (
                     <span className="text-xs font-medium bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full">
@@ -409,11 +409,11 @@ export default function Diagnose() {
               </div>
 
               {organicTreatment && (
-                <div className="p-3 bg-mint/10 border border-green-100 rounded-xl">
+                <div className="p-3 bg-mint/10 border border-lt-primary/10 rounded-xl">
                   <p className="text-xs font-semibold text-mint flex items-center gap-1.5 mb-1">
                     <Leaf className="h-4 w-4" /> Organic (try first)
                   </p>
-                  <p className="text-sm text-green-800">{organicTreatment}</p>
+                  <p className="text-sm text-lt-primary">{organicTreatment}</p>
                 </div>
               )}
 

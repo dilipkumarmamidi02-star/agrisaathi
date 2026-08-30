@@ -36,21 +36,21 @@ function ResourceCard({ resource }) {
       : [];
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <article className="overflow-hidden rounded-2xl border border-lt-border bg-lt-card shadow-sm">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="w-full p-4 text-left transition hover:bg-gray-50"
+        className="w-full p-4 text-left transition hover:bg-lt-bg"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-green-50 px-2 py-1 text-[10px] font-semibold text-green-700">
+              <span className="rounded-full bg-lt-primary/5 px-2 py-1 text-[10px] font-semibold text-lt-primary-dark">
                 Resource #{resource.id}
               </span>
 
               {resource.runtime_status === 'LIVE' && (
-                <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-semibold text-green-700">
+                <span className="rounded-full bg-lt-primary/10 px-2 py-1 text-[10px] font-semibold text-lt-primary-dark">
                   LIVE
                 </span>
               )}
@@ -62,18 +62,18 @@ function ResourceCard({ resource }) {
               )}
             </div>
 
-            <h4 className="font-semibold text-gray-900">
+            <h4 className="font-semibold text-lt-text">
               {resource.resource_name ||
                 resource.name ||
                 resource.resource_key}
             </h4>
 
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-lt-text-secondary">
               {resource.resource_key}
             </p>
           </div>
 
-          <div className="whitespace-nowrap text-xs text-gray-500">
+          <div className="whitespace-nowrap text-xs text-lt-text-secondary">
             {records.length} records
             <span className="ml-2">
               {open ? '▲' : '▼'}
@@ -83,7 +83,7 @@ function ResourceCard({ resource }) {
 
         <div className="mt-3 flex flex-wrap gap-1.5">
           {resource.primary_feature && (
-            <span className="rounded-full bg-green-50 px-2 py-1 text-[10px] text-green-700">
+            <span className="rounded-full bg-lt-primary/5 px-2 py-1 text-[10px] text-lt-primary-dark">
               Primary: {resource.primary_feature}
             </span>
           )}
@@ -115,7 +115,7 @@ function ResourceCard({ resource }) {
       </button>
 
       {open && (
-        <div className="border-t border-gray-100 p-4">
+        <div className="border-t border-lt-bg p-4">
           {resource.error && (
             <div className="mb-3 rounded-lg bg-red-50 p-3 text-xs text-red-700">
               {resource.error}
@@ -123,18 +123,18 @@ function ResourceCard({ resource }) {
           )}
 
           {records.length === 0 ? (
-            <div className="rounded-lg bg-gray-50 p-4 text-sm text-gray-500">
+            <div className="rounded-lg bg-lt-bg p-4 text-sm text-lt-text-secondary">
               No records returned by this resource.
             </div>
           ) : (
             <div className="max-h-[420px] overflow-auto">
               <table className="min-w-full text-xs">
-                <thead className="sticky top-0 bg-gray-50">
-                  <tr className="border-b border-gray-200">
+                <thead className="sticky top-0 bg-lt-bg">
+                  <tr className="border-b border-lt-border">
                     {columns.map((column) => (
                       <th
                         key={column}
-                        className="whitespace-nowrap px-3 py-2 text-left font-semibold text-gray-600"
+                        className="whitespace-nowrap px-3 py-2 text-left font-semibold text-lt-text-secondary"
                       >
                         {column}
                       </th>
@@ -147,12 +147,12 @@ function ResourceCard({ resource }) {
                     (record, rowIndex) => (
                       <tr
                         key={rowIndex}
-                        className="border-b border-gray-100"
+                        className="border-b border-lt-bg"
                       >
                         {columns.map((column) => (
                           <td
                             key={column}
-                            className="max-w-[280px] truncate whitespace-nowrap px-3 py-2 text-gray-700"
+                            className="max-w-[280px] truncate whitespace-nowrap px-3 py-2 text-lt-text"
                             title={formatValue(record[column])}
                           >
                             {formatValue(record[column])}
@@ -216,11 +216,11 @@ export default function DataGovFeaturePanel({
 
   if (loading) {
     return (
-      <section className="mt-6 rounded-2xl border border-gray-200 bg-white p-5">
+      <section className="mt-6 rounded-2xl border border-lt-border bg-lt-card p-5">
         <div className="animate-pulse space-y-3">
-          <div className="h-5 w-56 rounded bg-gray-200" />
-          <div className="h-3 w-80 rounded bg-gray-100" />
-          <div className="h-20 rounded-xl bg-gray-100" />
+          <div className="h-5 w-56 rounded bg-lt-border" />
+          <div className="h-3 w-80 rounded bg-lt-bg" />
+          <div className="h-20 rounded-xl bg-lt-bg" />
         </div>
       </section>
     );
@@ -250,23 +250,23 @@ export default function DataGovFeaturePanel({
   ).length;
 
   return (
-    <section className="mt-8 rounded-3xl border border-green-100 bg-green-50/40 p-4 sm:p-6">
+    <section className="mt-8 rounded-3xl border border-lt-primary/10 bg-lt-primary/5/40 p-4 sm:p-6">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
+          <p className="text-xs font-semibold uppercase tracking-wide text-lt-primary-dark">
             Data.gov.in Live Data
           </p>
 
-          <h3 className="mt-1 text-xl font-bold text-gray-900">
+          <h3 className="mt-1 text-xl font-bold text-lt-text">
             {feature}
           </h3>
 
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-lt-text-secondary">
             Live government data connected to this AgriSaathi feature.
           </p>
         </div>
 
-        <div className="rounded-xl border border-green-100 bg-white px-3 py-2 text-xs text-gray-600">
+        <div className="rounded-xl border border-lt-primary/10 bg-lt-card px-3 py-2 text-xs text-lt-text-secondary">
           {liveCount}/{resources.length} live
         </div>
       </div>

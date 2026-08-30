@@ -13,7 +13,7 @@ const CATEGORY_COLORS = {
   amber: 'bg-amber-500/10 border-amber-100 text-amber-400',
   blue: 'bg-cyan-500/10 border-blue-100 text-cyan-400',
   orange: 'bg-orange-50 border-orange-100 text-orange-700',
-  green: 'bg-mint/10 border-green-100 text-mint',
+  green: 'bg-mint/10 border-lt-primary/10 text-mint',
   yellow: 'bg-amber-500/10 border-yellow-100 text-amber-400',
   pink: 'bg-pink-50 border-pink-100 text-pink-700',
   violet: 'bg-violet-50 border-violet-100 text-violet-700',
@@ -65,7 +65,7 @@ export default function Crops() {
           onClick={() => setActiveCategory('all')}
           className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition ${
             activeCategory === 'all'
-              ? 'bg-green-600 text-white border-green-600'
+              ? 'bg-lt-primary text-white border-lt-primary'
               : 'bg-surface text-text-secondary border-border'
           }`}
         >
@@ -77,7 +77,7 @@ export default function Crops() {
             onClick={() => setActiveCategory(c.id)}
             className={`shrink-0 text-xs font-medium px-3 py-1.5 rounded-full border transition ${
               activeCategory === c.id
-                ? 'bg-green-600 text-white border-green-600'
+                ? 'bg-lt-primary text-white border-lt-primary'
                 : 'bg-surface text-text-secondary border-border'
             }`}
           >

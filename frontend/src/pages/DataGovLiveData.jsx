@@ -113,7 +113,7 @@ function ResourceCard({
 
   if (status === LIVE_STATUS) {
     badgeClass =
-      'bg-mint/10 text-mint border-green-200';
+      'bg-mint/10 text-mint border-lt-primary/20';
   }
 
   if (status === EMPTY_STATUS) {
@@ -134,7 +134,7 @@ function ResourceCard({
         'w-full text-left rounded-xl border p-4 transition',
         'hover:shadow-sm',
         selected
-          ? 'border-green-500 ring-2 ring-green-100'
+          ? 'border-lt-primary ring-2 ring-lt-primary/10'
           : 'border-border',
       ].join(' ')}
     >
@@ -485,7 +485,7 @@ export default function DataGovLiveData() {
                     type="button"
                     onClick={() => loadResource(selectedKey)}
                     disabled={loadingKey === selectedKey}
-                    className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                    className="rounded-lg bg-lt-primary px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
                   >
                     {loadingKey === selectedKey
                       ? 'Loading…'

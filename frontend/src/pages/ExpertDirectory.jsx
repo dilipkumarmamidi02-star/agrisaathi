@@ -31,7 +31,7 @@ export default function ExpertDirectory() {
                 <p className="text-xs text-text-secondary">{e.description}</p>
               </div>
               {e.helpline && (
-                <a href={`tel:${e.helpline}`} className="p-2 rounded-full bg-green-600 text-white shrink-0" aria-label={`Call ${e.title} helpline`}>
+                <a href={`tel:${e.helpline}`} className="p-2 rounded-full bg-lt-primary text-white shrink-0" aria-label={`Call ${e.title} helpline`}>
                   <Phone className="h-4 w-4" />
                 </a>
               )}

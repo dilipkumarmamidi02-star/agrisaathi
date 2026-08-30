@@ -71,24 +71,24 @@ export default function NextSteps({ pincode, productName }) {
   }, [productName]);
 
   return (
-    <div className="mt-3 rounded-2xl border border-green-200 bg-green-50 p-4 space-y-3">
-      <div className="text-xs font-semibold text-green-800 tracking-wide">
+    <div className="mt-3 rounded-2xl border border-lt-primary/20 bg-lt-primary/5 p-4 space-y-3">
+      <div className="text-xs font-semibold text-lt-primary tracking-wide">
         GET A CURRENT ANSWER
       </div>
 
       {/* Kisan Call Centre live helpline — always shown, always real */}
       <a
         href="tel:18001801551"
-        className="flex items-center gap-3 bg-white rounded-xl p-3 border border-green-100 hover:border-green-300 transition-colors"
+        className="flex items-center gap-3 bg-lt-card rounded-xl p-3 border border-lt-primary/10 hover:border-green-300 transition-colors"
       >
-        <div className="bg-green-600 text-white rounded-full p-2">
+        <div className="bg-lt-primary text-white rounded-full p-2">
           <Phone size={16} />
         </div>
         <div className="flex-1">
-          <div className="text-sm font-medium text-gray-900">
+          <div className="text-sm font-medium text-lt-text">
             Call Kisan Call Centre — 1800-180-1551
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-lt-text-secondary">
             Free, government-run, live agronomist support in your language
           </div>
         </div>
@@ -96,33 +96,33 @@ export default function NextSteps({ pincode, productName }) {
 
       {/* Nearest KVK, resolved from pincode via resource #9 */}
       {pincode && (
-        <div className="bg-white rounded-xl p-3 border border-green-100">
+        <div className="bg-lt-card rounded-xl p-3 border border-lt-primary/10">
           <div className="flex items-center gap-3">
-            <div className="bg-green-600 text-white rounded-full p-2">
+            <div className="bg-lt-primary text-white rounded-full p-2">
               <MapPin size={16} />
             </div>
             <div className="flex-1">
               {kvkStatus === 'loading' && (
-                <div className="text-sm text-gray-500">Finding your nearest KVK…</div>
+                <div className="text-sm text-lt-text-secondary">Finding your nearest KVK…</div>
               )}
               {kvkStatus === 'found' && kvk && (
                 <>
-                  <div className="text-sm font-medium text-gray-900">{kvk.name}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-sm font-medium text-lt-text">{kvk.name}</div>
+                  <div className="text-xs text-lt-text-secondary">
                     {kvk.district}{kvk.phone ? ` · ${kvk.phone}` : ''}
                   </div>
                 </>
               )}
               {kvkStatus === 'unavailable' && (
                 <>
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-medium text-lt-text">
                     Find your nearest Krishi Vigyan Kendra
                   </div>
                   <a
                     href="https://kvk.icar.gov.in/"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-green-700 inline-flex items-center gap-1"
+                    className="text-xs text-lt-primary-dark inline-flex items-center gap-1"
                   >
                     kvk.icar.gov.in <ExternalLink size={10} />
                   </a>
@@ -135,16 +135,16 @@ export default function NextSteps({ pincode, productName }) {
 
       {/* Optional factual registration cross-check — no dosage, no recommendation */}
       {productName && regStatus && regStatus !== 'unavailable' && (
-        <div className="bg-white rounded-xl p-3 border border-green-100 flex items-start gap-3">
-          <div className={`rounded-full p-2 text-white ${regStatus.listed ? 'bg-green-600' : 'bg-amber-500'}`}>
+        <div className="bg-lt-card rounded-xl p-3 border border-lt-primary/10 flex items-start gap-3">
+          <div className={`rounded-full p-2 text-white ${regStatus.listed ? 'bg-lt-primary' : 'bg-amber-500'}`}>
             {regStatus.listed ? <ShieldCheck size={16} /> : <ShieldQuestion size={16} />}
           </div>
-          <div className="text-xs text-gray-600">
-            <span className="font-medium text-gray-900">{productName}</span>
+          <div className="text-xs text-lt-text-secondary">
+            <span className="font-medium text-lt-text">{productName}</span>
             {regStatus.listed
               ? ' appears in current dealer records we have access to.'
               : ' does not appear in the dealer records we currently have — confirm current registration with your KVK before use.'}
-            <div className="text-[10px] text-gray-400 mt-1">
+            <div className="text-[10px] text-lt-text-muted mt-1">
               Dealer-license data only — not a registration, safety, or dosage authority.
             </div>
           </div>

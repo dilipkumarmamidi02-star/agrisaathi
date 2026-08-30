@@ -64,7 +64,7 @@ export default function DataGovResourceTest() {
             <div className="text-sm">
               {resource.title}
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-lt-text-secondary">
               {resource.resource_id}
             </div>
           </div>

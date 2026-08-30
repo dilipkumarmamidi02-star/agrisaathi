@@ -90,7 +90,7 @@ export default function CommunityForum() {
 
         <div className="flex gap-2">
           <Textarea value={reply} onChange={(e) => setReply(e.target.value)} placeholder={t('writeReply')} className="flex-1" rows={2} />
-          <Button onClick={addReply} className="bg-green-600 hover:bg-green-700 self-end"><Send className="h-4 w-4" /></Button>
+          <Button onClick={addReply} className="bg-lt-primary hover:bg-lt-primary-dark self-end"><Send className="h-4 w-4" /></Button>
         </div>
       </div>
     );
@@ -107,12 +107,12 @@ export default function CommunityForum() {
           <div><Label className="mb-1 block">{t('category')}</Label>
             <div className="flex flex-wrap gap-1.5">
               {CATEGORIES.map((c) => (
-                <button key={c} onClick={() => setForm({ ...form, category: c })} className={`px-2.5 py-1 rounded-full text-xs ${form.category === c ? 'bg-green-600 text-white' : 'bg-surface-hover text-text-secondary'}`}>{c}</button>
+                <button key={c} onClick={() => setForm({ ...form, category: c })} className={`px-2.5 py-1 rounded-full text-xs ${form.category === c ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>{c}</button>
               ))}
             </div>
           </div>
           <div><Label className="mb-1 block">{t('postBody')}</Label><Textarea value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} rows={4} /></div>
-          <Button onClick={create} className="w-full bg-green-600 hover:bg-green-700">{t('post')}</Button>
+          <Button onClick={create} className="w-full bg-lt-primary hover:bg-lt-primary-dark">{t('post')}</Button>
         </CardContent></Card>
       </div>
     );
@@ -123,7 +123,7 @@ export default function CommunityForum() {
       <PageHeader titleKey="communityForum" icon={MessageSquare} />
       <p className="text-xs text-text-secondary mb-3">{t('forumIntro')}</p>
 
-      <Button onClick={() => setView('new')} className="w-full mb-3 bg-green-600 hover:bg-green-700">
+      <Button onClick={() => setView('new')} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark">
         <Plus className="h-4 w-4" /> {t('newPost')}
       </Button>
 

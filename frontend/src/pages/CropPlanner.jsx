@@ -153,11 +153,11 @@ export default function CropPlanner() {
             <SelectContent><SelectItem value="kharif">{t('kharif')}</SelectItem><SelectItem value="rabi">{t('rabi')}</SelectItem><SelectItem value="zaid">{t('zaid')}</SelectItem><SelectItem value="perennial">{t('perennial')}</SelectItem></SelectContent>
           </Select>
         </div>
-        <Button onClick={plan} className="w-full bg-green-600 hover:bg-green-700 h-12">{t('rankByFit')}</Button>
+        <Button onClick={plan} className="w-full bg-lt-primary hover:bg-lt-primary-dark h-12">{t('rankByFit')}</Button>
       </div>
 
       {(soilCtx || waterCtx) && (
-        <Card className="mb-4 bg-mint/10 border-green-100"><CardContent className="pt-3 text-xs">
+        <Card className="mb-4 bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-xs">
           <p className="font-semibold text-mint flex items-center gap-1 mb-1"><FlaskConical className="h-3 w-3" />{t('soilWaterContext')}</p>
           {soilCtx && <p className="text-text-secondary">pH {soilCtx.ph ?? '—'} · N {soilCtx.nitrogen ?? '—'} · P {soilCtx.phosphorus ?? '—'} · K {soilCtx.potassium ?? '—'}</p>}
           {waterCtx && <p className="text-text-secondary">Water pH {waterCtx.water_ph ?? '—'} · EC {waterCtx.water_ec ?? '—'}</p>}

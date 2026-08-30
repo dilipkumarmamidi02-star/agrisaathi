@@ -24,7 +24,7 @@ export default function ProfitCalculator() {
   return (
     <Card>
       <CardContent className="pt-6 space-y-4">
-        <h3 className="text-sm font-semibold text-gray-800">Profit Calculator</h3>
+        <h3 className="text-sm font-semibold text-lt-text">Profit Calculator</h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Area (acres)</Label>
@@ -43,18 +43,18 @@ export default function ProfitCalculator() {
             <Input type="number" value={pricePerUnit} onChange={(e) => setPricePerUnit(e.target.value)} />
           </div>
         </div>
-        <div className="pt-2 border-t border-gray-100 grid grid-cols-3 gap-2 text-center">
+        <div className="pt-2 border-t border-lt-bg grid grid-cols-3 gap-2 text-center">
           <div>
-            <p className="text-xs text-gray-500">{t('revenue')}</p>
-            <p className="text-sm font-semibold text-gray-800">₹{revenue.toLocaleString('en-IN')}</p>
+            <p className="text-xs text-lt-text-secondary">{t('revenue')}</p>
+            <p className="text-sm font-semibold text-lt-text">₹{revenue.toLocaleString('en-IN')}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">{t('cost')}</p>
-            <p className="text-sm font-semibold text-gray-800">₹{cost.toLocaleString('en-IN')}</p>
+            <p className="text-xs text-lt-text-secondary">{t('cost')}</p>
+            <p className="text-sm font-semibold text-lt-text">₹{cost.toLocaleString('en-IN')}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">{t('profit')}</p>
-            <p className={`text-sm font-semibold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <p className="text-xs text-lt-text-secondary">{t('profit')}</p>
+            <p className={`text-sm font-semibold ${profit >= 0 ? 'text-lt-primary' : 'text-red-600'}`}>
               ₹{profit.toLocaleString('en-IN')}
             </p>
           </div>

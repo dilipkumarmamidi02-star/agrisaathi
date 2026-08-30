@@ -153,7 +153,7 @@ export default function FarmLedger() {
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   {b.event_type === 'income'
-                    ? <ArrowUpCircle className="h-5 w-5 text-green-600 shrink-0" />
+                    ? <ArrowUpCircle className="h-5 w-5 text-lt-primary shrink-0" />
                     : <ArrowDownCircle className="h-5 w-5 text-red-500 shrink-0" />}
                   <div>
                     <p className="text-sm font-medium">{b.payload?.category}</p>

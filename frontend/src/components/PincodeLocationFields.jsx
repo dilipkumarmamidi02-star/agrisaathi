@@ -91,18 +91,18 @@ export default function PincodeLocationFields() {
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-2 bg-gray-100 rounded-full p-1 w-fit">
+      <div className="flex gap-2 bg-lt-bg rounded-full p-1 w-fit">
         <button
           type="button"
           onClick={() => setMode('pincode')}
-          className={`px-3 py-1 rounded-full text-xs font-medium ${mode === 'pincode' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`}
+          className={`px-3 py-1 rounded-full text-xs font-medium ${mode === 'pincode' ? 'bg-lt-card shadow text-lt-text' : 'text-lt-text-secondary'}`}
         >
           By pincode
         </button>
         <button
           type="button"
           onClick={() => setMode('manual')}
-          className={`px-3 py-1 rounded-full text-xs font-medium ${mode === 'manual' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}`}
+          className={`px-3 py-1 rounded-full text-xs font-medium ${mode === 'manual' ? 'bg-lt-card shadow text-lt-text' : 'text-lt-text-secondary'}`}
         >
           Select manually
         </button>
@@ -113,13 +113,13 @@ export default function PincodeLocationFields() {
           <div>
             <Label className="text-sm">{t('pincode')}</Label>
             <Input value={location.pincode} onChange={onPincodeChange} placeholder="6-digit pincode" maxLength={6} />
-            {resolving && <p className="text-xs text-gray-400 mt-1">Resolving…</p>}
+            {resolving && <p className="text-xs text-lt-text-muted mt-1">Resolving…</p>}
             {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
           </div>
           {location.state && (
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-              <div><span className="text-gray-400">State:</span> {location.state}</div>
-              <div><span className="text-gray-400">District:</span> {location.district}</div>
+            <div className="grid grid-cols-2 gap-2 text-sm text-lt-text-secondary">
+              <div><span className="text-lt-text-muted">State:</span> {location.state}</div>
+              <div><span className="text-lt-text-muted">District:</span> {location.district}</div>
             </div>
           )}
           {location.mandals?.length > 0 && (

@@ -122,7 +122,7 @@ export default function AlertsCenter() {
           to compute a % change against. */}
       <div>
         <p className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1">
-          <TrendingUp className="h-4 w-4 text-green-600" /> Price Changes
+          <TrendingUp className="h-4 w-4 text-lt-primary" /> Price Changes
         </p>
         {loading ? (
           <p className="text-sm text-text-muted">Checking prices…</p>

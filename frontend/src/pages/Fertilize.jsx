@@ -112,11 +112,11 @@ export default function Fertilize() {
           ))}
         </div>
         <p className="text-xs text-text-muted">{t('soilTestOptionalNote')}</p>
-        <Button onClick={calc} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 h-12">{loading ? t('analyzing') : t('analyze')}</Button>
+        <Button onClick={calc} disabled={loading} className="w-full bg-lt-primary hover:bg-lt-primary-dark h-12">{loading ? t('analyzing') : t('analyze')}</Button>
       </div>
 
       {result && (
-        <Card className="mt-5 border-green-200">
+        <Card className="mt-5 border-lt-primary/20">
           <CardContent className="pt-4 space-y-3">
             <h3 className="font-bold text-text-primary">{result.summary}</h3>
             {result.dosage && <div><p className="text-xs font-semibold text-text-secondary">{t('dosage')}</p><p className="text-sm">{result.dosage}</p></div>}

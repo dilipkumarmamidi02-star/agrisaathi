@@ -57,7 +57,7 @@ export default function Home() {
     <div className="space-y-5 px-4 pt-6 pb-4">
       <div className="flex justify-between items-center mb-2">
         <div>
-          <h1 className="text-2xl font-bold text-green-800">🌾 AgriSaathi</h1>
+          <h1 className="text-2xl font-bold text-lt-primary">🌾 AgriSaathi</h1>
           <p className="text-sm text-text-secondary">One Voice, Every Acre, Every Plot</p>
         </div>
         <div className="flex gap-2">
@@ -67,7 +67,7 @@ export default function Home() {
       </div>
 
       {health && (
-        <div className="bg-mint/10 border border-green-200 rounded-xl p-3 flex items-center gap-2">
+        <div className="bg-mint/10 border border-lt-primary/20 rounded-xl p-3 flex items-center gap-2">
           <span className="text-sm text-mint">✅ Backend: {health.status} ({health.version})</span>
         </div>
       )}
@@ -80,7 +80,7 @@ export default function Home() {
       <div className="flex flex-col items-center gap-3">
         <button
           onClick={startVoice}
-          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${listening ? 'bg-red-500/100 animate-pulse scale-105' : 'bg-green-600 hover:bg-green-700'}`}
+          className={`flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition-all ${listening ? 'bg-red-500/100 animate-pulse scale-105' : 'bg-lt-primary hover:bg-lt-primary-dark'}`}
         >
           <Mic className="h-10 w-10" />
         </button>
@@ -88,7 +88,7 @@ export default function Home() {
       </div>
 
       {transcript && (
-        <div className="bg-mint/10 border border-green-200 rounded-xl p-4">
+        <div className="bg-mint/10 border border-lt-primary/20 rounded-xl p-4">
           <p className="text-sm text-text-primary">"{transcript}"</p>
         </div>
       )}

@@ -38,15 +38,15 @@ export default function PestLibrary() {
       <PageHeader titleKey="pestLibrary" icon={Bug} />
 
       <div className="flex gap-2 mb-3">
-        <button onClick={() => setTab('crop')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'crop' ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'}`}>Crop pests & weeds</button>
-        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-green-600 text-white border-green-600' : 'bg-surface text-text-secondary border-border'}`}>{t('livestockVaccines')}</button>
+        <button onClick={() => setTab('crop')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'crop' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'}`}>Crop pests & weeds</button>
+        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'}`}>{t('livestockVaccines')}</button>
       </div>
 
       {tab === 'crop' ? (
         <>
           <div className="flex gap-2 overflow-x-auto pb-2 mb-3">
             {['all', 'pest', 'disease', 'weed'].map((f) => (
-              <button key={f} onClick={() => setFilter(f)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${filter === f ? 'bg-gray-800 text-white border-gray-800' : 'bg-surface text-text-secondary border-border'}`}>
+              <button key={f} onClick={() => setFilter(f)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${filter === f ? 'bg-lt-text text-white border-lt-text' : 'bg-surface text-text-secondary border-border'}`}>
                 {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
@@ -80,7 +80,7 @@ export default function PestLibrary() {
         </div>
       )}
 
-      {disclaimer && <p className="text-[10px] text-gray-300 mt-3">{disclaimer}</p>}
+      {disclaimer && <p className="text-[10px] text-lt-border mt-3">{disclaimer}</p>}
       <DataGovFeaturePanel feature="Pesticide Library" />
     </div>
   );

@@ -137,7 +137,7 @@ export default function VendorContacts() {
                   {b.payload.notes && <p className="text-xs text-text-secondary mt-0.5">{b.payload.notes}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <a href={`tel:${b.payload.phone}`} className="p-2 rounded-full bg-green-600 text-white" aria-label={`Call ${b.payload.name}`}>
+                  <a href={`tel:${b.payload.phone}`} className="p-2 rounded-full bg-lt-primary text-white" aria-label={`Call ${b.payload.name}`}>
                     <Phone className="h-4 w-4" />
                   </a>
                   <button onClick={() => removeVendor(b.payload.name)} className="p-2 text-text-muted hover:text-red-500" aria-label={`Remove ${b.payload.name}`}>

@@ -247,7 +247,7 @@ export default function SpeakToAgriSaathi() {
         onClick={state === STATES.LISTENING ? stopListening : startListening}
         disabled={isBusy && state !== STATES.LISTENING}
         className={`w-28 h-28 rounded-full flex items-center justify-center text-white text-lg font-semibold shadow-lg transition-colors
-          ${state === STATES.LISTENING ? 'bg-red-500/100 animate-pulse' : 'bg-green-600 hover:bg-green-700'}
+          ${state === STATES.LISTENING ? 'bg-red-500/100 animate-pulse' : 'bg-lt-primary hover:bg-lt-primary-dark'}
           ${isBusy && state !== STATES.LISTENING ? 'opacity-60 cursor-not-allowed' : ''}`}
       >
         {state === STATES.LISTENING ? 'Stop' : '🎤'}

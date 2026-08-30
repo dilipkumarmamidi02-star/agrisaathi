@@ -107,7 +107,7 @@ export default function ExportReports() {
         ))}
       </CardContent></Card>
 
-      <Button onClick={generate} disabled={generating} className="w-full bg-green-600 hover:bg-green-700">
+      <Button onClick={generate} disabled={generating} className="w-full bg-lt-primary hover:bg-lt-primary-dark">
         {generating ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <Download className="h-4 w-4 mr-1" />}
         {generating ? t('generating') : t('downloadPdf')}
       </Button>

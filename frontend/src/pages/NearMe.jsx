@@ -140,7 +140,7 @@ export default function NearMe() {
       </div>
 
       <div className="flex gap-2 mb-3">
-        <Button onClick={useLocation} className="flex-1 bg-green-600 hover:bg-green-700"><Navigation className="h-4 w-4 mr-1" />{t('useMyLocation')}</Button>
+        <Button onClick={useLocation} className="flex-1 bg-lt-primary hover:bg-lt-primary-dark"><Navigation className="h-4 w-4 mr-1" />{t('useMyLocation')}</Button>
       </div>
 
       <div className="flex gap-2 mb-3">
@@ -201,7 +201,7 @@ export default function NearMe() {
               {selected.shop_type && <p className="text-sm"><span className="text-text-muted">{t('type')}:</span> {SHOP_TYPES[selected.shop_type]?.label}</p>}
               <p className="text-xs text-text-muted">{selected.VERIFY_AT ? `Verify at: ${selected.VERIFY_AT}` : 'Verify on official portal'}</p>
               {selected.phone && (
-                <a href={`tel:${selected.phone}`}><Button className="w-full bg-green-600 hover:bg-green-700"><Phone className="h-4 w-4 mr-1" />{t('callNow')}</Button></a>
+                <a href={`tel:${selected.phone}`}><Button className="w-full bg-lt-primary hover:bg-lt-primary-dark"><Phone className="h-4 w-4 mr-1" />{t('callNow')}</Button></a>
               )}
               {selected._type === 'kvk' && (
                 <a href="https://kvk.icar.gov.in/" target="_blank" rel="noopener noreferrer"><Button variant="outline" className="w-full"><ExternalLink className="h-4 w-4 mr-1" />{t('kvkPortal')}</Button></a>

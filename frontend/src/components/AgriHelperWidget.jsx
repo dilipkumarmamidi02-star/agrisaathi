@@ -1,19 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 import { useLang } from '../lib/i18n';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MessageCircle, X, Mic, Volume2, Send, ShieldCheck, Languages, Square } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import { API_ENDPOINTS } from '../api/endpoints';
 import { INDIAN_LANGUAGES } from '../lib/indianLanguages';
 import { useHelperRouter } from '../lib/useHelperRouter';
 import { getVoiceGovernmentContext } from '../lib/voiceDataGov';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
-
 async function translateText(text, targetLang) {
   if (!text || targetLang === 'en') return text;
   try {
-    const res = await axios.post(`${API_URL}${API_ENDPOINTS.translate}`, {
+    const res = await api.post(API_ENDPOINTS.translate, {
       text,
       target_language: targetLang,
     });
@@ -187,15 +187,21 @@ export default function AgriHelperWidget() {
   };
 
   useEffect(() => {
-    if (greetedRef.current) return;
-    greetedRef.current = true;
-    const greeting = `${timeGreeting()}! I am Agri Helper. How can I assist you today?`;
-    translateText(greeting, lang).then((translated) => {
-      greetingTextRef.current = translated;
-      setGreetingBanner({ text: translated });
-      setMessages([{ role: 'assistant', text: translated }]);
-      speak(translated, (played) => setGreetingSpoken(played));
+    // Wait for Firebase's initial auth check to resolve before making
+    // any backend call — otherwise the first request races auth state
+    // and goes out with no token (401), even for a signed-in user.
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      if (greetedRef.current) return;
+      greetedRef.current = true;
+      const greeting = `${timeGreeting()}! I am Agri Helper. How can I assist you today?`;
+      translateText(greeting, lang).then((translated) => {
+        greetingTextRef.current = translated;
+        setGreetingBanner({ text: translated });
+        setMessages([{ role: 'assistant', text: translated }]);
+        speak(translated, (played) => setGreetingSpoken(played));
+      });
     });
+    return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -253,8 +259,8 @@ export default function AgriHelperWidget() {
         };
       }
 
-      const response = await axios.post(
-        `${API_URL}${API_ENDPOINTS.helperChat}`,
+      const response = await api.post(
+        API_ENDPOINTS.helperChat,
         {
           message: text,
           language: lang,

@@ -51,6 +51,7 @@ async def fetch_resource(
         "commodity": "commodity",
         "variety": "variety",
         "grade": "grade",
+        "pincode": "pincode",
     }
 
     RESOURCE_FIELD_MAP_OVERRIDES = {

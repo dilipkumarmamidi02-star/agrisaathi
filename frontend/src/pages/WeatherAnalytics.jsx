@@ -9,8 +9,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-import axios from 'axios';
-
+import api from '../api/apiClient';
 import {
   Card,
   CardContent,
@@ -55,15 +54,13 @@ export default function WeatherAnalytics() {
       lon
     ) =>
       Promise.all([
-        axios.get(
-          `${API_URL}/api/weather/current`,
+        api.get('/api/weather/current',
           {
             params: { lat, lon },
           }
         ),
 
-        axios.get(
-          `${API_URL}/api/weather/forecast`,
+        api.get('/api/weather/forecast',
           {
             params: { lat, lon },
           }

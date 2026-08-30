@@ -4,6 +4,14 @@ import { MapPin, Phone, ExternalLink, Stethoscope, Sprout } from 'lucide-react';
 // Point this at your own backend. No vendor SDK, no API keys baked in.
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001';
 
+async function authHeader() {
+  const { getAuth } = await import('firebase/auth');
+  const user = getAuth().currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { Authorization: `Bearer ${token}` };
+}
+
 const haversine = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -21,7 +29,7 @@ const SPECIALTY_FOR_DOMAIN = {
 
 async function safeFetchJson(url) {
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { headers: await authHeader() });
     if (!res.ok) return [];
     return await res.json();
   } catch {

@@ -13,7 +13,7 @@ import {
   AlertCircle,
   Navigation,
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import {
   LineChart,
   Line,
@@ -345,8 +345,8 @@ export default function SoilPassport() {
    */
 
   const load = () =>
-    axios
-      .get(`${API_URL}/api/soil-records`)
+    api
+      .get('/api/soil-records')
       .then((res) =>
         setRecords(
           Array.isArray(res.data)
@@ -364,8 +364,8 @@ export default function SoilPassport() {
     // returns an arbitrary slice of a 1.7M-record dataset, which
     // isn't meaningful without a state to scope it to.
 
-    axios
-      .get(`${API_URL}/api/soil-profiles`)
+    api
+      .get('/api/soil-profiles')
       .then((res) =>
         setSoilProfiles(
           Array.isArray(res.data)
@@ -718,8 +718,8 @@ export default function SoilPassport() {
           new Date().toISOString(),
       });
 
-    await axios.post(
-      `${API_URL}/api/soil-records`,
+    await api.post(
+      '/api/soil-records',
       {
         ...payload,
         record_hash: hash,

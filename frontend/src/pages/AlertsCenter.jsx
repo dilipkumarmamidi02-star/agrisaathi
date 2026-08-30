@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Bell, AlertTriangle, CloudRain, TrendingUp } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function AlertsCenter() {
   const { t } = useLang();
@@ -19,7 +18,7 @@ export default function AlertsCenter() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/ledger/chain/inventory/${deviceId}`);
+      const res = await api.get('/api/ledger/chain/inventory/${deviceId}');
       const blocks = res.data.blocks || [];
       const latestByItem = {};
       [...blocks].reverse().forEach((b) => {
@@ -41,7 +40,7 @@ export default function AlertsCenter() {
           : reject(new Error('no geolocation'))
       );
       const { latitude, longitude } = pos.coords;
-      const fRes = await axios.get(`${API_URL}/api/weather/forecast`, { params: { lat: latitude, lon: longitude } });
+      const fRes = await api.get('/api/weather/forecast', { params: { lat: latitude, lon: longitude } });
       const risky = (fRes.data.days || []).filter((d) => d.rain_probability >= 60);
       setForecastDays(risky);
     } catch {
@@ -49,7 +48,7 @@ export default function AlertsCenter() {
     }
 
     try {
-      const pRes = await axios.get(`${API_URL}/api/price-alerts`);
+      const pRes = await api.get('/api/price-alerts');
       setPriceAlerts(pRes.data.alerts || []);
     } catch {
       setPriceAlerts([]);

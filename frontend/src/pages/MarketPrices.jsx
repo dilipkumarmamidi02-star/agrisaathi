@@ -1,4 +1,5 @@
 import { loadMarketIntelligence } from '../lib/marketIntelligence';
+import { useLocationContext } from '../lib/LocationContext';
 import React, {
   useCallback,
   useEffect,
@@ -256,6 +257,9 @@ export default function MarketPrices() {
     useState(false);
 
   const [stateFilter, setStateFilter] =
+    useState('');
+
+  const [locationNotice, setLocationNotice] =
     useState('');
 
   const [districtFilter, setDistrictFilter] =
@@ -606,15 +610,26 @@ export default function MarketPrices() {
   // fake Data.gov filters.
   // ----------------------------------------------------------
 
-  const states = useMemo(() => {
-    return [
-      ...new Set(
-        varietyRecords
-          .map(getState)
-          .filter(Boolean)
-      ),
-    ].sort();
-  }, [varietyRecords]);
+  // States come from the full India pincode-directory list (same
+  // source PincodeLocationFields uses), NOT from varietyRecords.
+  // varietyRecords is capped at `limit: 100` per fetch, so deriving
+  // the state dropdown from it silently hid any state whose records
+  // didn't happen to land in that first page (e.g. only 2 states
+  // showing instead of all of India). Districts/markets/commodities
+  // remain data-derived below since those are legitimately scoped
+  // to "what's queryable for the selected state," not "all of India."
+  const { browseStates } = useLocationContext();
+  const [states, setStates] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    browseStates().then((list) => {
+      if (!cancelled) setStates(list);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [browseStates]);
 
   const districts = useMemo(() => {
     return [
@@ -801,6 +816,74 @@ export default function MarketPrices() {
     setDistrictFilter(value);
     setMarketFilter('');
   };
+
+  const resolveLocationFilters = useCallback(
+    (pincodeState, pincodeDistrict) => {
+      const targetState = normalise(pincodeState);
+
+      const matchedState = states.find(
+        (s) => normalise(s) === targetState
+      );
+
+      if (!matchedState) {
+        return {
+          matched: false,
+          reason: `No market data for state "${pincodeState}".`,
+        };
+      }
+
+      const targetDistrict = normalise(pincodeDistrict);
+
+      const districtsForState = [
+        ...new Set(
+          varietyRecords
+            .filter(
+              (record) =>
+                normalise(getState(record)) === normalise(matchedState)
+            )
+            .map(getDistrict)
+            .filter(Boolean)
+        ),
+      ];
+
+      const matchedDistrict = districtsForState.find(
+        (d) => normalise(d) === targetDistrict
+      );
+
+      return {
+        matched: true,
+        state: matchedState,
+        district: matchedDistrict || '',
+        districtMatched: Boolean(matchedDistrict),
+      };
+    },
+    [states, varietyRecords]
+  );
+
+  const handleLocationResolved = useCallback(
+    (locationRecord) => {
+      const pincodeState = getState(locationRecord);
+      const pincodeDistrict = getDistrict(locationRecord);
+
+      const result = resolveLocationFilters(pincodeState, pincodeDistrict);
+
+      if (!result.matched) {
+        setLocationNotice(result.reason);
+        return;
+      }
+
+      changeState(result.state);
+
+      if (result.districtMatched) {
+        changeDistrict(result.district);
+      } else {
+        setLocationNotice(
+          `Showing all of ${result.state} \u2014 no market data for "${pincodeDistrict}" specifically.`
+        );
+      }
+    },
+    [resolveLocationFilters]
+  );
 
   const changeMarket = (value) => {
     setMarketFilter('');

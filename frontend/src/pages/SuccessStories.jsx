@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Trophy, Plus, Sprout } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -10,7 +10,6 @@ import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function SuccessStories() {
   const { t } = useLang();
@@ -25,7 +24,7 @@ export default function SuccessStories() {
     setLoading(true);
     try {
       // Shared feed — every farmer's story, not just this device's.
-      const res = await axios.get(`${API_URL}/api/ledger/list/success_story`, { params: { limit: 50 } });
+      const res = await api.get('/api/ledger/list/success_story', { params: { limit: 50 } });
       setStories(res.data.blocks || []);
     } catch {
       setStories([]);
@@ -41,7 +40,7 @@ export default function SuccessStories() {
     if (!form.farmer_name || !form.crop || !form.story) return;
     setSaving(true);
     try {
-      await axios.post(`${API_URL}/api/ledger/log`, {
+      await api.post('/api/ledger/log', {
         entity_type: 'success_story',
         entity_id: deviceId,
         event_type: 'story_shared',

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Wrench, Plus, AlertTriangle } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -9,7 +9,6 @@ import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function EquipmentRegistry() {
   const { t } = useLang();
@@ -23,7 +22,7 @@ export default function EquipmentRegistry() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/ledger/chain/equipment/${deviceId}`);
+      const res = await api.get('/api/ledger/chain/equipment/${deviceId}');
       setBlocks(res.data.blocks || []);
     } catch {
       setBlocks([]);
@@ -39,7 +38,7 @@ export default function EquipmentRegistry() {
     if (!form.name) return;
     setSaving(true);
     try {
-      await axios.post(`${API_URL}/api/ledger/log`, {
+      await api.post('/api/ledger/log', {
         entity_type: 'equipment',
         entity_id: deviceId,
         event_type: 'equipment_registered',

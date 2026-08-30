@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import PincodeLocationFields from '../components/PincodeLocationFields';
+import { useLocationContext } from '../lib/LocationContext';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -19,6 +21,7 @@ const LANGUAGES = [
 
 export default function Register() {
   const navigate = useNavigate();
+  const { location: pincodeLocation } = useLocationContext();
   const [step, setStep] = useState(1); // 1: account, 2: language + land details
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,9 +31,6 @@ export default function Register() {
     email: '',
     password: '',
     language: 'en',
-    state: '',
-    district: '',
-    village: '',
     landSizeAcres: '',
     primaryCrop: '',
   });
@@ -60,14 +60,16 @@ export default function Register() {
         email: form.email,
         language: form.language,
         landDetails: {
-          state: form.state,
-          district: form.district,
-          village: form.village,
+          pincode: pincodeLocation.pincode,
+          state: pincodeLocation.state,
+          district: pincodeLocation.district,
+          mandal: pincodeLocation.mandal,
+          village: pincodeLocation.village,
           landSizeAcres: form.landSizeAcres,
           primaryCrop: form.primaryCrop,
         },
         createdAt: new Date().toISOString(),
-      });
+      }, { merge: true });
 
       navigate('/');
     } catch (err) {
@@ -148,36 +150,7 @@ export default function Register() {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
-                <input
-                  type="text"
-                  value={form.state}
-                  onChange={update('state')}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
-                <input
-                  type="text"
-                  value={form.district}
-                  onChange={update('district')}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Village / area</label>
-              <input
-                type="text"
-                value={form.village}
-                onChange={update('village')}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-              />
-            </div>
+            <PincodeLocationFields />
 
             <div className="grid grid-cols-2 gap-3">
               <div>

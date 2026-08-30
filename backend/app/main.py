@@ -60,8 +60,13 @@ app.include_router(translate.router, dependencies=_auth_dep)
 app.include_router(price_alerts.router, dependencies=_auth_dep)
 app.include_router(scheme.router, dependencies=_auth_dep)
 app.include_router(livestock_types.router, dependencies=_auth_dep)
-app.include_router(data_gov.router, dependencies=_auth_dep)
-app.include_router(location.router, dependencies=_auth_dep)
+# data_gov: public government open-data (Data.gov.in). No auth required —
+# this is public information, same policy as health.router above.
+app.include_router(data_gov.router)
+# location: pincode/state/district/village lookup. Public — no auth
+# required. Register.jsx and other pre-login flows need this to
+# resolve a farmer's location before an account exists.
+app.include_router(location.router)
 
 
 @app.get("/")

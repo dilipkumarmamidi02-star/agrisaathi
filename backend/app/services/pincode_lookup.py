@@ -6,6 +6,10 @@ in-memory index, so /api/location/pincode/{pincode} answers instantly
 for ALL of India — no live Data.gov.in call, no rate limit, no
 "only 10 states available right now" issue.
 
+Also builds a state -> district -> village tree from the same load,
+so /api/location/states, /districts, /villages can serve manual
+cascading dropdowns without a second dataset or a second file.
+
 Rebuild the CSV periodically (monthly is plenty) by re-running the
 download script; pincode->district mappings barely change.
 """
@@ -31,9 +35,15 @@ def _pick(row: dict, *candidates: str) -> str:
     return ""
 
 
+def _titlecase(value: str) -> str:
+    return " ".join(w.capitalize() for w in value.split())
+
+
 class PincodeIndex:
     def __init__(self):
         self._index: dict[str, dict] = {}
+        # state -> district -> set(villages)
+        self._tree: dict[str, dict[str, set]] = {}
         self._loaded = False
 
     def load(self):
@@ -57,6 +67,11 @@ class PincodeIndex:
                 mandal = _pick(row, "taluk", "mandal", "block")
                 village = _pick(row, "officename", "village", "postoffice")
 
+                if not state or state.upper() == "NA":
+                    state = ""
+                if not district or district.upper() == "NA":
+                    district = ""
+
                 entry = self._index.setdefault(pincode, {
                     "pincode": pincode,
                     "state": state,
@@ -69,8 +84,24 @@ class PincodeIndex:
                 if village:
                     entry["villages"].add(village)
 
+                if state and district:
+                    state_key = _titlecase(state)
+                    district_key = _titlecase(district)
+                    self._tree.setdefault(state_key, {}).setdefault(district_key, set())
+                    if village and village.upper() != "NA":
+                        village_clean = village
+                        for suffix in [" B.O", " S.O", " SO", " PO", " P.O"]:
+                            if village_clean.upper().endswith(suffix.upper()):
+                                village_clean = village_clean[: -len(suffix)].strip()
+                        self._tree[state_key][district_key].add(_titlecase(village_clean))
+
         self._loaded = True
-        print(f"[pincode_lookup] indexed {len(self._index)} pincodes from {CSV_PATH}")
+        total_districts = sum(len(d) for d in self._tree.values())
+        print(
+            f"[pincode_lookup] indexed {len(self._index)} pincodes, "
+            f"{len(self._tree)} states, {total_districts} districts "
+            f"from {CSV_PATH}"
+        )
 
     def resolve(self, pincode: str) -> Optional[dict]:
         if not self._loaded:
@@ -80,11 +111,33 @@ class PincodeIndex:
             return None
         return {
             "pincode": entry["pincode"],
-            "state": entry["state"],
-            "district": entry["district"],
+            # Title-cased to match get_states()/get_districts() output —
+            # the raw CSV has inconsistent casing (e.g. "TELANGANA")
+            # which would otherwise break exact-match comparisons
+            # against the manual-selection dropdowns.
+            "state": _titlecase(entry["state"]) if entry["state"] else "",
+            "district": _titlecase(entry["district"]) if entry["district"] else "",
             "mandals": sorted(entry["mandals"]),
             "villages": sorted(entry["villages"]),
         }
+
+    def get_states(self) -> list[str]:
+        if not self._loaded:
+            self.load()
+        return sorted(self._tree.keys())
+
+    def get_districts(self, state: str) -> list[str]:
+        if not self._loaded:
+            self.load()
+        state_key = _titlecase(state)
+        return sorted(self._tree.get(state_key, {}).keys())
+
+    def get_villages(self, state: str, district: str) -> list[str]:
+        if not self._loaded:
+            self.load()
+        state_key = _titlecase(state)
+        district_key = _titlecase(district)
+        return sorted(self._tree.get(state_key, {}).get(district_key, set()))
 
 
 @lru_cache(maxsize=1)

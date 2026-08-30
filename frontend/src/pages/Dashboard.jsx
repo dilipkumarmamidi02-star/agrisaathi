@@ -38,12 +38,15 @@ import {
 ;
 import PageHeader from '../components/PageHeader';
 import ProfitCalculator from '../components/ProfitCalculator';
+import PincodeLocationFields from '../components/PincodeLocationFields';
+import { useLocationContext } from '../lib/LocationContext';
 
 const today = new Date().toISOString().slice(0, 10);
 const daysUntil = (d) => Math.ceil((new Date(d) - new Date(today)) / 86400000);
 
 export default function Dashboard() {
   const { t } = useLang();
+  const { location: farmLocation } = useLocationContext();
   const [farms, setFarms] = useState([]);
   const [cycles, setCycles] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -86,7 +89,9 @@ export default function Dashboard() {
     if (!form.plot_name || !form.crop_name) { alert('Plot name and crop are required'); return; }
     const farm = await appClient.entities.Farm.create({
       plot_name: form.plot_name,
-      state: form.state,
+      state: farmLocation.state,
+      district: farmLocation.district,
+      village: farmLocation.village,
       area_value: form.area_value ? Number(form.area_value) : undefined,
       current_crop: form.crop_name,
       farm_type: 'crop',
@@ -225,7 +230,7 @@ export default function Dashboard() {
         <Card className="border-green-200"><CardContent className="pt-4 space-y-3">
           <div><Label className="mb-1 block">{t('plotName')}</Label><Input value={form.plot_name} onChange={(e) => setForm({ ...form, plot_name: e.target.value })} /></div>
           <div><Label className="mb-1 block">{t('crop')}</Label><Input value={form.crop_name} onChange={(e) => setForm({ ...form, crop_name: e.target.value })} /></div>
-          <div><Label className="mb-1 block">{t('state')}</Label><Input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} /></div>
+          <div><Label className="mb-1.5 block">{t('state')}</Label><PincodeLocationFields /></div>
           <div><Label className="mb-1 block">{t('area')}</Label><Input type="number" value={form.area_value} onChange={(e) => setForm({ ...form, area_value: e.target.value })} /></div>
           <div className="grid grid-cols-2 gap-2">
             <div><Label className="mb-1 block">Sowing</Label><Input type="date" value={form.sowing_date} onChange={(e) => setForm({ ...form, sowing_date: e.target.value })} /></div>

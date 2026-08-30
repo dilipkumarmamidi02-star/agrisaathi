@@ -4,12 +4,11 @@ import {
   ArrowLeft, Camera, X, Sprout, PawPrint, Mic, AlertTriangle,
   Leaf, FlaskConical, ShieldAlert, ChevronRight,
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import appClient from '@/api/appClient';
 import cropData from '@/data/cropEncyclopedia.json';
 import animalData from '@/data/animalEncyclopedia.json';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const STEPS = [
   { id: 1, label: 'Take a photo' },
@@ -131,7 +130,7 @@ export default function Diagnose() {
     if (symptoms) formData.append('symptoms_text', symptoms);
 
     try {
-      const response = await axios.post(`${API_URL}/api/diagnosis/analyze`, formData, {
+      const response = await api.post('/api/diagnosis/analyze', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 60000,
       });

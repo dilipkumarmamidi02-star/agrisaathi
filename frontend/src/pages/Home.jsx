@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { Mic, Camera, Droplets, Sprout, MapPin, Wallet, Stethoscope, TrendingUp, FlaskConical, ShieldCheck, Landmark, Wheat, User, Banknote, MessageSquare, CloudRain, Store, GraduationCap, FolderArchive, ShieldPlus, Package, ListTodo, Bug, Gauge, UserCheck, Trophy, BellRing, Contact, Bell, FileSpreadsheet, PawPrint } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import { useLang } from '../lib/i18n';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function Home() {
   const { t } = useLang();
@@ -15,8 +13,8 @@ export default function Home() {
   const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_URL}/health`).then(res => setHealth(res.data)).catch(() => {});
-    axios.get(`${API_URL}/api/weather/current?lat=17.3850&lon=78.4867`)
+    api.get('/health').then(res => setHealth(res.data)).catch(() => {});
+    api.get('/api/weather/current?lat=17.3850&lon=78.4867')
       .then(res => setWeather(res.data))
       .catch(() => {});
   }, []);
@@ -39,38 +37,20 @@ export default function Home() {
   };
 
   const quickLinks = [
-    { to: '/diagnose', icon: Camera, label: t('diagnose'), color: 'bg-amber-50 text-amber-700' },
     { to: '/fertilizer', icon: Droplets, label: t('fertilizer'), color: 'bg-blue-50 text-blue-700' },
     { to: '/soil-passport', icon: Sprout, label: t('soil'), color: 'bg-green-50 text-green-700' },
     { to: '/crop-planner', icon: TrendingUp, label: t('planner'), color: 'bg-purple-50 text-purple-700' },
     { to: '/livestock-care', icon: Stethoscope, label: t('livestock'), color: 'bg-rose-50 text-rose-700' },
-    { to: '/animal-encyclopedia', icon: PawPrint, label: t('animalEncyclopedia'), color: 'bg-fuchsia-50 text-fuchsia-700' },
     { to: '/market-prices', icon: Wallet, label: t('marketPrices'), color: 'bg-orange-50 text-orange-700' },
-    { to: '/near-me', icon: MapPin, label: t('nearMe'), color: 'bg-indigo-50 text-indigo-700' },
     { to: '/farm-ledger', icon: FileSpreadsheet, label: t('ledger'), color: 'bg-lime-50 text-lime-700' },
     { to: '/crop-passport', icon: ShieldCheck, label: t('cropPassportTitle'), color: 'bg-emerald-50 text-emerald-700' },
     { to: '/schemes', icon: Landmark, label: t('govSchemes'), color: 'bg-blue-50 text-blue-700' },
-    { to: '/community', icon: MessageSquare, label: t('community'), color: 'bg-purple-50 text-purple-700' },
-    { to: '/weather', icon: CloudRain, label: t('weather'), color: 'bg-sky-50 text-sky-700' },
     { to: '/sensor-lab', icon: FlaskConical, label: t('sensorLab'), color: 'bg-cyan-50 text-cyan-700' },
     { to: '/irrigation-planner', icon: Droplets, label: t('irrigation'), color: 'bg-cyan-50 text-cyan-700' },
-    { to: '/harvest-records', icon: Wheat, label: t('harvest'), color: 'bg-amber-50 text-amber-700' },
-    { to: '/profile-settings', icon: User, label: t('profile'), color: 'bg-slate-50 text-slate-700' },
-    { to: '/voice-notes', icon: Mic, label: t('voice'), color: 'bg-rose-50 text-rose-700' },
-    { to: '/loan-eligibility', icon: Banknote, label: t('loanEligibility'), color: 'bg-indigo-50 text-indigo-700' },
-    { to: '/input-marketplace', icon: Store, label: t('marketplace'), color: 'bg-orange-50 text-orange-700' },
     { to: '/training-center', icon: GraduationCap, label: t('training'), color: 'bg-teal-50 text-teal-700' },
-    { to: '/document-wallet', icon: FolderArchive, label: t('documents'), color: 'bg-amber-50 text-amber-700' },
-    { to: '/insurance-hub', icon: ShieldPlus, label: t('insurance'), color: 'bg-purple-50 text-purple-700' },
-    { to: '/inventory-tracker', icon: Package, label: t('inventory'), color: 'bg-blue-50 text-blue-700' },
-    { to: '/task-manager', icon: ListTodo, label: t('tasks'), color: 'bg-green-50 text-green-700' },
-    { to: '/alerts-center', icon: Bell, label: t('alerts'), color: 'bg-amber-50 text-amber-700' },
     { to: '/pest-library', icon: Bug, label: t('pestLibrary'), color: 'bg-red-50 text-red-700' },
-    { to: '/sustainability-score', icon: Gauge, label: t('sustainability'), color: 'bg-green-50 text-green-700' },
     { to: '/expert-directory', icon: UserCheck, label: t('experts'), color: 'bg-blue-50 text-blue-700' },
-    { to: '/success-stories', icon: Trophy, label: t('successStoriesTitle'), color: 'bg-amber-50 text-amber-700' },
     { to: '/farm-notifications', icon: BellRing, label: t('notifications'), color: 'bg-cyan-50 text-cyan-700' },
-    { to: '/vendor-contacts', icon: Contact, label: t('vendors'), color: 'bg-teal-50 text-teal-700' },
   ];
 
   return (
@@ -114,7 +94,7 @@ export default function Home() {
       )}
 
       {/* Weather Card */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-5 text-white shadow-lg">
+      <Link to="/weather" className="block bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-5 text-white shadow-lg hover:opacity-95 transition-opacity">
         {weather && weather.temperature != null ? (
           <div className="flex justify-between items-start">
             <div>
@@ -131,7 +111,7 @@ export default function Home() {
         ) : (
           <div className="text-center text-blue-100 py-4">{t('weatherDataUnavailable')}</div>
         )}
-      </div>
+      </Link>
 
       <div>
         <h3 className="text-sm font-semibold text-gray-500 mb-3">{t('allTools')}</h3>

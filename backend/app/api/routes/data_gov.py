@@ -44,6 +44,7 @@ async def get_resource(
     commodity: Optional[str] = Query(None),
     variety: Optional[str] = Query(None),
     grade: Optional[str] = Query(None),
+    pincode: Optional[str] = Query(None),
 ):
     """
     Generic Data.gov resource endpoint.
@@ -89,6 +90,9 @@ async def get_resource(
 
     if grade:
         filters["grade"] = grade.strip()
+
+    if pincode:
+        filters["pincode"] = pincode.strip()
 
     try:
         result = await fetch_resource(

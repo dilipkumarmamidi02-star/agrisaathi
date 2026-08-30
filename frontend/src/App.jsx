@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import AgriHelperWidget from './components/AgriHelperWidget.jsx';
+import RequireAuth from './components/RequireAuth.jsx';
 import Home from './pages/Home.jsx';
 import Diagnose from './pages/Diagnose.jsx';
 import NearMe from './pages/NearMe.jsx';
@@ -67,6 +68,7 @@ function App() {
     <Router>
       <Layout>
         <Routes>
+          <Route element={<RequireAuth />}>
           <Route path="/" element={<Home />} />
           <Route path="/diagnose" element={<Diagnose />} />
           <Route path="/near-me" element={<NearMe />} />
@@ -120,16 +122,23 @@ function App() {
           <Route path="/weather-analytics" element={<WeatherAnalytics />} />
           <Route path="/farm-notifications" element={<FarmNotifications />} />
           <Route path="/vendor-contacts" element={<VendorContacts />} />
+          </Route>
+
+          {/* Public routes — no auth required */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/oauth-consent" element={<OAuthConsent />} />
+
+          <Route element={<RequireAuth />}>
           <Route path="/weather" element={<Weather />} />
           <Route path="/community" element={<Community />} />
           <Route path="/animal-encyclopedia" element={<AnimalEncyclopedia />} />
           <Route path="/animal-encyclopedia/:categoryId/:typeId" element={<AnimalEncyclopediaDetail />} />
           <Route path="/crop-encyclopedia/:categoryId/:typeId" element={<CropEncyclopediaDetail />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react'
 import { Leaf, Plus, Check, Calendar } from 'lucide-react';
 import { useLang } from '../lib/i18n';
 import appClient from '../api/appClient';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+import api from '../api/apiClient';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Label } from '../components/ui/label';
@@ -25,7 +23,7 @@ export default function LivestockCare() {
 
   const load = async () => {
     const [tpRes, lg] = await Promise.all([
-      axios.get(`${API_URL}/api/livestock-types`).catch(() => ({ data: [] })),
+      api.get('/api/livestock-types').catch(() => ({ data: [] })),
       appClient.entities.LivestockCareLog.list('-scheduled_date').catch(() => []),
     ]);
     setTypes(tpRes.data);
@@ -45,7 +43,7 @@ export default function LivestockCare() {
       status: 'pending',
       notes: form.notes || undefined,
     });
-    axios.post(`${API_URL}/api/ledger/log`, {
+    api.post('/api/ledger/log', {
       entity_type: 'livestock_care',
       entity_id: form.animal_type,
       event_type: 'care_logged',
@@ -58,7 +56,7 @@ export default function LivestockCare() {
 
   const markDone = async (log) => {
     await appClient.entities.LivestockCareLog.update(log.id, { status: 'done', completed_date: new Date().toISOString().slice(0, 10) });
-    axios.post(`${API_URL}/api/ledger/log`, {
+    api.post('/api/ledger/log', {
       entity_type: 'livestock_care',
       entity_id: log.animal_type,
       event_type: 'care_completed',

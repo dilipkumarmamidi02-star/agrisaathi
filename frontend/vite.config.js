@@ -14,6 +14,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: false, // using our own public/manifest.webmanifest
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB, up from the 2 MB default
+      },
     }),
   ],
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import api from '../api/apiClient';
 import { Bug } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -7,7 +7,6 @@ import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const TYPE_COLORS = {
   pest: 'bg-red-100 text-red-700',
@@ -24,10 +23,10 @@ export default function PestLibrary() {
   const [disclaimer, setDisclaimer] = useState('');
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/pest-library`)
+    api.get('/api/pest-library')
       .then((res) => { setItems(res.data.items || []); setDisclaimer(res.data.disclaimer || ''); })
       .catch(() => setItems([]));
-    axios.get(`${API_URL}/api/pest-library/livestock-vaccines`)
+    api.get('/api/pest-library/livestock-vaccines')
       .then((res) => setVaccines(res.data.items || []))
       .catch(() => setVaccines([]));
   }, []);

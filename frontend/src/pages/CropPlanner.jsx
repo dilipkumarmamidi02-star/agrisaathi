@@ -9,12 +9,8 @@ import {
 import {
   base44
 } from '../api/base44Client';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
-import {
-  districtsOf
-} from '../lib/indianLocations';
+import api from '../api/apiClient';
+import { useLocationContext } from '../lib/LocationContext';
 import {
   Card,
   CardContent
@@ -60,11 +56,18 @@ export default function CropPlanner() {
   const [loading, setLoading] = useState(false);
   const [soilCtx, setSoilCtx] = useState(null);
   const [waterCtx, setWaterCtx] = useState(null);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const { browseDistricts } = useLocationContext();
 
   useEffect(() => {
     base44.entities.Crop.list('name_en', 300).then(setCrops).catch(() => []);
     base44.entities.StateSoilProfile.list().then(setProfiles).catch(() => []);
   }, []);
+
+  useEffect(() => {
+    if (!state) { setDistrictOptions([]); return; }
+    browseDistricts(state).then(setDistrictOptions);
+  }, [state, browseDistricts]);
 
   const plan = async () => {
     const profile = profiles.find((p) => p.state_ut === state);
@@ -94,7 +97,7 @@ export default function CropPlanner() {
     setLoading(true);
     setEstimates({});
     try {
-      const res = await axios.post(`${API_URL}/api/crop-planner/estimate`, {
+      const res = await api.post('/api/crop-planner/estimate', {
         state, district, water, season,
         soil_context: soilInfo,
         water_context: waterInfo,
@@ -103,7 +106,7 @@ export default function CropPlanner() {
       const map = {};
       (res.data.crops || []).forEach((c) => { map[c.name] = c; });
       setEstimates(map);
-      axios.post(`${API_URL}/api/ledger/log`, {
+      api.post('/api/ledger/log', {
         entity_type: 'crop_plan',
         entity_id: `${state || 'india'}_${Date.now()}`,
         event_type: 'plan_generated',
@@ -135,7 +138,7 @@ export default function CropPlanner() {
         <div><Label className="mb-1.5 block">{t('district')}</Label>
           <Select value={district} onValueChange={setDistrict} disabled={!state}>
             <SelectTrigger><SelectValue placeholder={state ? t('selectDistrict') : t('selectStateFirst')} /></SelectTrigger>
-            <SelectContent className="max-h-72">{districtsOf(state).map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+            <SelectContent className="max-h-72">{districtOptions.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <div><Label className="mb-1.5 block">{t('water')}</Label>

@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import api from '../api/apiClient';
 import { CloudSun, Wind, Droplets, MapPin } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function Weather() {
   const [weather, setWeather] = useState(null);
@@ -15,7 +14,7 @@ export default function Weather() {
   function fetchWeather(lat, lon) {
     setLoading(true);
     setError(null);
-    axios.get(`${API_URL}/api/weather/current`, { params: { lat, lon } })
+    api.get('/api/weather/current', { params: { lat, lon } })
       .then((res) => setWeather(res.data))
       .catch((err) => setError(err?.response?.data?.detail || 'Could not fetch weather'))
       .finally(() => setLoading(false));

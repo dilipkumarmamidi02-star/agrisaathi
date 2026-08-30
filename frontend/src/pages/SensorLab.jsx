@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios';
+import api from '../api/apiClient';
 import { Gauge, Bluetooth } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -8,7 +8,6 @@ import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function SensorLab() {
   const { t } = useLang();
@@ -44,7 +43,7 @@ export default function SensorLab() {
     const samples = soilSamples.filter((v) => v !== '').map(Number);
     if (samples.length === 0) { setSoilError('Enter at least one soil pH sample.'); return; }
     try {
-      const res = await axios.post(`${API_URL}/api/sensors/soil/analyze`, {
+      const res = await api.post('/api/sensors/soil/analyze', {
         ph_samples: samples,
         n: n ? Number(n) : null,
         p: p ? Number(p) : null,
@@ -64,7 +63,7 @@ export default function SensorLab() {
       .map((s) => ({ ph: s.ph ? Number(s.ph) : null, ec: s.ec ? Number(s.ec) : null }));
     if (samples.length === 0) { setWaterError('Enter at least one water sample.'); return; }
     try {
-      const res = await axios.post(`${API_URL}/api/sensors/water/analyze`, {
+      const res = await api.post('/api/sensors/water/analyze', {
         samples,
         tds: tds ? Number(tds) : null,
         turbidity: turbidity ? Number(turbidity) : null,

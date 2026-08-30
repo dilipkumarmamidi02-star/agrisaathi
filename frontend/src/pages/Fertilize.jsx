@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import api from '../api/apiClient';
 import { Droplets, Leaf } from 'lucide-react';
 import { useLang } from '../lib/i18n';
 import { Button } from '../components/ui/button';
@@ -9,21 +9,29 @@ import { Input } from '../components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import PincodeLocationFields from '../components/PincodeLocationFields';
+import { useLocationContext } from '../lib/LocationContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function Fertilize() {
   const { t } = useLang();
   const [crops, setCrops] = useState([]);
   const [soilProfiles, setSoilProfiles] = useState([]);
   const [form, setForm] = useState({ crop: '', area: '', unit: 'acre', state: '', n: '', p: '', k: '', ph: '' });
+  const { location } = useLocationContext();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/crops`).then((res) => setCrops(res.data)).catch(() => setCrops([]));
-    axios.get(`${API_URL}/api/soil-profiles`).then((res) => setSoilProfiles(res.data)).catch(() => setSoilProfiles([]));
+    api.get('/api/crops').then((res) => setCrops(res.data)).catch(() => setCrops([]));
+    api.get('/api/soil-profiles').then((res) => setSoilProfiles(res.data)).catch(() => setSoilProfiles([]));
   }, []);
+
+  useEffect(() => {
+    if (location.state && location.state !== form.state) {
+      setForm((f) => ({ ...f, state: location.state }));
+    }
+  }, [location.state]);
 
   const stateDefault = soilProfiles.find((s) => s.state === form.state);
 
@@ -35,7 +43,7 @@ export default function Fertilize() {
     setLoading(true);
     setResult(null);
     try {
-      const res = await axios.post(`${API_URL}/api/fertilizer/calculate`, {
+      const res = await api.post('/api/fertilizer/calculate', {
         crop: form.crop,
         area: parseFloat(form.area),
         unit: form.unit,
@@ -45,11 +53,11 @@ export default function Fertilize() {
         soil_ph: form.ph ? parseFloat(form.ph) : null,
       });
       setResult(res.data);
-      axios.post(`${API_URL}/api/ledger/log`, {
+      api.post('/api/ledger/log', {
         entity_type: 'fertilizer_recommendation',
         entity_id: `${form.crop}_${Date.now()}`,
         event_type: 'recommendation_generated',
-        payload: { crop: form.crop, area: form.area, unit: form.unit },
+        payload: { crop: form.crop, area: form.area, unit: form.unit, location },
       }).catch(() => {});
     } catch (_err) {
       alert('Calculation failed. Please try again.');
@@ -88,14 +96,13 @@ export default function Fertilize() {
             </Select>
           </div>
         </div>
+
         <div>
-          <Label className="mb-1.5 block">{t('state')}</Label>
-          <Select value={form.state} onValueChange={(v) => setForm({ ...form, state: v })}>
-            <SelectTrigger><SelectValue placeholder={t('state')} /></SelectTrigger>
-            <SelectContent className="max-h-72">{soilProfiles.map((s) => <SelectItem key={s.state} value={s.state}>{s.state}</SelectItem>)}</SelectContent>
-          </Select>
-          {stateDefault && <p className="text-xs text-gray-400 mt-1">Default soil: {stateDefault.dominant_soil_type} (pH {stateDefault.typical_ph_range})</p>}
+          <Label className="mb-1.5 block">{t('state')} / Location</Label>
+          <PincodeLocationFields />
+          {stateDefault && <p className="text-xs text-gray-400 mt-2">Default soil: {stateDefault.dominant_soil_type} (pH {stateDefault.typical_ph_range})</p>}
         </div>
+
         <div className="grid grid-cols-4 gap-2">
           {[['n', 'N'], ['p', 'P'], ['k', 'K'], ['ph', 'pH']].map(([k, lbl]) => (
             <div key={k}>

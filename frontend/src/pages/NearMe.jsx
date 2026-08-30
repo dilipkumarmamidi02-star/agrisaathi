@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
 import { MapPin, Phone, Building2, Sprout, Navigation, ExternalLink, Store, Leaf, FlaskConical } from 'lucide-react';
 import { useLang } from '../lib/i18n';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+import api from '../api/apiClient';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -38,9 +36,9 @@ export default function NearMe() {
   const [shopsLoading, setShopsLoading] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/kvk`)
+    api.get('/api/kvk')
       .then((res) => setKvks((res.data || []).map((k, idx) => ({
-        id: `kvk_${k.state}_${k.serial_no ?? idx}`,
+        id: `kvk_${k.state}_${k.serial_no ?? 'na'}_${idx}`,
         address: k.address,
         state_ut: k.state,
         host_institution_approx: k.host_institution,
@@ -51,7 +49,7 @@ export default function NearMe() {
         VERIFY_AT: k.verify_at,
       }))))
       .catch(() => setKvks([]));
-    axios.get(`${API_URL}/api/gov-markets`)
+    api.get('/api/gov-markets')
       .then((res) => setMarkets((res.data || []).map((m) => ({
         id: `market_${m.market_name}_${m.state}`,
         market_name: m.market_name,

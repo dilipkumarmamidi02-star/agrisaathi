@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Phone, MapPin, ExternalLink, ShieldCheck, ShieldQuestion } from 'lucide-react';
+import { getAuth } from 'firebase/auth';
+
+// Attaches the signed-in user's Firebase ID token as a plain fetch() header.
+// Async because getIdToken() is async — callers must await this before use.
+async function authHeader() {
+  const user = getAuth().currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { Authorization: `Bearer ${token}` };
+}
 
 /**
  * NextSteps
@@ -24,7 +34,8 @@ export default function NextSteps({ pincode, productName }) {
     // dataGov registry to resolve district, then looks up the nearest KVK.
     // Adjust the endpoint path to whatever your backend actually exposes —
     // this assumes a /api/near-me/kvk route backed by pincode -> district lookup.
-    fetch(`/api/near-me/kvk?pincode=${encodeURIComponent(pincode)}`)
+    authHeader().then((headers) =>
+      fetch(`/api/near-me/kvk?pincode=${encodeURIComponent(pincode)}`, { headers })
       .then((r) => {
         if (!r.ok) throw new Error('not found');
         return r.json();
@@ -37,7 +48,7 @@ export default function NextSteps({ pincode, productName }) {
           setKvkStatus('unavailable');
         }
       })
-      .catch(() => setKvkStatus('unavailable'));
+      .catch(() => setKvkStatus('unavailable')));
   }, [pincode]);
 
   useEffect(() => {
@@ -46,7 +57,8 @@ export default function NextSteps({ pincode, productName }) {
     // or a dedicated registration dataset if you have one. This is a FACTUAL
     // lookup only ("is this name present in current records?") — never a
     // recommendation, dosage, or safety claim.
-    fetch(`/api/data-gov/resources/data?resource=pesticide_dealers&product=${encodeURIComponent(productName)}&limit=1`)
+    authHeader().then((headers) =>
+      fetch(`/api/data-gov/resources/data?resource=pesticide_dealers&product=${encodeURIComponent(productName)}&limit=1`, { headers })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data && typeof data.count === 'number') {
@@ -55,7 +67,7 @@ export default function NextSteps({ pincode, productName }) {
           setRegStatus('unavailable');
         }
       })
-      .catch(() => setRegStatus('unavailable'));
+      .catch(() => setRegStatus('unavailable')));
   }, [productName]);
 
   return (

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { ShieldCheck, Search, CheckCircle2, XCircle } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/apiClient';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function CropPassport() {
   const { t } = useLang();
@@ -15,7 +14,7 @@ export default function CropPassport() {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/crop-passport/requirements`)
+    api.get('/api/crop-passport/requirements')
       .then((res) => {
         setRequirements(res.data.requirements);
         setSource(res.data.source);
@@ -29,14 +28,13 @@ export default function CropPassport() {
     if (!current) return;
     setGenerating(true);
     try {
-      await axios.post(`${API_URL}/api/ledger/log`, {
+      await api.post('/api/ledger/log', {
         entity_type: 'crop_passport',
         entity_id: current.crop,
         event_type: 'passport_generated',
         payload: current,
       });
-      const chainRes = await axios.get(
-        `${API_URL}/api/ledger/chain/crop_passport/${encodeURIComponent(current.crop)}`
+      const chainRes = await api.get('/api/ledger/chain/crop_passport/${encodeURIComponent(current.crop)}'
       );
       setChain(chainRes.data);
     } catch {

@@ -9,6 +9,11 @@ const LocationContext = createContext(null);
 // Every page reads location from here instead of re-asking the user.
 // Set once (Profile page, or first prompt from any page), persisted
 // to localStorage, resolved instantly from the local pincode CSV.
+//
+// Two ways to set location:
+//   - resolvePincode(pincode)              — fast path, auto-fills everything
+//   - browseStates() / browseDistricts(state) / browseVillages(state, district)
+//     — manual fallback for farmers who don't know their pincode
 export function LocationProvider({ children }) {
   const [location, setLocationState] = useState(() => {
     try {
@@ -54,12 +59,52 @@ export function LocationProvider({ children }) {
     }
   }, []);
 
+  const browseStates = useCallback(async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/location/states`);
+      return res.data.states || [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const browseDistricts = useCallback(async (state) => {
+    if (!state) return [];
+    try {
+      const res = await axios.get(`${API_URL}/api/location/districts`, { params: { state } });
+      return res.data.districts || [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const browseVillages = useCallback(async (state, district) => {
+    if (!state || !district) return [];
+    try {
+      const res = await axios.get(`${API_URL}/api/location/villages`, { params: { state, district } });
+      return res.data.villages || [];
+    } catch {
+      return [];
+    }
+  }, []);
+
   const setLocation = useCallback((partial) => {
     setLocationState((prev) => ({ ...prev, ...partial }));
   }, []);
 
   return (
-    <LocationContext.Provider value={{ location, setLocation, resolvePincode, resolving, error }}>
+    <LocationContext.Provider
+      value={{
+        location,
+        setLocation,
+        resolvePincode,
+        resolving,
+        error,
+        browseStates,
+        browseDistricts,
+        browseVillages,
+      }}
+    >
       {children}
     </LocationContext.Provider>
   );

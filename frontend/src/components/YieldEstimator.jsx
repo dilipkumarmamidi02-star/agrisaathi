@@ -3,6 +3,7 @@ import { Card, CardContent } from './ui/card';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { useLang } from '../lib/i18n';
 
 const BASE_YIELD = {
   rice: 2200,
@@ -13,6 +14,7 @@ const BASE_YIELD = {
 };
 
 export default function YieldEstimator() {
+  const { t } = useLang();
   const [crop, setCrop] = useState('rice');
   const [area, setArea] = useState('');
 
@@ -28,7 +30,7 @@ export default function YieldEstimator() {
         <h3 className="text-sm font-semibold text-gray-800">Yield Estimator</h3>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <Label>Crop</Label>
+            <Label>{t('cropSingular')}</Label>
             <Select value={crop} onValueChange={setCrop}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>

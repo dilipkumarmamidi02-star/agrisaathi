@@ -4,10 +4,12 @@ import axios from 'axios';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function AlertsCenter() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [lowStockItems, setLowStockItems] = useState([]);
   const [forecastDays, setForecastDays] = useState([]);
@@ -63,7 +65,7 @@ export default function AlertsCenter() {
 
   return (
     <div>
-      <PageHeader title="Alerts Center" icon={Bell} />
+      <PageHeader title={t('alertsCenterTitle')} icon={Bell} />
       <p className="text-xs text-gray-500 mb-3">
         {totalAlerts > 0
           ? `${totalAlerts} alert${totalAlerts > 1 ? 's' : ''} need your attention.`

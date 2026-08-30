@@ -21,10 +21,11 @@ import {
 } from '../components/ui/button';
 
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  'http://localhost:8000';
+  'http://localhost:8001';
 
 const DEFAULT_LOCATION = {
   lat: 17.385,
@@ -32,6 +33,7 @@ const DEFAULT_LOCATION = {
 };
 
 export default function WeatherAnalytics() {
+  const { t } = useLang();
   const [current, setCurrent] =
     useState(null);
 
@@ -123,7 +125,7 @@ export default function WeatherAnalytics() {
   return (
     <div>
       <PageHeader
-        title="Weather Analytics"
+        title={t('weatherAnalyticsTitle')}
         icon={CloudRain}
       />
 

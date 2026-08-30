@@ -1,0 +1,53 @@
+AgriSaathi Agri Helper contract patch.
+
+The patch adds deterministic frontend-side feature and context resolution helpers.
+
+Supported areas include:
+Dashboard
+Home
+Crops
+Diagnose
+Fertilizer
+Soil Passport
+Livestock
+Animal Encyclopedia
+Market Prices
+Near Me
+Farm Ledger
+Crop Passport
+Government Schemes
+Community
+Weather
+Sensor Lab
+Irrigation
+Harvest
+Profile
+Voice Notes
+Loan Eligibility
+Marketplace
+Training
+Documents
+Insurance
+Inventory
+Tasks
+Alerts
+Pest Library
+Sustainability
+Experts
+Success Stories
+Notifications
+Vendors
+Speak to AgriSaathi
+All Tools
+
+Important separation:
+
+Agri Helper remains the floating contextual navigation and page assistance system.
+
+Speak to AgriSaathi remains the separate central voice-first agricultural knowledge system.
+
+Resource #26 must remain part of Speak to AgriSaathi retrieval and must not be treated as Agri Helper identity.
+
+This patch does not replace the existing AgriHelperWidget implementation, backend helper service, RAG implementation, Data.gov registry, database, or voice implementation.
+
+The existing backend 502 at /api/helper/chat must be diagnosed against the actual backend implementation rather than hidden with fake responses.

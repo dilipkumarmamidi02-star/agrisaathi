@@ -1,133 +1,212 @@
-import { useState, useEffect } from 'react'
-import { User, MapPin, Globe, Save, Plus, Trash2 } from 'lucide-react';
-import { useLang, LANGS } from '../lib/i18n';
-import appClient from '../api/appClient';
-import { Card, CardContent } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
-import LocationFields from '../components/LocationFields';
-import PageHeader from '../components/PageHeader';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { updateProfile } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
+
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: 'हिंदी' },
+  { code: 'te', label: 'తెలుగు' },
+  { code: 'ta', label: 'தமிழ்' },
+  { code: 'kn', label: 'ಕನ್ನಡ' },
+  { code: 'ml', label: 'മലയാളം' },
+  { code: 'mr', label: 'मराठी' },
+  { code: 'bn', label: 'বাংলা' },
+  { code: 'gu', label: 'ગુજરાતી' },
+  { code: 'pa', label: 'ਪੰਜਾਬੀ' },
+];
 
 export default function ProfileSettings() {
-  const { t, lang, setLang } = useLang();
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState({ full_name: '', phone: '', state: '', district: '', mandal: '', village: '', geo_lat: null, geo_lng: null, preferred_language: 'en' });
-  const [farms, setFarms] = useState([]);
+  const navigate = useNavigate();
+  const user = auth.currentUser;
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [showFarm, setShowFarm] = useState(false);
-  const [farmForm, setFarmForm] = useState({ plot_name: '', state: '', district: '', mandal: '', village: '', geo_lat: null, geo_lng: null, area_value: '', area_unit: 'acre' });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const [form, setForm] = useState({
+    name: '',
+    language: 'en',
+    state: '',
+    district: '',
+    village: '',
+    landSizeAcres: '',
+    primaryCrop: '',
+  });
 
   useEffect(() => {
-    appClient.auth.me().then((u) => {
-      setUser(u);
-      setProfile({
-        full_name: u.full_name || '',
-        phone: u.phone || '',
-        state: u.state || '',
-        district: u.district || '',
-        mandal: u.mandal || '',
-        village: u.village || '',
-        geo_lat: u.geo_lat ?? null,
-        geo_lng: u.geo_lng ?? null,
-        preferred_language: u.preferred_language || 'en',
-      });
-    }).catch(() => {});
-    appClient.entities.Farm.list().then(setFarms).catch(() => {});
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    (async () => {
+      try {
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          setForm({
+            name: data.name || user.displayName || '',
+            language: data.language || 'en',
+            state: data.landDetails?.state || '',
+            district: data.landDetails?.district || '',
+            village: data.landDetails?.village || '',
+            landSizeAcres: data.landDetails?.landSizeAcres || '',
+            primaryCrop: data.landDetails?.primaryCrop || '',
+          });
+        }
+      } catch (err) {
+        setError(err?.message || 'Could not load your profile.');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const saveProfile = async () => {
+  const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
     setSaving(true);
     try {
-      await appClient.auth.updateMe({
-        full_name: profile.full_name,
-        phone: profile.phone,
-        state: profile.state,
-        district: profile.district,
-        mandal: profile.mandal,
-        village: profile.village,
-        geo_lat: profile.geo_lat,
-        geo_lng: profile.geo_lng,
-        preferred_language: profile.preferred_language,
+      if (form.name.trim() && form.name.trim() !== user.displayName) {
+        await updateProfile(user, { displayName: form.name.trim() });
+      }
+      await updateDoc(doc(db, 'users', user.uid), {
+        name: form.name.trim(),
+        language: form.language,
+        landDetails: {
+          state: form.state,
+          district: form.district,
+          village: form.village,
+          landSizeAcres: form.landSizeAcres,
+          primaryCrop: form.primaryCrop,
+        },
+        updatedAt: new Date().toISOString(),
       });
-      if (profile.preferred_language !== lang) setLang(profile.preferred_language);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } catch { alert(t('saveFailed')); } finally { setSaving(false); }
+      setSuccess('Profile updated.');
+    } catch (err) {
+      setError(err?.message || 'Could not save your changes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const addFarm = async () => {
-    if (!farmForm.plot_name) return;
-    await appClient.entities.Farm.create({ ...farmForm, area_value: farmForm.area_value ? Number(farmForm.area_value) : undefined, geo_lat: farmForm.geo_lat || undefined, geo_lng: farmForm.geo_lng || undefined });
-    setFarmForm({ plot_name: '', state: '', district: '', mandal: '', village: '', geo_lat: null, geo_lng: null, area_value: '', area_unit: 'acre' });
-    setShowFarm(false);
-    appClient.entities.Farm.list().then(setFarms);
-  };
-  const removeFarm = async (id) => { await appClient.entities.Farm.delete(id); appClient.entities.Farm.list().then(setFarms); };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-sm text-gray-500">Loading your profile…</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <PageHeader titleKey="profileSettings" icon={User} />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Profile settings</h1>
+        <p className="text-sm text-gray-500 mb-6">Update your language and land details</p>
 
-      <Card className="mb-4"><CardContent className="pt-4 space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5"><User className="h-4 w-4 text-green-600" />{t('personalInfo')}</h3>
-        <div><Label className="mb-1 block">{t('fullName')}</Label><Input value={profile.full_name} onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} /></div>
-        <div><Label className="mb-1 block">{t('phone')}</Label><Input value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} placeholder="10-digit mobile" /></div>
-        {user?.email && <p className="text-xs text-gray-400">{t('email')}: {user.email}</p>}
-      </CardContent></Card>
-
-      <Card className="mb-4"><CardContent className="pt-4 space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5"><MapPin className="h-4 w-4 text-green-600" />{t('farmAddress')}</h3>
-        <LocationFields value={profile} onChange={(v) => setProfile({ ...profile, ...v })} />
-      </CardContent></Card>
-
-      <Card className="mb-4"><CardContent className="pt-4 space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-1.5"><Globe className="h-4 w-4 text-green-600" />{t('regionalPrefs')}</h3>
-        <div><Label className="mb-1 block">{t('language')}</Label>
-          <Select value={profile.preferred_language} onValueChange={(v) => setProfile({ ...profile, preferred_language: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent className="max-h-72">{LANGS.map((l) => <SelectItem key={l.code} value={l.code}>{l.name}</SelectItem>)}</SelectContent>
-          </Select>
-        </div>
-      </CardContent></Card>
-
-      <Button onClick={saveProfile} disabled={saving} className="w-full mb-4 bg-green-600 hover:bg-green-700">
-        <Save className="h-4 w-4" /> {saved ? t('saved') : t('save')}
-      </Button>
-
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">{t('myPlots')}</h3>
-        <Button size="sm" variant="outline" onClick={() => setShowFarm(!showFarm)}><Plus className="h-3 w-3" />{t('addPlot')}</Button>
-      </div>
-
-      {showFarm && (
-        <Card className="mb-3"><CardContent className="pt-4 space-y-2">
-          <div className="grid grid-cols-2 gap-2">
-            <div><Label className="mb-1 block">{t('plotName')}</Label><Input value={farmForm.plot_name} onChange={(e) => setFarmForm({ ...farmForm, plot_name: e.target.value })} /></div>
-            <div><Label className="mb-1 block">{t('area')}</Label><Input type="number" value={farmForm.area_value} onChange={(e) => setFarmForm({ ...farmForm, area_value: e.target.value })} /></div>
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3">
+            {error}
           </div>
-          <LocationFields value={farmForm} onChange={(v) => setFarmForm({ ...farmForm, ...v })} compact />
-          <Button onClick={addFarm} size="sm" className="w-full bg-green-600 hover:bg-green-700">{t('save')}</Button>
-        </CardContent></Card>
-      )}
+        )}
+        {success && (
+          <div className="mb-4 bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg p-3">
+            {success}
+          </div>
+        )}
 
-      {farms.length === 0 ? (
-        <p className="text-xs text-gray-400">{t('noPlots')}</p>
-      ) : (
-        <div className="space-y-2">
-          {farms.map((f) => (
-            <Card key={f.id}><CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-sm font-medium truncate">{f.plot_name}</p>
-                <p className="text-xs text-gray-500">{[f.village, f.district, f.state].filter(Boolean).join(', ') || '—'}{f.area_value ? ` · ${f.area_value} ${f.area_unit}` : ''}</p>
-              </div>
-              <Button size="icon" variant="ghost" onClick={() => removeFarm(f.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
-            </CardContent></Card>
-          ))}
-        </div>
-      )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={update('name')}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Preferred language</label>
+            <select
+              value={form.language}
+              onChange={update('language')}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>{l.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+              <input
+                type="text"
+                value={form.state}
+                onChange={update('state')}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+              <input
+                type="text"
+                value={form.district}
+                onChange={update('district')}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Village / area</label>
+            <input
+              type="text"
+              value={form.village}
+              onChange={update('village')}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Land size (acres)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={form.landSizeAcres}
+                onChange={update('landSizeAcres')}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Primary crop</label>
+              <input
+                type="text"
+                value={form.primaryCrop}
+                onChange={update('primaryCrop')}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg text-sm"
+          >
+            {saving ? 'Saving…' : 'Save changes'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

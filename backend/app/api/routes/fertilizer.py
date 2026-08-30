@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.data.fertilizer_reference import CROP_NPK_PER_HECTARE, STATE_SOIL_PROFILES, AREA_TO_HECTARE
+from app.data.fertilizer_reference import CROP_NPK_PER_HECTARE, AREA_TO_HECTARE
 
 router = APIRouter(prefix="/api", tags=["fertilizer"])
 
@@ -10,9 +10,12 @@ def list_crops():
     return [{"name_en": name} for name in sorted(CROP_NPK_PER_HECTARE.keys())]
 
 
-@router.get("/soil-profiles")
-def list_soil_profiles():
-    return STATE_SOIL_PROFILES
+# NOTE: a duplicate GET /soil-profiles route used to live here, shadowing
+# the real, CSV-backed implementation in app/api/routes/soil_profiles.py
+# (registered later in main.py, so this one always won). Removed — the
+# real implementation is the only one now. See STATE_SOIL_PROFILES in
+# fertilizer_reference.py if that hardcoded data is still needed
+# elsewhere; it is no longer served at this path.
 
 
 class FertilizerRequest(BaseModel):

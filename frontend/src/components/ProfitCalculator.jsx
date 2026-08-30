@@ -2,8 +2,10 @@ import { useState, useMemo } from 'react'
 import { Card, CardContent } from './ui/card';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
+import { useLang } from '../lib/i18n';
 
 export default function ProfitCalculator() {
+  const { t } = useLang();
   const [area, setArea] = useState('');
   const [costPerAcre, setCostPerAcre] = useState('');
   const [yieldPerAcre, setYieldPerAcre] = useState('');
@@ -43,15 +45,15 @@ export default function ProfitCalculator() {
         </div>
         <div className="pt-2 border-t border-gray-100 grid grid-cols-3 gap-2 text-center">
           <div>
-            <p className="text-xs text-gray-500">Revenue</p>
+            <p className="text-xs text-gray-500">{t('revenue')}</p>
             <p className="text-sm font-semibold text-gray-800">₹{revenue.toLocaleString('en-IN')}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">Cost</p>
+            <p className="text-xs text-gray-500">{t('cost')}</p>
             <p className="text-sm font-semibold text-gray-800">₹{cost.toLocaleString('en-IN')}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500">Profit</p>
+            <p className="text-xs text-gray-500">{t('profit')}</p>
             <p className={`text-sm font-semibold ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               ₹{profit.toLocaleString('en-IN')}
             </p>

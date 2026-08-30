@@ -1,0 +1,10 @@
+357d433 frontend: stabilize existing AgriSaathi deployment
+de0eef9 Ignore filelock runtime lock files
+39c64e3 Remove stale duplicate src/ directory at repo root (superseded by frontend/src/ since project restructure)
+999f806 Fix 72-resource data.gov.in registry wiring; add real backend persistence for soil records; clean up stray backup files
+b5d2daf Remove environment secrets from repository
+0f0ef0b Complete Data.gov.in 72 resource integration and validation
+3ceb141 Add 6 verified data.gov.in resources (fertilizer, PM-KISAN, PMFBY, cold storage)
+ccf2388 Fix weather and community routing; wire Farm Ledger to blockchain ledger API
+8baec21 agrisaathi full project
+be8e2bb Merge existing main with backend integration

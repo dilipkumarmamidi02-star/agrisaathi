@@ -57,7 +57,7 @@ export default function Treatments() {
             <SelectContent className="max-h-72">{crops.map((c) => <SelectItem key={c.id} value={c.name_en}>{c.name_en}</SelectItem>)}</SelectContent>
           </Select>
         </div>
-        <div><Label className="mb-1.5 block">Disease / pest / issue</Label>
+        <div><Label className="mb-1.5 block">{t('diseasePestIssueLabel')}</Label>
           <Input value={issue} onChange={(e) => setIssue(e.target.value)} placeholder="e.g. powdery mildew, aphids, yellow leaves" />
         </div>
         <Button onClick={search} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 h-12"><Search className="h-4 w-4 mr-1" />{loading ? t('analyzing') : t('search')}</Button>
@@ -68,11 +68,11 @@ export default function Treatments() {
           <h3 className="font-bold">{result.summary}</h3>
           {result.organic_treatment && <div className="bg-green-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-green-700 flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
           {result.chemical_treatment && <div className="bg-blue-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-blue-700">{t('chemical')}</p><p className="text-sm mt-0.5">{result.chemical_treatment}</p></div>}
-          {result.application_method && <div><p className="text-xs font-semibold text-gray-500">Method</p><p className="text-sm">{result.application_method}</p></div>}
-          {result.timing && <div><p className="text-xs font-semibold text-gray-500">Timing</p><p className="text-sm">{result.timing}</p></div>}
+          {result.application_method && <div><p className="text-xs font-semibold text-gray-500">{t('method')}</p><p className="text-sm">{result.application_method}</p></div>}
+          {result.timing && <div><p className="text-xs font-semibold text-gray-500">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
           {result.precautions && <div className="bg-amber-50 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-700 flex items-center gap-1"><Shield className="h-3 w-3" />{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
-          {result.pre_harvest_interval && <p className="text-xs text-gray-500">Pre-harvest interval: {result.pre_harvest_interval}</p>}
-          {result.source && <p className="text-[10px] text-gray-400">Source: {result.source}</p>}
+          {result.pre_harvest_interval && <p className="text-xs text-gray-500">{t('preHarvestInterval')}: {result.pre_harvest_interval}</p>}
+          {result.source && <p className="text-[10px] text-gray-400">{t('source')}: {result.source}</p>}
         </CardContent></Card>
       )}
     </div>

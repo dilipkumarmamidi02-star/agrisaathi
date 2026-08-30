@@ -15,6 +15,8 @@ import {
 } from '../components/ui/card';
 
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import { useLang } from '../lib/i18n';
 
 const LOCAL_RESOURCES = [
   {
@@ -40,6 +42,7 @@ const LOCAL_RESOURCES = [
 ];
 
 export default function ResourceMarketplace() {
+  const { t } = useLang();
   const [resources, setResources] = useState([]);
   const [query, setQuery] = useState('');
 
@@ -81,7 +84,7 @@ export default function ResourceMarketplace() {
   return (
     <div>
       <PageHeader
-        title="Resource Marketplace"
+        title={t('resourceMarketplaceTitle')}
         icon={Store}
       />
 
@@ -158,6 +161,7 @@ export default function ResourceMarketplace() {
 
         </CardContent>
       </Card>
+      <DataGovFeaturePanel feature="Marketplace" />
     </div>
   );
 }

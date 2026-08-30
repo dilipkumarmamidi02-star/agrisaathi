@@ -187,3 +187,31 @@ export const DATAGOV_FEATURES = [
   'Speak to AgriSaathi',
   'Animal Encyclopedia',
 ];
+
+// ============================================================
+// Evidence conflict resolution
+// ============================================================
+// When two evidence items disagree, resolve deterministically:
+//   1. Prefer higher authority_level (government > ICAR > SAU > KVK > research org > institution > educational reference)
+//   2. If authority is equal, prefer the more recently published item
+//   3. If neither resolves the conflict, surface it explicitly rather than silently merging
+export function resolveEvidenceConflict(evidenceA, evidenceB) {
+  if (!evidenceA) return evidenceB;
+  if (!evidenceB) return evidenceA;
+
+  if (evidenceA.authority_level !== evidenceB.authority_level) {
+    return evidenceA.authority_level < evidenceB.authority_level ? evidenceA : evidenceB;
+  }
+
+  const dateA = new Date(evidenceA.published_at || 0);
+  const dateB = new Date(evidenceB.published_at || 0);
+  if (dateA.getTime() !== dateB.getTime()) {
+    return dateA > dateB ? evidenceA : evidenceB;
+  }
+
+  return {
+    conflict: true,
+    reason: 'source conflict: equal authority and date, evidence disagrees',
+    candidates: [evidenceA, evidenceB],
+  };
+}

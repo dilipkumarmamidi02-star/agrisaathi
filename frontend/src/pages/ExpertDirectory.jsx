@@ -1,6 +1,7 @@
 import { Users, Sprout, Stethoscope, GraduationCap, Landmark, Phone } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
 const EXPERT_TYPES = [
   { icon: Sprout, title: 'Agronomist', description: 'Crop disease, fertilizer & soil advice', helpline: '1800-180-1551' },
@@ -10,9 +11,10 @@ const EXPERT_TYPES = [
 ];
 
 export default function ExpertDirectory() {
+  const { t } = useLang();
   return (
     <div>
-      <PageHeader title="Expert Directory" icon={Users} />
+      <PageHeader title={t('expertDirectoryTitle')} icon={Users} />
       <p className="text-xs text-gray-500 mb-3">
         Connect with the right expert for your farm issue. For a KVK scientist near you specifically, use Near Me — it lists actual KVK contacts from the ICAR directory.
       </p>

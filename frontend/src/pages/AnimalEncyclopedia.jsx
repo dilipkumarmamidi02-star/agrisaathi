@@ -5,6 +5,7 @@ import appClient from '../api/appClient';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CATEGORY_LABELS = {
   poultry: 'Poultry (Layer/Broiler)',
@@ -161,6 +162,7 @@ export default function AnimalEncyclopedia() {
           })}
         </div>
       )}
+      <DataGovFeaturePanel feature="Animal Encyclopedia" />
     </div>
   );
 }

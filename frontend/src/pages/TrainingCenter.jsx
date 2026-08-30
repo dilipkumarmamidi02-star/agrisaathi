@@ -6,6 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CATEGORIES = [
   { value: '', label: 'all' },
@@ -80,6 +81,7 @@ export default function TrainingCenter() {
           })}
         </div>
       )}
+      <DataGovFeaturePanel feature="Training" />
     </div>
   );
 }

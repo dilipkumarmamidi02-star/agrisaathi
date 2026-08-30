@@ -1,0 +1,5 @@
+agrisaathi_speak_inspection/
+agrisaathi-audit-*/
+.backup-helper-router-*/
+*.log
+*.sh

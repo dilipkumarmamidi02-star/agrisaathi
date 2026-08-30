@@ -6,6 +6,17 @@ class HelperChatRequest(BaseModel):
     message: str
     language: str = "en"
     context_data: Optional[Dict[str, Any]] = None
+
+    # Current frontend route (e.g. "/crops", "/fertilizer") — lets the
+    # backend resolve ambiguous questions like "what should I do here?"
+    # against the page the farmer is actually looking at.
+    route: Optional[str] = None
+
+    # Live Data.gov.in context supplied by Speak to AgriSaathi /
+    # Agri Helper frontend. Contains feature, resources, context,
+    # live status and optional error information.
+    government_data: Optional[Dict[str, Any]] = None
+
     # True when the user was just asked "read this aloud?" and this message
     # is their yes/no answer to THAT question (not a new query).
     awaiting_read_confirmation: bool = False

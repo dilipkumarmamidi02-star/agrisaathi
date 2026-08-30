@@ -9,12 +9,14 @@ import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 const CATEGORIES = ['Seed', 'Fertilizer', 'Pesticide', 'Equipment', 'Fuel', 'Other'];
 const UNITS = ['kg', 'litre', 'bag', 'unit', 'packet'];
 
 export default function InventoryTracker() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [valid, setValid] = useState(true);
@@ -76,7 +78,7 @@ export default function InventoryTracker() {
 
   return (
     <div>
-      <PageHeader title="Inventory Tracker" icon={Package} />
+      <PageHeader title={t('inventoryTrackerTitle')} icon={Package} />
       <p className="text-xs text-gray-500 mb-3">
         Log seed, fertilizer, pesticide and equipment stock. Set a low-stock threshold to get warned before you run out.
       </p>
@@ -110,12 +112,12 @@ export default function InventoryTracker() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Item name</Label>
+              <Label>{t('itemName')}</Label>
               <Input value={form.item} onChange={(e) => setForm({ ...form, item: e.target.value })} placeholder="e.g. Urea 46%" />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label>Category</Label>
+                <Label>{t('category')}</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -124,7 +126,7 @@ export default function InventoryTracker() {
                 </Select>
               </div>
               <div>
-                <Label>Unit</Label>
+                <Label>{t('unit')}</Label>
                 <Select value={form.unit} onValueChange={(v) => setForm({ ...form, unit: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -135,7 +137,7 @@ export default function InventoryTracker() {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label>Current quantity</Label>
+                <Label>{t('currentQuantity')}</Label>
                 <Input type="number" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} placeholder="e.g. 12" />
               </div>
               <div>

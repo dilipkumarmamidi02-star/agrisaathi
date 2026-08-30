@@ -3,12 +3,13 @@ import { MapPin, Phone, Building2, Sprout, Navigation, ExternalLink, Store, Leaf
 import { useLang } from '../lib/i18n';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const haversine = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -148,7 +149,7 @@ export default function NearMe() {
         <Select value={filter} onValueChange={setFilter}>
           <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t('all')}</SelectItem>
             <SelectItem value="kvk">{t('kvks')}</SelectItem>
             <SelectItem value="market">{t('markets')}</SelectItem>
             <SelectItem value="shop">{t('shops')}</SelectItem>
@@ -225,6 +226,7 @@ export default function NearMe() {
           </Card>
         </div>
       )}
+      <DataGovFeaturePanel feature="Near Me" />
     </div>
   );
 }

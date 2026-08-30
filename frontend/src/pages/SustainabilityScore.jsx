@@ -5,8 +5,9 @@ import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const PRACTICES = [
   { key: 'organic_fertilizer', label: 'I use organic/farmyard manure alongside or instead of chemical fertilizer' },
@@ -20,6 +21,7 @@ const PRACTICES = [
 ];
 
 export default function SustainabilityScore() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [checked, setChecked] = useState({});
   const [saved, setSaved] = useState(false);
@@ -70,7 +72,7 @@ export default function SustainabilityScore() {
 
   return (
     <div>
-      <PageHeader title="Sustainability Score" icon={Leaf} />
+      <PageHeader title={t('sustainabilityScoreTitle')} icon={Leaf} />
       <p className="text-xs text-gray-500 mb-3">
         A simple self-assessment based on practices you actually follow — not an automated guess.
       </p>

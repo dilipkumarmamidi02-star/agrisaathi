@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
 const CATEGORIES = {
   income: ['Crop Sale', 'Livestock Sale', 'Government Subsidy', 'Other Income'],
@@ -15,6 +16,7 @@ const CATEGORIES = {
 };
 
 export default function FarmLedger() {
+  const { t } = useLang();
   const [userId, setUserId] = useState(null);
   const [blocks, setBlocks] = useState([]);
   const [valid, setValid] = useState(true);
@@ -71,22 +73,22 @@ export default function FarmLedger() {
 
   return (
     <div>
-      <PageHeader title="Farm Ledger" icon={FileSpreadsheet} />
+      <PageHeader title={t('ledger')} icon={FileSpreadsheet} />
       <p className="text-xs text-gray-500 mb-3">
         Every entry is written to a tamper-evident, hash-chained ledger — nothing can be silently edited or deleted after the fact.
       </p>
 
       <div className="grid grid-cols-3 gap-2 mb-3">
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-gray-500">Income</p>
+          <p className="text-xs text-gray-500">{t('income')}</p>
           <p className="text-base font-bold text-green-700">₹{totalIncome.toLocaleString('en-IN')}</p>
         </CardContent></Card>
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-gray-500">Expense</p>
+          <p className="text-xs text-gray-500">{t('expense')}</p>
           <p className="text-base font-bold text-red-600">₹{totalExpense.toLocaleString('en-IN')}</p>
         </CardContent></Card>
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-gray-500">Net</p>
+          <p className="text-xs text-gray-500">{t('net')}</p>
           <p className={`text-base font-bold ${net >= 0 ? 'text-green-700' : 'text-red-600'}`}>₹{net.toLocaleString('en-IN')}</p>
         </CardContent></Card>
       </div>
@@ -106,17 +108,17 @@ export default function FarmLedger() {
           <CardContent className="pt-4 space-y-3">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label>Type</Label>
+                <Label>{t('type')}</Label>
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v, category: CATEGORIES[v][0] })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="income">Income</SelectItem>
-                    <SelectItem value="expense">Expense</SelectItem>
+                    <SelectItem value="income">{t('income')}</SelectItem>
+                    <SelectItem value="expense">{t('expense')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Category</Label>
+                <Label>{t('category')}</Label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>

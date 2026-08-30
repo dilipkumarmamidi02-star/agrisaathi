@@ -10,11 +10,13 @@ import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 const CATEGORIES = ['Technical issue', 'Account', 'Feature request', 'Bug report', 'Other'];
 
 export default function SupportTickets() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,7 @@ export default function SupportTickets() {
 
   return (
     <div>
-      <PageHeader title="Support Tickets" icon={LifeBuoy} />
+      <PageHeader title={t('supportTicketsTitle')} icon={LifeBuoy} />
       <p className="text-xs text-gray-500 mb-3">
         Report an issue or ask for help. Every ticket is recorded so you can track its status over time.
       </p>
@@ -75,11 +77,11 @@ export default function SupportTickets() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Subject</Label>
+              <Label>{t('subject')}</Label>
               <Input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} placeholder="Short summary of the issue" />
             </div>
             <div>
-              <Label>Category</Label>
+              <Label>{t('category')}</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -88,7 +90,7 @@ export default function SupportTickets() {
               </Select>
             </div>
             <div>
-              <Label>Description</Label>
+              <Label>{t('description')}</Label>
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="What went wrong, and what did you expect?" rows={4} />
             </div>
             <Button className="w-full" onClick={submit} disabled={saving || !form.subject || !form.description}>

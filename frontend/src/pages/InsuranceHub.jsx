@@ -36,6 +36,7 @@ import {
   SelectItem
 } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CLAIM_STATUS = {
   none: { label: 'No claim', color: 'bg-gray-100 text-gray-600' },
@@ -149,6 +150,7 @@ export default function InsuranceHub() {
       ) : (
         <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-green-300 text-green-700"><Plus className="h-4 w-4 mr-1" />{t('addPolicy')}</Button>
       )}
+      <DataGovFeaturePanel feature="Insurance" />
     </div>
   );
 }

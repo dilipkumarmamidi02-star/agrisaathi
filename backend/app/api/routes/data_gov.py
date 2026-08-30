@@ -19,7 +19,6 @@ async def list_resources():
         resources.append(
             {
                 "resource_key": key,
-                "resource_key": key,
                 "resource_id": meta["resource_id"],
                 "title": meta["resource_name"],
                 "primary_feature": meta.get("primary_feature"),

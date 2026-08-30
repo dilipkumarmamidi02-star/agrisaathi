@@ -35,4 +35,7 @@ export const API_ENDPOINTS = {
   marketPrices: '/api/market-prices',
 
   harvestRecords: '/api/harvest-records',
+
+  translate: '/api/translate',
+  helperChat: '/api/helper/chat',
 };

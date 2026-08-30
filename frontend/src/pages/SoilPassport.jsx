@@ -49,7 +49,7 @@ import { Image } from '../components/ui/image';
 import PageHeader from '../components/PageHeader';
 
 const API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const SOIL_MOISTURE_RESOURCE = 'soil_moisture';
 const LAND_UTILISATION_RESOURCE = 'land_utilisation';
@@ -101,6 +101,17 @@ const formatNumber = (value) => {
   });
 };
 
+
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',
+  'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim',
+  'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',
+  'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh',
+  'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir',
+  'Ladakh', 'Lakshadweep', 'Puducherry',
+];
 
 export default function SoilPassport() {
   const { t } = useLang();
@@ -230,14 +241,18 @@ export default function SoilPassport() {
    * the farmer's location.
    */
 
-  const loadGovernmentSoil = async () => {
+  const loadGovernmentSoil = async (state = '', district = '') => {
     setLoadingGovernment(true);
     setGovernmentError('');
 
     try {
+      const params = { limit: 100 };
+      if (state) params.state = state;
+      if (district) params.district = district;
+
       const data = await getDataGovResource(
         'soil_moisture',
-        { limit: 100 }
+        params
       );
 
       const incoming = Array.isArray(data?.records)
@@ -343,8 +358,11 @@ export default function SoilPassport() {
 
   useEffect(() => {
     load();
-    loadGovernmentSoil();
     loadLandUtilisation();
+    // Soil moisture is not fetched unfiltered here — see the
+    // selectedState effect below. An unfiltered fetch only ever
+    // returns an arbitrary slice of a 1.7M-record dataset, which
+    // isn't meaningful without a state to scope it to.
 
     axios
       .get(`${API_URL}/api/soil-profiles`)
@@ -358,25 +376,34 @@ export default function SoilPassport() {
       .catch(() => setSoilProfiles([]));
   }, []);
 
+  // Re-fetch soil moisture from the server whenever the farmer
+  // changes State/District, using the now-fixed server-side filter
+  // (see datagov_client.py per-resource field mapping). This
+  // replaces client-side filtering of a small unfiltered sample,
+  // which only ever showed whichever states happened to be in the
+  // first 100 of 1.7M records.
+  useEffect(() => {
+    if (!selectedState) {
+      setGovernmentRecords([]);
+      return;
+    }
+
+    loadGovernmentSoil(selectedState, selectedDistrict);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedState, selectedDistrict]);
+
   /*
    * ------------------------------------------------------------
    * STATE / DISTRICT OPTIONS
    * ------------------------------------------------------------
+   *
+   * The state list is a static list of Indian states/UTs, not
+   * derived from governmentRecords — deriving it from a small
+   * fetched sample meant only whichever states happened to land
+   * in that sample were ever selectable.
    */
 
-  const governmentStates = useMemo(() => {
-    return [
-      ...new Set(
-        governmentRecords
-          .map(
-            (r) =>
-              r?.State ??
-              r?.state
-          )
-          .filter(Boolean)
-      ),
-    ].sort();
-  }, [governmentRecords]);
+  const governmentStates = INDIAN_STATES;
 
   const governmentDistricts = useMemo(() => {
     const state = selectedState;
@@ -895,7 +922,7 @@ export default function SoilPassport() {
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select State" />
+                <SelectValue placeholder={t('selectState')} />
               </SelectTrigger>
 
               <SelectContent>
@@ -928,7 +955,7 @@ export default function SoilPassport() {
               disabled={!selectedState}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select District" />
+                <SelectValue placeholder={t('selectDistrict')} />
               </SelectTrigger>
 
               <SelectContent>
@@ -1192,7 +1219,7 @@ export default function SoilPassport() {
               onValueChange={setRefState}
             >
               <SelectTrigger className="h-8 text-sm mb-2">
-                <SelectValue placeholder="Select your state" />
+                <SelectValue placeholder={t('selectYourState')} />
               </SelectTrigger>
 
               <SelectContent>

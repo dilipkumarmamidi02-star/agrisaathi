@@ -10,6 +10,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 export default function HarvestRecords() {
   const { t } = useLang();
@@ -177,6 +178,7 @@ export default function HarvestRecords() {
           ))}
         </div>
       )}
+      <DataGovFeaturePanel feature="Harvest" />
     </div>
   );
 }

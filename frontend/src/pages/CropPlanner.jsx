@@ -11,7 +11,7 @@ import {
 } from '../api/base44Client';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 import {
   districtsOf
 } from '../lib/indianLocations';
@@ -141,13 +141,13 @@ export default function CropPlanner() {
         <div><Label className="mb-1.5 block">{t('water')}</Label>
           <Select value={water} onValueChange={setWater}>
             <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent><SelectItem value="low">Low</SelectItem><SelectItem value="medium">Medium</SelectItem><SelectItem value="high">High</SelectItem></SelectContent>
+            <SelectContent><SelectItem value="low">{t('low')}</SelectItem><SelectItem value="medium">{t('medium')}</SelectItem><SelectItem value="high">{t('high')}</SelectItem></SelectContent>
           </Select>
         </div>
         <div><Label className="mb-1.5 block">{t('season')}</Label>
           <Select value={season} onValueChange={setSeason}>
-            <SelectTrigger><SelectValue placeholder="Any" /></SelectTrigger>
-            <SelectContent><SelectItem value="kharif">Kharif</SelectItem><SelectItem value="rabi">Rabi</SelectItem><SelectItem value="zaid">Zaid</SelectItem><SelectItem value="perennial">Perennial</SelectItem></SelectContent>
+            <SelectTrigger><SelectValue placeholder={t('any')} /></SelectTrigger>
+            <SelectContent><SelectItem value="kharif">{t('kharif')}</SelectItem><SelectItem value="rabi">{t('rabi')}</SelectItem><SelectItem value="zaid">{t('zaid')}</SelectItem><SelectItem value="perennial">{t('perennial')}</SelectItem></SelectContent>
           </Select>
         </div>
         <Button onClick={plan} className="w-full bg-green-600 hover:bg-green-700 h-12">{t('rankByFit')}</Button>
@@ -182,9 +182,9 @@ export default function CropPlanner() {
               {loading && <p className="text-xs text-gray-400 mt-1">{t('loading')}</p>}
               {est && (
                 <div className="grid grid-cols-3 gap-1 mt-2 text-center text-xs">
-                  <div className="bg-red-50 rounded p-1"><div className="text-gray-400">Cost</div><div className="font-medium">{est.cost}</div></div>
-                  <div className="bg-green-50 rounded p-1"><div className="text-gray-400">Revenue</div><div className="font-medium">{est.revenue}</div></div>
-                  <div className="bg-amber-50 rounded p-1"><div className="text-gray-400">Margin</div><div className="font-medium">{est.margin}</div></div>
+                  <div className="bg-red-50 rounded p-1"><div className="text-gray-400">{t('cost')}</div><div className="font-medium">{est.cost}</div></div>
+                  <div className="bg-green-50 rounded p-1"><div className="text-gray-400">{t('revenue')}</div><div className="font-medium">{est.revenue}</div></div>
+                  <div className="bg-amber-50 rounded p-1"><div className="text-gray-400">{t('margin')}</div><div className="font-medium">{est.margin}</div></div>
                 </div>
               )}
             </CardContent></Card>

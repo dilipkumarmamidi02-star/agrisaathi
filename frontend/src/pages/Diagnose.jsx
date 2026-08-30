@@ -9,7 +9,7 @@ import appClient from '@/api/appClient';
 import cropData from '@/data/cropEncyclopedia.json';
 import animalData from '@/data/animalEncyclopedia.json';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const STEPS = [
   { id: 1, label: 'Take a photo' },

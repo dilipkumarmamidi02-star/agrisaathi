@@ -8,10 +8,12 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function SuccessStories() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +58,7 @@ export default function SuccessStories() {
 
   return (
     <div>
-      <PageHeader title="Success Stories" icon={Trophy} />
+      <PageHeader title={t('successStoriesTitle')} icon={Trophy} />
       <p className="text-xs text-gray-500 mb-3">
         Real stories shared by farmers using AgriSaathi — visible to everyone.
       </p>
@@ -71,15 +73,15 @@ export default function SuccessStories() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Your name</Label>
+              <Label>{t('yourName')}</Label>
               <Input value={form.farmer_name} onChange={(e) => setForm({ ...form, farmer_name: e.target.value })} placeholder="e.g. Ravi Kumar" />
             </div>
             <div>
-              <Label>Crop</Label>
+              <Label>{t('cropSingular')}</Label>
               <Input value={form.crop} onChange={(e) => setForm({ ...form, crop: e.target.value })} placeholder="e.g. Chilli" />
             </div>
             <div>
-              <Label>Your story</Label>
+              <Label>{t('yourStory')}</Label>
               <Textarea value={form.story} onChange={(e) => setForm({ ...form, story: e.target.value })} placeholder="What changed, what worked, what would you tell other farmers?" rows={4} />
             </div>
             <Button className="w-full" onClick={submit} disabled={saving || !form.farmer_name || !form.crop || !form.story}>

@@ -1,81 +1,220 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { resolvePageIntent, isYes, isNo, isDetailRequest, isExplainIntent, isReadPageRequest, detectLanguageSwitch, isSelfExplainRequest } from './pageRouter';
+
+import {
+  resolvePageIntent,
+  isYes,
+  isNo,
+  isDetailRequest,
+  isExplainIntent,
+  isReadPageRequest,
+  detectLanguageSwitch,
+  isSelfExplainRequest,
+} from './pageRouter';
+
 import { getReadableContent } from './pageReadable';
 
-// handleRouterTurn(text) returns one of:
-//   { handled: true, reply }                           -> shown as-is, nothing else to do
-//   { handled: true, reply, readable: {title,text} }    -> shown, then widget offers to read `readable` aloud
-//   { handled: true, forwardToBackend: text }           -> widget should call the backend RAG chat with this text
-//   { handled: false }                                  -> not a routing turn, pass to backend chat normally
+// ============================================================
+// AgriSaathi Helper Router
+// ============================================================
+//
+// Router responsibilities:
+//   1. Language switching
+//   2. Self explanation
+//   3. Read-current-page
+//   4. Navigation intent
+//   5. Page explanation
+//   6. Forward factual/data questions to backend
+//
+// Backend responsibilities:
+//   - RAG
+//   - government/live-data context
+//   - factual agricultural questions
+//   - market-price answers
+//   - crop/animal information
+//
+// No new page is created here.
+// ============================================================
+
 export function useHelperRouter() {
   const navigate = useNavigate();
-  const [pending, setPending] = useState(null); // { route, originalQuery }
 
-  const handleRouterTurn = useCallback((text) => {
-    // -1. Language switch — handled instantly, no backend round-trip.
-    const newLangCode = detectLanguageSwitch(text);
-    if (newLangCode) {
-      return { handled: true, languageSwitch: newLangCode };
-    }
+  const [pending, setPending] = useState(null);
+  // pending = {
+  //   route,
+  //   originalQuery
+  // }
 
-    // -0.5. "What can you do / who are you" — self-description.
-    if (isSelfExplainRequest(text)) {
-      return {
-        handled: true,
-        reply: "I'm Agri Helper. I can open any page in AgriSaathi for you, answer questions about your crops and animals using the app's own records, explain what a feature does before you open it, read page content aloud, and change language any time — just say 'change language to Telugu' or similar. Ask me anything in your own words.",
-      };
-    }
+  const handleRouterTurn = useCallback(
+    (text) => {
+      // --------------------------------------------------------
+      // 0. Ignore empty input
+      // --------------------------------------------------------
 
-    // 0. Direct "read this page" request — independent of navigation state.
-    if (isReadPageRequest(text)) {
-      const content = getReadableContent();
-      if (content) {
-        return { handled: true, reply: `Here it is: ${content.title}.`, readable: content };
+      if (!text || !text.trim()) {
+        return { handled: false };
       }
-      return { handled: true, reply: "I don't have a readable page open right now. Open a crop or animal page first, then ask me to read it." };
-    }
 
-    // 1. Waiting on a response to a previous "open it, or details?" offer.
-    if (pending) {
-      if (isYes(text)) {
-        const route = pending.route;
+      // --------------------------------------------------------
+      // 1. Language switching
+      // --------------------------------------------------------
+
+      const newLangCode = detectLanguageSwitch(text);
+
+      if (newLangCode) {
         setPending(null);
-        navigate(route.path);
-        return { handled: true, reply: `Opening ${route.label}.` };
-      }
-      if (isDetailRequest(text)) {
-        const originalQuery = pending.originalQuery;
-        setPending(null);
-        return { handled: true, forwardToBackend: originalQuery };
-      }
-      if (isNo(text)) {
-        setPending(null);
-        return { handled: true, reply: 'Okay, not opening that. What are you looking for?' };
-      }
-      // Ambiguous reply — drop pending and re-resolve against the new text.
-      setPending(null);
-    }
 
-    // 2. "What is X / how do I use X" — explain, then offer to open it.
-    if (isExplainIntent(text)) {
+        return {
+          handled: true,
+          languageSwitch: newLangCode,
+        };
+      }
+
+      // --------------------------------------------------------
+      // 2. "What can you do?" / "Who are you?"
+      // --------------------------------------------------------
+
+      if (isSelfExplainRequest(text)) {
+        setPending(null);
+
+        return {
+          handled: true,
+          reply:
+            "I'm Agri Helper. I can open AgriSaathi pages for you, explain what a feature does before opening it, read supported page content aloud, answer agricultural questions using the app's available records and government data context, help with market prices, weather, crops, animals, schemes and other farm tools, and change language whenever you ask.",
+        };
+      }
+
+      // --------------------------------------------------------
+      // 3. Direct "read this page"
+      // --------------------------------------------------------
+
+      if (isReadPageRequest(text)) {
+        const content = getReadableContent();
+
+        if (content) {
+          return {
+            handled: true,
+            reply: `Here is the ${content.title}.`,
+            readable: content,
+          };
+        }
+
+        return {
+          handled: true,
+          reply:
+            "I don't have readable page content available right now. Open a supported crop or animal page first, then ask me to read it.",
+        };
+      }
+
+      // --------------------------------------------------------
+      // 4. Resolve pending open/details question
+      // --------------------------------------------------------
+
+      if (pending) {
+        // User said YES / OPEN
+        if (isYes(text)) {
+          const route = pending.route;
+
+          setPending(null);
+
+          navigate(route.path);
+
+          return {
+            handled: true,
+            reply: `Opening ${route.label}.`,
+          };
+        }
+
+        // User wants details instead
+        if (isDetailRequest(text)) {
+          const originalQuery = pending.originalQuery;
+
+          setPending(null);
+
+          return {
+            handled: true,
+            forwardToBackend: originalQuery,
+          };
+        }
+
+        // User said NO
+        if (isNo(text)) {
+          setPending(null);
+
+          return {
+            handled: true,
+            reply:
+              "Okay, I won't open it. You can ask me for the details instead, or tell me what you want to do.",
+          };
+        }
+
+        // New unrelated request:
+        // discard old pending state and resolve the new request.
+        setPending(null);
+      }
+
+      // --------------------------------------------------------
+      // 5. Explanation request
+      // --------------------------------------------------------
+
+      if (isExplainIntent(text)) {
+        const route = resolvePageIntent(text);
+
+        if (route) {
+          setPending({
+            route,
+            originalQuery: text,
+          });
+
+          return {
+            handled: true,
+            reply:
+              `${route.description} Would you like me to open ${route.label}?`,
+          };
+        }
+      }
+
+      // --------------------------------------------------------
+      // 6. Direct navigation request
+      // --------------------------------------------------------
+
       const route = resolvePageIntent(text);
+
       if (route) {
-        setPending({ route, originalQuery: text });
-        return { handled: true, reply: `${route.description} Would you like me to open it?` };
+        setPending({
+          route,
+          originalQuery: text,
+        });
+
+        return {
+          handled: true,
+          reply:
+            `${route.label} is the AgriSaathi page for that. Should I open it, or do you want the details here?`,
+        };
       }
-    }
 
-    // 3. Plain page match — ask whether they want it opened or just the details here.
-    const route = resolvePageIntent(text);
-    if (route) {
-      setPending({ route, originalQuery: text });
-      return { handled: true, reply: `${route.label} is where you'd do that. Should I open it, or do you want the details here?` };
-    }
+      // --------------------------------------------------------
+      // 7. No route match
+      //
+      // Let backend handle:
+      //   - market questions
+      //   - government data
+      //   - crop facts
+      //   - disease questions
+      //   - animal questions
+      //   - agricultural advice
+      //   - RAG questions
+      // --------------------------------------------------------
 
-    // 4. No page match — let the backend RAG/chat handle it.
-    return { handled: false };
-  }, [pending, navigate]);
+      return {
+        handled: false,
+      };
+    },
+    [pending, navigate]
+  );
 
-  return { pending, handleRouterTurn };
+  return {
+    pending,
+    handleRouterTurn,
+  };
 }

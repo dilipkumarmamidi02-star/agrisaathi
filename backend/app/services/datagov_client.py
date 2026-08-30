@@ -34,21 +34,42 @@ async def fetch_resource(
         "offset": max(offset, 0),
     }
 
-    # Only send filters that are known to be supported by
-    # the current Data.gov market-resource integration.
+    # Different Data.gov.in resources use different raw field names
+    # for the same logical concept (e.g. soil_moisture uses "State" /
+    # "District", mandi_prices uses "state.keyword" / "district").
+    # Sending the wrong field name silently returns unfiltered or
+    # empty results rather than erroring, so this must be per-resource,
+    # not a single hardcoded set.
     #
-    # IMPORTANT:
-    # village / mandal / pincode are NOT included here because
-    # mandi_prices and variety_market_prices do not expose those
-    # fields in their market records.
+    # Generic filter key (from the API route) -> actual Data.gov.in
+    # field name for this specific resource. Falls back to the
+    # mandi-style field names for any resource not listed here.
+    DEFAULT_FIELD_MAP = {
+        "state.keyword": "state.keyword",
+        "district": "district",
+        "market": "market",
+        "commodity": "commodity",
+        "variety": "variety",
+        "grade": "grade",
+    }
 
-    KNOWN_FILTER_FIELDS = {
-        "state.keyword",
-        "district",
-        "market",
-        "commodity",
-        "variety",
-        "grade",
+    RESOURCE_FIELD_MAP_OVERRIDES = {
+        "soil_moisture": {
+            "state.keyword": "State",
+            "district": "District",
+        },
+        "variety_market_prices": {
+            "state.keyword": "State",
+            "district": "District",
+        },
+        "kcc_farmer_queries": {
+            "state.keyword": "StateName",
+        },
+    }
+
+    field_map = {
+        **DEFAULT_FIELD_MAP,
+        **RESOURCE_FIELD_MAP_OVERRIDES.get(resource_key, {}),
     }
 
     if filters:
@@ -61,8 +82,10 @@ async def fetch_resource(
             if not value:
                 continue
 
-            if field in KNOWN_FILTER_FIELDS:
-                params[f"filters[{field}]"] = value
+            actual_field = field_map.get(field)
+
+            if actual_field:
+                params[f"filters[{actual_field}]"] = value
 
     url = f"{BASE_URL}/{meta['resource_id']}"
 

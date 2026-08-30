@@ -6,10 +6,12 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function FeedbackCorner() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ export default function FeedbackCorner() {
 
   return (
     <div>
-      <PageHeader title="Feedback Corner" icon={MessageSquareHeart} />
+      <PageHeader title={t('feedbackCornerTitle')} icon={MessageSquareHeart} />
       <p className="text-xs text-gray-500 mb-3">
         Tell us what's working and what isn't. Your feedback shapes what gets built next.
       </p>

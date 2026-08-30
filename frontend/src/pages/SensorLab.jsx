@@ -6,10 +6,12 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function SensorLab() {
+  const { t } = useLang();
   const [tab, setTab] = useState('soil');
   const [bleStatus, setBleStatus] = useState('Not connected');
 
@@ -82,11 +84,11 @@ export default function SensorLab() {
           <div className="flex items-center gap-2">
             <Bluetooth className="h-5 w-5 text-blue-500" />
             <div>
-              <p className="text-sm font-medium">Connect sensor</p>
+              <p className="text-sm font-medium">{t('connectSensor')}</p>
               <p className="text-xs text-gray-400">{bleStatus}</p>
             </div>
           </div>
-          <Button variant="outline" onClick={connectSensor}>Connect</Button>
+          <Button variant="outline" onClick={connectSensor}>{t('connect')}</Button>
         </div>
         <p className="text-[10px] text-gray-300 mt-2">
           Pairs with compatible Bluetooth soil/water sensors (Web Bluetooth). USB sensors aren't readable in-browser — connect a BLE device or enter readings manually below; all values are saved to your analysis.
@@ -113,21 +115,21 @@ export default function SensorLab() {
             <div><p className="text-xs mb-1">K (kg/ha)</p><Input type="number" value={k} onChange={(e) => setK(e.target.value)} /></div>
           </div>
           <div className="grid grid-cols-2 gap-2 mb-4">
-            <div><p className="text-xs mb-1">Organic carbon (%)</p><Input type="number" value={oc} onChange={(e) => setOc(e.target.value)} /></div>
+            <div><p className="text-xs mb-1">{t('organicCarbon')}</p><Input type="number" value={oc} onChange={(e) => setOc(e.target.value)} /></div>
             <div><p className="text-xs mb-1">EC (dS/m)</p><Input type="number" value={soilEc} onChange={(e) => setSoilEc(e.target.value)} /></div>
           </div>
-          <Button onClick={analyzeSoil} className="w-full bg-green-600 hover:bg-green-700 mb-4">Analyze Soil</Button>
+          <Button onClick={analyzeSoil} className="w-full bg-green-600 hover:bg-green-700 mb-4">{t('analyzeSoil')}</Button>
           {soilError && <p className="text-sm text-red-500 mb-3">{soilError}</p>}
           {soilResult && (
             <Card><CardContent className="pt-4 space-y-2">
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">Avg pH</div><div className="text-sm font-medium">{soilResult.avg_ph}</div></div>
-                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">Range</div><div className="text-sm font-medium">{soilResult.min_ph}-{soilResult.max_ph}</div></div>
-                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">Variation</div><div className="text-sm font-medium">{soilResult.variation}</div></div>
+                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">{t('avgPh')}</div><div className="text-sm font-medium">{soilResult.avg_ph}</div></div>
+                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">{t('range')}</div><div className="text-sm font-medium">{soilResult.min_ph}-{soilResult.max_ph}</div></div>
+                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">{t('variation')}</div><div className="text-sm font-medium">{soilResult.variation}</div></div>
               </div>
               <Badge className="bg-blue-100 text-blue-700">{soilResult.ph_classification}</Badge>
               <p className="text-xs text-gray-500">{soilResult.variation_note}</p>
-              <p className="text-xs font-medium text-gray-700 mt-2">Suitable crops at this pH:</p>
+              <p className="text-xs font-medium text-gray-700 mt-2">{t('suitableCropsAtPh')}</p>
               <div className="flex flex-wrap gap-1">
                 {soilResult.suitable_crops.map((c) => <Badge key={c} className="bg-green-50 text-green-700">{c}</Badge>)}
               </div>
@@ -136,7 +138,7 @@ export default function SensorLab() {
         </>
       ) : (
         <>
-          <p className="text-sm font-medium mb-2">Water samples — pH & EC (up to 5)</p>
+          <p className="text-sm font-medium mb-2">{t('waterSamplesLabel')}</p>
           {waterSamples.map((s, i) => (
             <div key={i} className="grid grid-cols-2 gap-2 mb-2">
               <Input placeholder={`#${i + 1} pH`} type="number" step="0.1" value={s.ph}
@@ -150,13 +152,13 @@ export default function SensorLab() {
             <div><p className="text-xs mb-1">Turbidity (NTU)</p><Input type="number" value={turbidity} onChange={(e) => setTurbidity(e.target.value)} /></div>
             <div><p className="text-xs mb-1">Hardness (mg/L)</p><Input type="number" value={hardness} onChange={(e) => setHardness(e.target.value)} /></div>
           </div>
-          <Button onClick={analyzeWater} className="w-full bg-blue-600 hover:bg-blue-700 mb-4">Check Water Suitability</Button>
+          <Button onClick={analyzeWater} className="w-full bg-blue-600 hover:bg-blue-700 mb-4">{t('checkWaterSuitability')}</Button>
           {waterError && <p className="text-sm text-red-500 mb-3">{waterError}</p>}
           {waterResult && (
             <Card><CardContent className="pt-4 space-y-2">
               <div className="grid grid-cols-2 gap-2 text-center">
-                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">Avg pH</div><div className="text-sm font-medium">{waterResult.avg_ph ?? '—'}</div></div>
-                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">Avg EC</div><div className="text-sm font-medium">{waterResult.avg_ec ?? '—'}</div></div>
+                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">{t('avgPh')}</div><div className="text-sm font-medium">{waterResult.avg_ph ?? '—'}</div></div>
+                <div className="bg-gray-50 rounded p-2"><div className="text-[10px] text-gray-400">{t('avgEc')}</div><div className="text-sm font-medium">{waterResult.avg_ec ?? '—'}</div></div>
               </div>
               <ul className="text-xs text-gray-600 list-disc pl-4 mt-2">
                 {waterResult.issues.map((issue, i) => <li key={i}>{issue}</li>)}

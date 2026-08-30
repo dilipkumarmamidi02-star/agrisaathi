@@ -23,3 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Debug / audit / inspection artifacts — never ship these
+agrisaathi_speak_inspection/
+agrisaathi-audit-*/
+.backup-helper-router-*/
+*.log
+.env.local
+.env

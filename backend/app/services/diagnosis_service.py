@@ -15,7 +15,7 @@ DISCLAIMER = "AI-assisted estimate only. Confirm with a KVK expert before applyi
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # Vision-capable model. Reads GROQ_VLM_MODEL from .env if set, otherwise
-# falls back to Groq's current vision model. llama-3.3-70b-versatile is
+# falls back to Groq's current vision model. the configured Groq vision model is
 # TEXT-ONLY and must never be used here — it silently ignores images.
 VISION_MODEL = os.environ.get("GROQ_VLM_MODEL", "qwen/qwen3.6-27b")
 

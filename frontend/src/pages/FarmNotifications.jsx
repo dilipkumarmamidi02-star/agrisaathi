@@ -7,10 +7,12 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function FarmNotifications() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ export default function FarmNotifications() {
 
   return (
     <div>
-      <PageHeader title="Farm Notifications" icon={BellRing} />
+      <PageHeader title={t('farmNotificationsTitle')} icon={BellRing} />
       <p className="text-xs text-gray-500 mb-3">Set reminders for spraying, harvest, vaccination — anything with a date.</p>
 
       <div className="flex justify-end mb-3">
@@ -85,11 +87,11 @@ export default function FarmNotifications() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Reminder</Label>
+              <Label>{t('reminder')}</Label>
               <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Spray fungicide on plot 2" />
             </div>
             <div>
-              <Label>Due date</Label>
+              <Label>{t('dueDate')}</Label>
               <Input type="date" value={form.due_date} onChange={(e) => setForm({ ...form, due_date: e.target.value })} />
             </div>
             <Button className="w-full" onClick={submit} disabled={saving || !form.title || !form.due_date}>

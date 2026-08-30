@@ -1,18 +1,20 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Camera, MapPin, Sprout, PawPrint, User, Mic, X } from 'lucide-react';
+import { useLang } from '../lib/i18n';
 
 export default function Layout({ children }) {
+  const { t } = useLang();
   const location = useLocation();
   const [showMic, setShowMic] = useState(false);
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
-    { path: '/diagnose', icon: Camera, label: 'Diagnose' },
-    { path: '/near-me', icon: MapPin, label: 'Near Me' },
-    { path: '/crops', icon: Sprout, label: 'Crops' },
-    { path: '/animal-encyclopedia', icon: PawPrint, label: 'Animals' },
-    { path: '/dashboard', icon: User, label: 'Dashboard' },
+    { path: '/', icon: Home, label: t('home') },
+    { path: '/diagnose', icon: Camera, label: t('diagnose') },
+    { path: '/near-me', icon: MapPin, label: t('nearMe') },
+    { path: '/crops', icon: Sprout, label: t('crops') },
+    { path: '/animal-encyclopedia', icon: PawPrint, label: t('animals') },
+    { path: '/dashboard', icon: User, label: t('dashboard') },
   ];
 
   return (
@@ -37,9 +39,9 @@ export default function Layout({ children }) {
             "Identify this plant disease"
           </div>
           <div className="mt-2 flex gap-2">
-            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Crop</button>
-            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Livestock</button>
-            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">Weather</button>
+            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">{t('cropSingular')}</button>
+            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">{t('livestock')}</button>
+            <button className="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">{t('weather')}</button>
           </div>
         </div>
       )}

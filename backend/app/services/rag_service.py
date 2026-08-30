@@ -17,6 +17,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from app.data.feature_registry import FEATURES
+from app.core.datagov_registry import DATAGOV_REGISTRY
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 CROP_JSON = os.path.join(BASE_DIR, "frontend", "src", "data", "cropEncyclopedia.json")
@@ -94,6 +95,30 @@ def _static_corpus():
         })
     docs += _entries_from_json(CROP_JSON, "crop_encyclopedia", "/crop-planner")
     docs += _entries_from_json(ANIMAL_JSON, "animal_encyclopedia", "/animal-encyclopedia")
+
+    # Data.gov.in resource registry — authoritative source is
+    # app/core/datagov_registry.py (used by the real /api/data-gov routes).
+    # This just makes those same 72 resources retrievable as RAG passages,
+    # so a query can surface "what dataset covers X" with correct temporal
+    # labeling, without maintaining a second copy of the registry.
+    for r in DATAGOV_REGISTRY:
+        temporal_status = (
+            r["temporal_status"].value
+            if hasattr(r["temporal_status"], "value")
+            else r["temporal_status"]
+        )
+        temporal_note = (
+            f"This is a {temporal_status.lower()} dataset — treat it as historical, not current."
+            if temporal_status == "HISTORICAL"
+            else ""
+        )
+        docs.append({
+            "source": "datagov_resource",
+            "title": r["resource_name"],
+            "text": f"{r['resource_name']} {r['primary_feature']} Data.gov.in {temporal_note}",
+            "route": None,  # route resolution stays with feature_registry.py; avoids a third route mapping
+        })
+
     return docs
 
 

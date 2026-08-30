@@ -2,7 +2,7 @@
 # route: React Router path | keywords: help the LLM match loose phrasing
 FEATURES = [
     {"name": "Diagnose", "route": "/diagnose", "description": "AI-powered crop and livestock disease diagnosis from a photo", "keywords": ["disease", "sick", "diagnose", "pest", "leaf", "spots"]},
-    {"name": "Fertilizer", "route": "/fertilize", "description": "Fertilizer recommendations for a crop", "keywords": ["fertilizer", "urea", "nutrients", "npk"]},
+    {"name": "Fertilizer", "route": "/fertilizer", "description": "Fertilizer recommendations for a crop", "keywords": ["fertilizer", "urea", "nutrients", "npk"]},
     {"name": "Soil Passport", "route": "/soil-passport", "description": "Soil test records and history for a plot", "keywords": ["soil", "ph", "soil test"]},
     {"name": "Crop Planner", "route": "/crop-planner", "description": "Plan what crop to grow based on soil, water, season", "keywords": ["crop plan", "what to grow", "planning"]},
     {"name": "Livestock Care", "route": "/livestock-care", "description": "Livestock health, vaccination, feeding records", "keywords": ["livestock", "cattle", "poultry", "animal", "vaccine"]},
@@ -31,4 +31,30 @@ FEATURES = [
     {"name": "Vendor Contacts", "route": "/vendor-contacts", "description": "Contact list of vendors and suppliers", "keywords": ["vendor", "supplier", "contact"]},
     {"name": "Sustainability Score", "route": "/sustainability-score", "description": "Sustainability analysis of farming practices", "keywords": ["sustainability", "environment", "score"]},
     {"name": "Dashboard", "route": "/dashboard", "description": "Farm overview dashboard", "keywords": ["dashboard", "overview", "summary"]},
+    {"name": "Crops", "route": "/crops", "description": "Crop-related information and crop tools", "keywords": ["crop", "crops", "crop information"]},
+    {"name": "Weather", "route": "/weather", "description": "Current weather conditions and forecast for the farm location", "keywords": ["weather", "forecast", "temperature", "rain"]},
+    {"name": "Animal Encyclopedia", "route": "/animal-encyclopedia", "description": "Livestock and animal reference information: breeds, feeding, vaccination", "keywords": ["animal encyclopedia", "breeds", "livestock breeds"]},
+    {"name": "Crop Passport", "route": "/crop-passport", "description": "Tamper-evident record of a crop batch: soil, water, sowing, harvest history", "keywords": ["crop passport", "crop record", "crop history"]},
+    {"name": "Sensor Lab", "route": "/sensor-lab", "description": "Soil and water sample entry and field suitability information", "keywords": ["sensor", "soil sample", "water sample"]},
+    {"name": "Treatments", "route": "/treatments", "description": "Crop and agricultural treatment information", "keywords": ["treatment", "disease treatment", "pest treatment"]},
+    {"name": "Community", "route": "/community", "description": "Connect with other farmers", "keywords": ["community", "farmer community"]},
+    {"name": "Government Data", "route": "/data-gov", "description": "Live government agricultural datasets from Data.gov.in", "keywords": ["data gov", "government data", "official data"]},
+    {"name": "Speak to AgriSaathi", "route": "/speak-to-agrisaathi", "description": "Voice-first agricultural knowledge assistant", "keywords": ["speak to agrisaathi", "voice assistant", "tap to speak"]},
+    {"name": "Alerts Center", "route": "/alerts-center", "description": "Important alerts and notifications across AgriSaathi", "keywords": ["alerts", "important alerts"]},
+    {"name": "Export Reports", "route": "/export-reports", "description": "Generate and export farm reports", "keywords": ["export report", "generate report", "download report"]},
+    {"name": "Export Data", "route": "/export-data", "description": "Export AgriSaathi farm data", "keywords": ["export data", "download data"]},
+    {"name": "Support", "route": "/support-tickets", "description": "Create and manage AgriSaathi support requests", "keywords": ["support", "support ticket", "help"]},
+    {"name": "Feedback Corner", "route": "/feedback-corner", "description": "Send feedback about AgriSaathi", "keywords": ["feedback", "give feedback"]},
+    {"name": "Weather Analytics", "route": "/weather-analytics", "description": "Weather trends, current conditions, and forecast analytics", "keywords": ["weather analytics", "weather data", "weather trends"]},
+    {"name": "Farm Notifications", "route": "/farm-notifications", "description": "Notifications related to farm activities and services", "keywords": ["farm notifications", "notification"]},
+    {"name": "Training Academy", "route": "/training-academy", "description": "Structured agricultural learning and training resources", "keywords": ["training academy", "agriculture academy"]},
+    {"name": "Loan Calculator", "route": "/loan-calculator", "description": "Calculate agricultural loan repayment figures", "keywords": ["loan calculator", "emi", "loan calculation"]},
+    {"name": "Insurance Vault", "route": "/insurance-hub-vault", "description": "Stored insurance-related evidence and records", "keywords": ["insurance vault", "insurance evidence", "claim evidence"]},
+    {"name": "Yield Benchmarks", "route": "/yield-benchmarks", "description": "Crop-yield benchmark information", "keywords": ["yield benchmark", "crop yield", "yield comparison"]},
+    {"name": "Sensor Hub", "route": "/sensor-hub", "description": "Farm sensor and monitoring hub", "keywords": ["sensor hub", "farm sensors"]},
+    {"name": "Expense Analytics", "route": "/expense-analytics", "description": "Analyze farm expenses and spending patterns", "keywords": ["expense analytics", "spending analysis", "cost analysis"]},
 ]
+
+# Reverse lookup: route path -> feature dict. Lets the helper backend
+# resolve which feature the farmer is currently looking at from req.route.
+ROUTE_TO_FEATURE = {f["route"]: f for f in FEATURES}

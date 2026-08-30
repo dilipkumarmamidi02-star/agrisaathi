@@ -56,3 +56,9 @@ backend/app/data/storage/*.json
 backend/app/data/storage/*.lock
 .vercel
 .env*
+
+# Backup/recovery/forensic artifacts — never commit these
+*backup*
+*.bak.*
+*recovery*
+*forensic*

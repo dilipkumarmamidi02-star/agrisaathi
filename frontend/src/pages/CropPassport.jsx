@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import { ShieldCheck, Search, CheckCircle2, XCircle } from 'lucide-react';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function CropPassport() {
+  const { t } = useLang();
   const [requirements, setRequirements] = useState([]);
   const [source, setSource] = useState('reference_data');
   const [selected, setSelected] = useState(null);
@@ -46,7 +48,7 @@ export default function CropPassport() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <PageHeader title="Crop Passport" icon={ShieldCheck} />
+      <PageHeader title={t('cropPassportTitle')} icon={ShieldCheck} />
       <p className="text-xs text-gray-500 mb-3">
         Reference soil and water requirements per crop, recorded to a tamper-evident ledger.
       </p>
@@ -64,7 +66,7 @@ export default function CropPassport() {
           onChange={(e) => { setSelected(e.target.value); setChain(null); }}
           className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm"
         >
-          <option value="">Select a crop</option>
+          <option value="">{t('selectACrop')}</option>
           {requirements.map((r) => (
             <option key={r.crop} value={r.crop}>{r.crop}</option>
           ))}

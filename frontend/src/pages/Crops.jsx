@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import cropData from '@/data/cropEncyclopedia.json';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
 const CATEGORY_COLORS = {
   amber: 'bg-amber-50 border-amber-100 text-amber-700',
@@ -123,6 +124,7 @@ export default function Crops() {
           </div>
         </div>
       ))}
+      <DataGovFeaturePanel feature="Crops" />
     </div>
   );
 }

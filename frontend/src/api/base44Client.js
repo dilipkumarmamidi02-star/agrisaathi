@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 const STORAGE_PREFIX = 'agrisaathi_entity_';
 const AUTH_KEY = 'agrisaathi_user_profile';
 

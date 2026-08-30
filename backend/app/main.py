@@ -1,7 +1,15 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.core.config import settings
-from app.api.routes import data_gov, crop, fertilizer, diagnosis, health, weather, helper, ledger, animal_encyclopedia, livestock, crop_planner, crop_passport, livestock_encyclopedia, soil_profiles, kvk, gov_markets, mandi_prices, pest_library, livestock_details, sensor, translate, price_alerts, scheme, livestock_types, soil_records
+from app.core.firebase_auth import get_current_user
+from app.api.routes import (
+    data_gov, location, users, crop, fertilizer, diagnosis, health,
+    weather, helper, ledger, animal_encyclopedia, livestock, crop_planner,
+    crop_passport, livestock_encyclopedia, soil_profiles, kvk, gov_markets,
+    mandi_prices, pest_library, livestock_details, sensor, translate,
+    price_alerts, scheme, livestock_types, soil_records,
+)
 
 app = FastAPI(
     title="AgriSaathi API",
@@ -19,37 +27,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Public — no auth. Health check must stay reachable for uptime monitors.
 app.include_router(health.router)
-app.include_router(crop.router)
-app.include_router(fertilizer.router)
-app.include_router(diagnosis.router)
-app.include_router(livestock_encyclopedia.router)
-app.include_router(mandi_prices.router)
-app.include_router(pest_library.router)
-app.include_router(livestock_details.router)
-app.include_router(sensor.router)
-app.include_router(soil_records.router)
-app.include_router(gov_markets.router)
-app.include_router(kvk.router)
-app.include_router(soil_profiles.router)
-app.include_router(weather.router)
-app.include_router(helper.router)
-app.include_router(ledger.router)
-app.include_router(animal_encyclopedia.router)
-app.include_router(livestock.router)
-app.include_router(crop_planner.router)
-app.include_router(crop_passport.router)
-app.include_router(translate.router)
-app.include_router(price_alerts.router)
-app.include_router(scheme.router)
-app.include_router(livestock_types.router)
+
+# users.router already enforces auth per-route (see app/api/routes/users.py),
+# so it's not wrapped again here to avoid running the check twice.
+app.include_router(users.router)
+
+# Everything else requires a valid Firebase ID token.
+_auth_dep = [Depends(get_current_user)]
+
+app.include_router(crop.router, dependencies=_auth_dep)
+app.include_router(fertilizer.router, dependencies=_auth_dep)
+app.include_router(diagnosis.router, dependencies=_auth_dep)
+app.include_router(livestock_encyclopedia.router, dependencies=_auth_dep)
+app.include_router(mandi_prices.router, dependencies=_auth_dep)
+app.include_router(pest_library.router, dependencies=_auth_dep)
+app.include_router(livestock_details.router, dependencies=_auth_dep)
+app.include_router(sensor.router, dependencies=_auth_dep)
+app.include_router(soil_records.router, dependencies=_auth_dep)
+app.include_router(gov_markets.router, dependencies=_auth_dep)
+app.include_router(kvk.router, dependencies=_auth_dep)
+app.include_router(soil_profiles.router, dependencies=_auth_dep)
+app.include_router(weather.router, dependencies=_auth_dep)
+app.include_router(helper.router, dependencies=_auth_dep)
+app.include_router(ledger.router, dependencies=_auth_dep)
+app.include_router(animal_encyclopedia.router, dependencies=_auth_dep)
+app.include_router(livestock.router, dependencies=_auth_dep)
+app.include_router(crop_planner.router, dependencies=_auth_dep)
+app.include_router(crop_passport.router, dependencies=_auth_dep)
+app.include_router(translate.router, dependencies=_auth_dep)
+app.include_router(price_alerts.router, dependencies=_auth_dep)
+app.include_router(scheme.router, dependencies=_auth_dep)
+app.include_router(livestock_types.router, dependencies=_auth_dep)
+app.include_router(data_gov.router, dependencies=_auth_dep)
+app.include_router(location.router, dependencies=_auth_dep)
+
 
 @app.get("/")
 def root():
     return {"service": "AgriSaathi API", "version": "1.0.0", "status": "running"}
 
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-
-app.include_router(data_gov.router)

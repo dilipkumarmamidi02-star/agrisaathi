@@ -272,9 +272,9 @@ export const DATA_GOV_72_RESOURCES = [
     key: 26,
     name: "Kisan Call Centre (KCC) - Transcripts of farmers queries & answers",
     resource_id: "cef25fe2-9231-4128-8aec-2c948fedd43f",
-    primary_feature: "SPEAK TO AGRISAATHI",
+    primary_feature: "Speak to AgriSaathi",
     secondary_features: [],
-    route: "/",
+    route: "/speak-to-agrisaathi",
     temporal_status: "HISTORICAL"
   },
 

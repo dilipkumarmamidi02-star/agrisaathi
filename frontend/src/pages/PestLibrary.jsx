@@ -4,8 +4,10 @@ import { Bug } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 const TYPE_COLORS = {
   pest: 'bg-red-100 text-red-700',
@@ -14,6 +16,7 @@ const TYPE_COLORS = {
 };
 
 export default function PestLibrary() {
+  const { t } = useLang();
   const [items, setItems] = useState([]);
   const [vaccines, setVaccines] = useState([]);
   const [tab, setTab] = useState('crop');
@@ -37,7 +40,7 @@ export default function PestLibrary() {
 
       <div className="flex gap-2 mb-3">
         <button onClick={() => setTab('crop')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'crop' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-200'}`}>Crop pests & weeds</button>
-        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-200'}`}>Livestock vaccines</button>
+        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-200'}`}>{t('livestockVaccines')}</button>
       </div>
 
       {tab === 'crop' ? (
@@ -79,6 +82,7 @@ export default function PestLibrary() {
       )}
 
       {disclaimer && <p className="text-[10px] text-gray-300 mt-3">{disclaimer}</p>}
+      <DataGovFeaturePanel feature="Pesticide Library" />
     </div>
   );
 }

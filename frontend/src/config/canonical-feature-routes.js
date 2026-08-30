@@ -1,43 +1,28 @@
-/*
- * AGRISAATHI CANONICAL FEATURE ROUTES
+/**
+ * AgriSaathi canonical feature routes.
  *
- * These are destinations in the EXISTING application.
- *
- * Multiple Data.gov.in resources may feed the same feature.
- * They must NOT create duplicate application pages.
+ * One canonical route per feature.
+ * Existing completed features are preserved.
  */
 
 export const CANONICAL_FEATURE_ROUTES = {
-  home: "/",
-  crops: "/crops",
-  diagnose: "/diagnose",
-  nearMe: "/near-me",
-  fertilizer: "/fertilizer",
-  soilPassport: "/soil-passport",
-  cropPlanner: "/crop-planner",
-  livestock: "/livestock-care",
   marketPrices: "/market-prices",
-  dataGov: "/data-gov",
-  schemes: "/schemes",
-  irrigation: "/irrigation-planner",
-  harvest: "/harvest-records",
-  profile: "/profile-settings",
-  weather: "/weather",
-  marketplace: "/marketplace",
-  training: "/training-center",
-  insurance: "/insurance-hub",
-  pesticideLibrary: "/pest-library",
-  alerts: "/alerts-center",
-  animalEncyclopedia: "/animal-encyclopedia",
-  community: "/community",
+  soilPassport: "/soil-passport",
+  livestock: "/livestock-care",
+  speakToAgriSaathi: "/speak-to-agrisaathi",
 
-  /*
-   * KCC Resource #26 is a knowledge source for
-   * SPEAK TO AGRISAATHI.
-   *
-   * It is intentionally NOT converted into a new page.
-   */
-  speakToAgriSaathi: "/"
+  fertilizer: "/fertilizer",
+  pesticideLibrary: "/pest-library",
+  nearMe: "/near-me",
+  governmentSchemes: "/schemes",
+  insurance: "/insurance-hub",
+  crops: "/crops",
+  training: "/training-center",
+  animalEncyclopedia: "/animal-encyclopedia",
+  weather: "/weather",
+  harvest: "/harvest-records",
+  marketplace: "/marketplace",
+  alerts: "/alerts-center",
 };
 
 export default CANONICAL_FEATURE_ROUTES;

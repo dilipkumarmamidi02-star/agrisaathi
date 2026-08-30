@@ -8,11 +8,13 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 const VENDOR_TYPES = ['Seed dealer', 'Fertilizer dealer', 'Pesticide dealer', 'Equipment rental', 'Buyer/Trader', 'Transport', 'Other'];
 
 export default function VendorContacts() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +77,7 @@ export default function VendorContacts() {
 
   return (
     <div>
-      <PageHeader title="Vendor Contacts" icon={Store} />
+      <PageHeader title={t('vendorContactsTitle')} icon={Store} />
       <p className="text-xs text-gray-500 mb-3">
         Save the shops and buyers you deal with regularly, so their numbers are one tap away.
       </p>
@@ -90,11 +92,11 @@ export default function VendorContacts() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Name</Label>
+              <Label>{t('name')}</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Sri Ganesh Fertilizers" />
             </div>
             <div>
-              <Label>Type</Label>
+              <Label>{t('type')}</Label>
               <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -103,7 +105,7 @@ export default function VendorContacts() {
               </Select>
             </div>
             <div>
-              <Label>Phone number</Label>
+              <Label>{t('phoneNumber')}</Label>
               <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="e.g. 9876543210" />
             </div>
             <div>

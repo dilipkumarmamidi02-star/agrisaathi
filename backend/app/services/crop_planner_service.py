@@ -18,7 +18,7 @@ Respond ONLY with strict JSON, no markdown:
 Clearly this is an estimate, not a guarantee."""
 
     completion = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.4,
         max_tokens=800,

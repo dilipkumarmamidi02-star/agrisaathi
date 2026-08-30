@@ -1,16 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLang } from '../lib/i18n';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MessageCircle, X, Mic, Volume2, Send, ShieldCheck, Languages, Square } from 'lucide-react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../api/endpoints';
 import { INDIAN_LANGUAGES } from '../lib/indianLanguages';
 import { useHelperRouter } from '../lib/useHelperRouter';
+import { getVoiceGovernmentContext } from '../lib/voiceDataGov';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 async function translateText(text, targetLang) {
   if (!text || targetLang === 'en') return text;
   try {
-    const res = await axios.post(`${API_URL}/api/translate`, {
+    const res = await axios.post(`${API_URL}${API_ENDPOINTS.translate}`, {
       text,
       target_language: targetLang,
     });
@@ -41,12 +44,15 @@ function timeGreeting() {
   const hour = new Date().getHours();
   if (hour < 12) return 'Good morning';
   if (hour < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (hour < 21) return 'Good evening';
+  return 'Good night';
 }
 
 export default function AgriHelperWidget() {
+  const { t } = useLang();
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState('en');
+  // lang now comes from shared i18n context so Profile <-> Helper stay in sync
+  const { lang, setLang } = useLang();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [listening, setListening] = useState(false);
@@ -57,6 +63,7 @@ export default function AgriHelperWidget() {
 
   const recognitionRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const scrollRef = useRef(null);
   const greetedRef = useRef(false);
   const greetingTextRef = useRef('');
@@ -69,20 +76,99 @@ export default function AgriHelperWidget() {
 
   const currentLocale = INDIAN_LANGUAGES.find((l) => l.code === lang)?.locale || 'en-IN';
 
-  const speak = (text, onDone) => {
+  // Chrome loads TTS voices asynchronously — getVoices() can return an
+  // empty array on the very first call. This waits for voices to actually
+  // be populated (or a short timeout) before the first real speak() call.
+  const voicesReadyRef = useRef(false);
+  const ensureVoicesReady = () =>
+    new Promise((resolve) => {
+      if (voicesReadyRef.current || window.speechSynthesis.getVoices().length > 0) {
+        voicesReadyRef.current = true;
+        resolve();
+        return;
+      }
+      const handler = () => {
+        voicesReadyRef.current = true;
+        window.speechSynthesis.removeEventListener('voiceschanged', handler);
+        resolve();
+      };
+      window.speechSynthesis.addEventListener('voiceschanged', handler);
+      // Fallback in case voiceschanged never fires on this browser
+      setTimeout(() => {
+        window.speechSynthesis.removeEventListener('voiceschanged', handler);
+        resolve();
+      }, 1000);
+    });
+
+  // Tracks the current utterance so a rapid second call (e.g. React
+  // StrictMode double-invoking an effect in dev) doesn't cancel a speech
+  // request that hasn't actually started yet, which throws a confusing
+  // "interrupted" error rather than a real failure.
+  const speakingRef = useRef(false);
+
+  const speak = async (text, onDone) => {
     if (!('speechSynthesis' in window) || !text) {
+      console.warn('[AgriHelper speak] speechSynthesis unavailable or empty text');
       onDone?.(false);
       return;
     }
-    window.speechSynthesis.cancel();
+
+    await ensureVoicesReady();
+
+    if (speakingRef.current) {
+      window.speechSynthesis.cancel();
+    }
+    speakingRef.current = true;
+
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = currentLocale;
     const voices = window.speechSynthesis.getVoices();
-    const match = voices.find((v) => v.lang === currentLocale || v.lang.startsWith(lang));
-    if (match) utter.voice = match;
+    const match = voices.find((v) => v.lang === currentLocale || v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+    if (match) {
+      utter.voice = match;
+      console.log('[AgriHelper speak] matched voice:', match.name, match.lang);
+    } else {
+      console.warn('[AgriHelper speak] no matching voice found for', currentLocale, '- using browser default voice');
+    }
+
+    // Chrome has a long-standing bug (still present in recent Chrome/Chromium
+    // builds) where speechSynthesis silently stops producing audio after
+    // roughly 15 seconds, or when the tab loses focus, even though the
+    // browser still reports `speaking: true` and never fires onend/onerror.
+    // A periodic pause()/resume() nudge keeps the underlying audio thread
+    // alive. This interval is cleared as soon as the utterance genuinely
+    // finishes or errors.
+    let cutoffWatchdog = null;
+
     setIsSpeaking(true);
-    utter.onend = () => { setIsSpeaking(false); onDone?.(true); };
-    utter.onerror = () => { setIsSpeaking(false); onDone?.(false); }; // fires if browser blocks autoplay
+    utter.onstart = () => {
+      console.log('[AgriHelper speak] STARTED speaking:', text.slice(0, 40));
+      cutoffWatchdog = setInterval(() => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      }, 5000);
+    };
+    utter.onend = () => {
+      if (cutoffWatchdog) clearInterval(cutoffWatchdog);
+      speakingRef.current = false;
+      setIsSpeaking(false);
+      onDone?.(true);
+    };
+    utter.onerror = (e) => {
+      if (cutoffWatchdog) clearInterval(cutoffWatchdog);
+      speakingRef.current = false;
+      setIsSpeaking(false);
+      if (e.error === 'interrupted' || e.error === 'canceled') {
+        // Expected when a newer speak() call supersedes this one
+        // (e.g. dev-mode StrictMode double effects) — not a real failure.
+        console.log('[AgriHelper speak] superseded by a newer speak call, not an error');
+      } else {
+        console.error('[AgriHelper speak] BLOCKED or failed:', e.error, '- likely Chrome autoplay policy if this is the first speak() call on page load');
+      }
+      onDone?.(false);
+    };
     window.speechSynthesis.speak(utter);
   };
 
@@ -139,12 +225,63 @@ export default function AgriHelperWidget() {
 
   const callBackendChat = async (text) => {
     setLoading(true);
+
     try {
-      const response = await axios.post(`${API_URL}/api/helper/chat`, {
-        message: text,
-        language: lang,
-        context_data: collectContextData(),
-      });
+      /*
+       * Load live Data.gov.in context only when the voice/helper
+       * request matches a supported government-data feature.
+       *
+       * This does not replace the existing backend RAG/helper.
+       * It enriches the existing request with live government data.
+       */
+      let governmentData = null;
+
+      try {
+        governmentData = await getVoiceGovernmentContext(
+          text,
+          {
+            language: lang,
+          },
+        );
+      } catch {
+        governmentData = {
+          feature: null,
+          resources: [],
+          context: [],
+          live: false,
+          error: 'Government data unavailable',
+        };
+      }
+
+      const response = await axios.post(
+        `${API_URL}${API_ENDPOINTS.helperChat}`,
+        {
+          message: text,
+          language: lang,
+
+          /*
+           * Current route, so the backend knows what page the user
+           * is on (e.g. /crops, /fertilizer) even before per-page
+           * entity context (selected crop, commodity, etc.) exists.
+           */
+          route: location.pathname,
+
+          /*
+           * Existing AgriSaathi local/entity context.
+           */
+          context_data: collectContextData(),
+
+          /*
+           * New live Data.gov context.
+           *
+           * The backend can use `context` directly for RAG/context
+           * generation while `feature` and `resources` remain
+           * available for traceability/debugging.
+           */
+          government_data: governmentData,
+        },
+      );
+
       return response.data;
     } finally {
       setLoading(false);
@@ -224,7 +361,7 @@ export default function AgriHelperWidget() {
                 <Volume2 className="h-3.5 w-3.5" /> Tap to hear
               </button>
             )}
-            <button onClick={() => dismissGreetingBanner(false)} className="text-gray-400 text-xs">Dismiss</button>
+            <button onClick={() => dismissGreetingBanner(false)} className="text-gray-400 text-xs">{t('dismiss')}</button>
           </div>
         </div>
       )}
@@ -243,7 +380,7 @@ export default function AgriHelperWidget() {
         <div className="fixed bottom-0 right-0 z-50 w-full sm:w-96 h-[70vh] sm:h-[32rem] sm:bottom-20 sm:right-4 bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
           <div className="flex items-center justify-between p-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-gray-800">Agri Helper</span>
+              <span className="font-semibold text-gray-800">{t('agriHelper')}</span>
               <div className="flex items-center gap-1">
                 <Languages className="h-3.5 w-3.5 text-gray-400" />
                 <select
@@ -305,7 +442,7 @@ export default function AgriHelperWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type or tap mic..."
+              placeholder={t('typeOrTapMic')}
               className="flex-1 border border-gray-200 rounded-full px-3 py-2 text-sm"
             />
             <button onClick={() => sendMessage()} className="p-2 rounded-full bg-green-600 text-white" aria-label="Send">

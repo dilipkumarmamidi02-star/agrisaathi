@@ -1,0 +1,240 @@
+======================================================================
+Speak to AgriSaathi — Implementation-Aware READ-ONLY Audit
+======================================================================
+Audit time: Wed Aug 19 18:35:33 IST 2026
+Project: /Users/mamididilipkumar/Downloads/agrisaathi/frontend
+Source: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src
+Mode: READ ONLY
+
+
+============================================================
+01. PROJECT EXISTENCE
+============================================================
+PASS: Existing AgriSaathi frontend directory found: /Users/mamididilipkumar/Downloads/agrisaathi/frontend
+PASS: Existing src directory found
+
+============================================================
+02. EXISTING APPLICATION IDENTITY
+============================================================
+PASS: Existing package.json found
+PASS: Existing application package metadata found
+
+============================================================
+03. SPEAK TO AGRISAATHI ROUTES
+============================================================
+PASS: Canonical Speak to AgriSaathi route definition found
+PASS: Speak to AgriSaathi route/context mapping found
+PASS: Speak to AgriSaathi feature definition found
+
+============================================================
+04. VOICE-FIRST IMPLEMENTATION
+============================================================
+FOUND: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/components/AgriHelperWidget.jsx
+FOUND: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/indianLanguages.js
+PASS: Browser speech recognition / speech synthesis implementation evidence found
+
+============================================================
+05. INDIAN LANGUAGE SUPPORT
+============================================================
+PASS: Indian language configuration file found
+PASS: Indian BCP-47 locale configuration found
+
+============================================================
+06. API / BACKEND INTEGRATION
+============================================================
+PASS: Existing API endpoint registry found
+PASS: Agri Helper chat endpoint registered
+FOUND endpoint reference: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/api/endpoints.js
+PASS: Helper chat endpoint reference exists in source
+
+============================================================
+07. ARCHITECTURE BOUNDARY
+============================================================
+PASS: Explicit Speak to AgriSaathi / Agri Helper architectural distinction found
+WARN: Agri Helper context implementation not clearly identified
+
+============================================================
+08. KCC RESOURCE BOUNDARY
+============================================================
+KCC RESOURCE FOUND: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/config/data-gov-72-registry.js
+KCC RESOURCE FOUND: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/data/dataGovResources.js
+PASS: KCC Resource #26 ID found in existing source
+
+============================================================
+09. DATA.GOV.IN RESOURCE REGISTRY
+============================================================
+PASS: 72-resource Data.gov.in registry found
+PASS: Data.gov.in resource data file found
+Detected registry UUID entries: 72
+PASS: At least 72 registry UUID entries detected
+
+============================================================
+10. REGISTRY AUTHORITY / SOURCE OF TRUTH
+============================================================
+Authority evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/dataGov.js
+Authority evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/voiceDataGov.js
+PASS: Data.gov.in registry authority evidence found
+
+============================================================
+11. FRESHNESS / TEMPORAL HANDLING
+============================================================
+Temporal evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/config/data-gov-72-registry.js
+Temporal evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/data/dataGovResources.js
+Temporal evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+PASS: Current/historical/freshness handling evidence found
+
+============================================================
+12. MARKET / MANDI DATA
+============================================================
+PASS: Market intelligence implementation found
+PASS: Current mandi price feature found
+PASS: Current commodity price description found
+
+============================================================
+13. WEATHER INTEGRATION
+============================================================
+PASS: Current weather API endpoint registered
+PASS: Current weather context handling found
+
+============================================================
+14. GROUNDING / RETRIEVAL
+============================================================
+Grounding term "retrieval": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+Grounding term "evidence": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+Grounding term "source": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+Grounding term "verified": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+Grounding term "source": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/voiceDataGov.js
+PASS: Grounding/retrieval/evidence references found
+
+============================================================
+15. SOURCE AUTHORITY / RANKING
+============================================================
+Authority evidence "authority_level": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/data/educational/README.md
+Authority evidence "authority": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/data/educational/README.md
+Authority evidence "KVK": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/agriHelperContext.js
+Authority evidence "ICAR": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/pages/Treatments.jsx
+Authority evidence "KVK": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/pages/Treatments.jsx
+PASS: Source authority / ICAR / KVK evidence found
+
+============================================================
+16. PROVENANCE
+============================================================
+Provenance evidence "source_id": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/config/data-gov-72-registry.js
+Provenance evidence "source_id": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/components/DataGovResourceTest.jsx
+Provenance evidence "version": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/components/LocationFields.jsx
+Provenance evidence "source_id": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/components/DataGovFeaturePanel.jsx
+Provenance evidence "source_id": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/data/dataGovResources.js
+Provenance evidence "source_id": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/pages/Livestock.jsx
+Provenance evidence "version": /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/pages/Home.jsx
+PASS: Provenance/source identity references found
+
+============================================================
+17. EVIDENCE CONFLICT HANDLING
+============================================================
+WARN: Explicit evidence conflict handling not established
+
+============================================================
+18. TREATMENT SAFETY / CHEMICAL GUIDANCE
+============================================================
+PASS: Treatment page exists
+PASS: Active ingredient requirement found
+PASS: Application method requirement found
+PASS: Safety precautions requirement found
+PASS: Pre-harvest interval requirement found
+PASS: Banned-substance safety instruction found
+PASS: Dosage safety instruction found
+
+============================================================
+19. OPTIONAL TEXT-TO-SPEECH
+============================================================
+TTS evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/components/AgriHelperWidget.jsx
+TTS evidence: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/src/lib/indianLanguages.js
+PASS: Optional browser TTS implementation found
+
+============================================================
+20. CANONICAL ROUTES
+============================================================
+PASS: Canonical Speak to AgriSaathi root route found
+
+============================================================
+21. PAGE ROUTER
+============================================================
+PASS: Existing page router found
+WARN: Speak to AgriSaathi navigation evidence not found
+
+============================================================
+22. AGRI HELPER CONTEXT
+============================================================
+PASS: Agri Helper context module found
+PASS: Current-page feature context detection found
+PASS: Current commodity context support found
+PASS: Current crop context support found
+
+============================================================
+23. VOICE DATA.GOV CONTEXT
+============================================================
+PASS: Voice Data.gov context module found
+PASS: Voice registry authority statement found
+
+============================================================
+24. EDUCATIONAL DATA PROVENANCE
+============================================================
+PASS: Educational data README found
+PASS: Educational data provenance requirement found
+PASS: Educational authority-level metadata documented
+
+============================================================
+25. READ-ONLY SAFETY CHECK
+============================================================
+INFO: Audit does not invoke npm build/install/start.
+INFO: Audit does not modify source files.
+INFO: Audit does not perform database writes.
+INFO: Audit only reads project files and writes an external audit report.
+PASS: Audit execution path is READ ONLY with respect to AgriSaathi source
+
+============================================================
+26. BUILD STATUS
+============================================================
+INFO: Build execution intentionally skipped because this audit is READ ONLY.
+INFO: Use the existing recorded build result if available.
+WARN: No existing recorded successful build result was found
+
+============================================================
+27. ARCHITECTURE BOUNDARY
+============================================================
+Speak to AgriSaathi != Agri Helper
+
+Speak to AgriSaathi:
+  Voice-first agricultural knowledge/query interface
+
+Agri Helper:
+  Floating application/navigation assistant
+
+Agri Helper endpoint:
+  /api/helper/chat
+
+KCC Resource #26:
+  cef25fe2-9231-4128-8aec-2c948fedd43f
+
+KCC MUST belong to Speak to AgriSaathi knowledge retrieval.
+KCC MUST NOT become Agri Helper's knowledge identity.
+
+TEST MODE:
+  READ ONLY
+
+============================================================
+FINAL RESULT
+============================================================
+PASS COUNT : 48
+WARN COUNT : 4
+FAIL COUNT : 0
+
+RESULT: PASS
+No hard integration failure was detected.
+
+Warnings still require engineering review.
+
+======================================================================
+TEST COMPLETE
+======================================================================
+Report: /Users/mamididilipkumar/Downloads/agrisaathi/frontend/../agrisaathi_speak_inspection/speak_to_agrisaathi_audit_20260819_183533.txt

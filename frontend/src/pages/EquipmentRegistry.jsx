@@ -7,10 +7,12 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
+import { useLang } from '../lib/i18n';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function EquipmentRegistry() {
+  const { t } = useLang();
   const deviceId = getDeviceId();
   const [blocks, setBlocks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +64,7 @@ export default function EquipmentRegistry() {
 
   return (
     <div>
-      <PageHeader title="Equipment Registry" icon={Wrench} />
+      <PageHeader title={t('equipmentRegistryTitle')} icon={Wrench} />
       <p className="text-xs text-gray-500 mb-3">Track your machinery and its maintenance schedule.</p>
 
       <div className="flex justify-end mb-3">
@@ -75,20 +77,20 @@ export default function EquipmentRegistry() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div>
-              <Label>Equipment name</Label>
+              <Label>{t('equipmentName')}</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Mahindra 265 DI" />
             </div>
             <div>
-              <Label>Type</Label>
+              <Label>{t('type')}</Label>
               <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="e.g. Tractor" />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label>Last maintenance</Label>
+                <Label>{t('lastMaintenance')}</Label>
                 <Input type="date" value={form.last_maintenance} onChange={(e) => setForm({ ...form, last_maintenance: e.target.value })} />
               </div>
               <div>
-                <Label>Next maintenance due</Label>
+                <Label>{t('nextMaintenanceDue')}</Label>
                 <Input type="date" value={form.next_maintenance} onChange={(e) => setForm({ ...form, next_maintenance: e.target.value })} />
               </div>
             </div>

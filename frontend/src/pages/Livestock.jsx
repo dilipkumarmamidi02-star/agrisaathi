@@ -51,6 +51,7 @@ import {
  */
 
 import * as dataGovRegistryModule from '../data/dataGovResources';
+import { useLang } from '../lib/i18n';
 
 const LIVESTOCK_KEY_PREFIX =
   'livestock_census_';
@@ -528,6 +529,7 @@ function getLivestockResources() {
 }
 
 export default function Livestock() {
+  const { t } = useLang();
   const livestockResources =
     useMemo(
       () =>
@@ -942,32 +944,32 @@ export default function Livestock() {
       {/* Summary */}
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
         <SummaryCard
-          label="Districts"
+          label={t('districts')}
           value={displayRecords.length}
         />
 
         <SummaryCard
-          label="Cattle"
+          label={t('cattle')}
           value={formatNumber(totalCattle)}
         />
 
         <SummaryCard
-          label="Buffalo"
+          label={t('buffalo')}
           value={formatNumber(totalBuffalo)}
         />
 
         <SummaryCard
-          label="Sheep"
+          label={t('sheep')}
           value={formatNumber(totalSheep)}
         />
 
         <SummaryCard
-          label="Goat"
+          label={t('goat')}
           value={formatNumber(totalGoat)}
         />
 
         <SummaryCard
-          label="Poultry"
+          label={t('poultry')}
           value={formatNumber(totalPoultry)}
         />
       </section>
@@ -1046,7 +1048,7 @@ export default function Livestock() {
                     event.target.value
                   )
                 }
-                placeholder="Search district..."
+                placeholder={t('searchDistrict')}
                 className="w-full rounded-lg border bg-background py-2.5 pl-9 pr-3 text-sm"
               />
             </div>

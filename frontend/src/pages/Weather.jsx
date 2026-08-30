@@ -3,8 +3,9 @@ import axios from 'axios';
 import { CloudSun, Wind, Droplets, MapPin } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 export default function Weather() {
   const [weather, setWeather] = useState(null);
@@ -57,6 +58,7 @@ export default function Weather() {
           </CardContent>
         </Card>
       )}
+      <DataGovFeaturePanel feature="Weather" />
     </div>
   );
 }

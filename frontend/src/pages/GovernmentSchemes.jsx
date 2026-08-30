@@ -7,6 +7,8 @@ import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import { useLang } from '../lib/i18n';
 
 // Fields the rules checker can use, per scheme. Keep this small and honest --
 // only ask what's actually needed to evaluate that scheme's published rules.
@@ -27,6 +29,7 @@ const ELIGIBILITY_QUESTIONS = {
 };
 
 export default function GovernmentSchemes() {
+  const { t } = useLang();
   const [schemes, setSchemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,10 +95,10 @@ export default function GovernmentSchemes() {
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="h-4 w-4 text-green-600 shrink-0" />
         <Select value={filterState || 'all'} onValueChange={(v) => setFilterState(v === 'all' ? '' : v)}>
-          <SelectTrigger className="h-8 text-sm"><SelectValue placeholder="All states" /></SelectTrigger>
+          <SelectTrigger className="h-8 text-sm"><SelectValue placeholder={t('allStates')} /></SelectTrigger>
           <SelectContent className="max-h-72">
             {/* Radix Select.Item rejects value="" at runtime -- use a sentinel instead */}
-            <SelectItem value="all">All India</SelectItem>
+            <SelectItem value="all">{t('allIndia')}</SelectItem>
             {STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
           </SelectContent>
         </Select>
@@ -174,6 +177,7 @@ export default function GovernmentSchemes() {
           })}
         </div>
       )}
+      <DataGovFeaturePanel feature="Government Schemes" />
     </div>
   );
 }

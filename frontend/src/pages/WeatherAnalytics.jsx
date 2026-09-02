@@ -21,6 +21,9 @@ import {
 
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import WeatherScene3D from '../components/WeatherScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -119,6 +122,14 @@ export default function WeatherAnalytics() {
         Number(day.rain_probability) >= 60
     ).length;
 
+  // Subtle background only (spec #32: the data itself stays primary) —
+  // real condition from the same current-weather value rendered above.
+  const analyticsCondition = current?.description
+    ? mapWeatherDescriptionToCondition(current.description)
+    : 'default';
+
+  usePageContext({ page: 'weather-analytics', weather: analyticsCondition });
+
   return (
     <div>
       <PageHeader
@@ -153,6 +164,12 @@ export default function WeatherAnalytics() {
 
       {current && (
         <>
+          <WeatherScene3D
+            condition={analyticsCondition}
+            windSpeed={current.wind_speed || 0}
+            height="h-28"
+          />
+
           <Card className="mb-3">
             <CardContent className="pt-4">
 

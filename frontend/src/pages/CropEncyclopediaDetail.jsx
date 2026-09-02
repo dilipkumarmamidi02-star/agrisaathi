@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Home, FlaskConical, Droplets, Sun, TrendingUp,
@@ -9,6 +9,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import cropData from '@/data/cropEncyclopedia.json';
+import CropEncyclopediaScene3D from '@/components/CropEncyclopediaScene3D';
+import { usePageContext } from '@/contexts/AgricultureContext';
 
 export default function CropEncyclopediaDetail() {
   const { categoryId, typeId } = useParams();
@@ -17,6 +19,14 @@ export default function CropEncyclopediaDetail() {
 
   const category = cropData.categories.find((c) => c.id === categoryId);
   const crop = category?.types.find((tItem) => tItem.id === typeId);
+
+  const [activeStage, setActiveStage] = useState(null); // index into crop.growth_timeline
+
+  usePageContext({
+    page: 'crop-encyclopedia-detail',
+    crop: crop?.name || null,
+    cropStage: crop && activeStage != null ? crop.growth_timeline[activeStage]?.stage : null,
+  });
 
   if (!crop) {
     return (
@@ -43,6 +53,15 @@ export default function CropEncyclopediaDetail() {
         <h1 className="text-lg font-bold text-gray-800">{crop.name}</h1>
         <p className="text-sm text-gray-500">{category.name} &middot; {crop.category_use}</p>
       </div>
+
+      <CropEncyclopediaScene3D
+        cropName={crop.name}
+        stageProgress={
+          activeStage != null
+            ? (activeStage + 1) / crop.growth_timeline.length
+            : 1
+        }
+      />
 
       {/* Varieties */}
       <Card className="mb-3">
@@ -127,8 +146,15 @@ export default function CropEncyclopediaDetail() {
           <div className="relative pl-4 space-y-3">
             <div className="absolute left-1.5 top-1 bottom-1 w-px bg-green-200" />
             {crop.growth_timeline.map((g, i) => (
-              <div key={i} className="relative">
-                <div className="absolute -left-4 top-1 h-2.5 w-2.5 rounded-full bg-green-500" />
+              <div
+                key={i}
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveStage(activeStage === i ? null : i)}
+                onKeyDown={(e) => e.key === 'Enter' && setActiveStage(activeStage === i ? null : i)}
+                className={`relative cursor-pointer rounded-md -ml-1 pl-1 py-0.5 transition-colors ${activeStage === i ? 'bg-green-50' : ''}`}
+              >
+                <div className={`absolute -left-4 top-1 h-2.5 w-2.5 rounded-full ${activeStage === i ? 'bg-green-700 ring-2 ring-green-200' : 'bg-green-500'}`} />
                 <p className="text-xs font-semibold text-gray-700">{g.stage} <span className="text-gray-400 font-normal">&middot; {g.age_range}</span></p>
                 <p className="text-[11px] text-gray-500">{g.milestone}</p>
               </div>
@@ -136,6 +162,10 @@ export default function CropEncyclopediaDetail() {
           </div>
         </CardContent>
       </Card>
+
+      <p className="text-[10px] text-gray-400 -mt-2 mb-3 text-center">
+        Tap a growth stage above to see it reflected in the 3D crop &middot; tap again to view fully grown
+      </p>
 
       {/* Common Pests & Diseases */}
       <Card className="mb-3">

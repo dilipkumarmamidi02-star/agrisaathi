@@ -25,6 +25,8 @@ import {
   getDataGovResourceRecords,
 } from '../lib/dataGov';
 import PincodeLocationFields from '../components/PincodeLocationFields';
+import MandiScene3D from '../components/MandiScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 const MARKET_RESOURCES = [
   {
@@ -776,6 +778,49 @@ export default function MarketPrices() {
     commodityFilter,
   ]);
 
+  // ----------------------------------------------------------
+  // 3D MANDI SCENE — derived entirely from the real displayRecords
+  // above; never fabricates a commodity or price (spec #17/#71).
+  // ----------------------------------------------------------
+
+  const marketSceneCommodities = useMemo(() => {
+    const byCommodity = new Map();
+    displayRecords.forEach((record) => {
+      const name = getCommodity(record);
+      if (!name) return;
+      if (!byCommodity.has(name)) {
+        byCommodity.set(name, {
+          name,
+          market: getMarket(record),
+          modalPrice: getPrice(record, ['Modal_Price', 'modal_price']),
+          count: 0,
+        });
+      }
+      byCommodity.get(name).count += 1;
+    });
+
+    const list = Array.from(byCommodity.values())
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+
+    if (list.length) {
+      const filterMatch = commodityFilter
+        ? list.find((c) => normalise(c.name) === normalise(commodityFilter))
+        : null;
+      (filterMatch || list[0]).active = true;
+    }
+
+    return list;
+  }, [displayRecords, commodityFilter]);
+
+  const activeMarketCommodity = marketSceneCommodities.find((c) => c.active) || null;
+
+  usePageContext({
+    page: 'market-prices',
+    marketCommodity: activeMarketCommodity?.name || null,
+    market: activeMarketCommodity?.market || null,
+  });
+
   const marketCount = useMemo(
     () =>
       new Set(
@@ -1115,6 +1160,9 @@ export default function MarketPrices() {
             </button>
           </div>
         </div>
+
+        {/* 3D MANDI */}
+        <MandiScene3D commodities={marketSceneCommodities} />
 
         {/* LOCATION */}
 

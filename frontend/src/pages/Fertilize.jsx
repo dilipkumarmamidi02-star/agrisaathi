@@ -11,6 +11,28 @@ import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import PincodeLocationFields from '../components/PincodeLocationFields';
 import { useLocationContext } from '../lib/LocationContext';
+import FertilizerScene3D from '../components/FertilizerScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+
+// Derive which nutrient the *real* result/soil numbers point to. Prefers
+// the calculator's own recommendation text (checks for the standard
+// Indian fertilizer names); falls back to whichever of the farmer's own
+// entered N/P/K soil readings is lowest (the nutrient most likely to be
+// deficient). Never invents a product choice the farmer didn't get.
+function detectNutrientFocus(result, form) {
+  const text = `${result?.summary || ''} ${result?.dosage || ''} ${result?.method || ''}`.toLowerCase();
+  if (/\burea\b/.test(text)) return 'nitrogen';
+  if (/\bdap\b|diammonium/.test(text)) return 'phosphorus';
+  if (/\bmop\b|potash|muriate/.test(text)) return 'potassium';
+
+  const n = form.n ? parseFloat(form.n) : null;
+  const p = form.p ? parseFloat(form.p) : null;
+  const k = form.k ? parseFloat(form.k) : null;
+  const entries = [['nitrogen', n], ['phosphorus', p], ['potassium', k]].filter(([, v]) => v != null);
+  if (entries.length === 0) return null;
+  entries.sort((a, b) => a[1] - b[1]);
+  return entries[0][0];
+}
 
 
 export default function Fertilize() {
@@ -34,6 +56,9 @@ export default function Fertilize() {
   }, [location.state]);
 
   const stateDefault = soilProfiles.find((s) => s.state === form.state);
+  const nutrientFocus = result ? detectNutrientFocus(result, form) : null;
+
+  usePageContext({ page: 'fertilizer', crop: form.crop || null, fertilizer: nutrientFocus });
 
   const calc = async () => {
     if (!form.crop || !form.area) {
@@ -70,6 +95,10 @@ export default function Fertilize() {
     <div>
       <PageHeader titleKey="fertilize" icon={Droplets} />
       <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">Estimate based on general crop reference data. Confirm with a soil test where possible.</p>
+
+      {form.crop && (
+        <FertilizerScene3D cropName={form.crop} nutrientFocus={nutrientFocus} />
+      )}
 
       <div className="space-y-4">
         <div>

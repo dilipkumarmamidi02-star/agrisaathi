@@ -8,6 +8,8 @@ import api from '../api/apiClient';
 import appClient from '@/api/appClient';
 import cropData from '@/data/cropEncyclopedia.json';
 import animalData from '@/data/animalEncyclopedia.json';
+import DiagnosisScene3D from '@/components/DiagnosisScene3D';
+import { usePageContext } from '@/contexts/AgricultureContext';
 
 
 const STEPS = [
@@ -181,6 +183,12 @@ export default function Diagnose() {
     result?.precautions ||
     (result?.prevention && result.prevention.length ? result.prevention.join(' ') : '');
 
+  usePageContext({
+    page: 'diagnose',
+    crop: domain === 'crop' ? (subject || null) : null,
+    diagnosis: result && result.source !== 'unavailable' ? likelyIssue : null,
+  });
+
   return (
     <div className="p-4 max-w-md mx-auto">
       <div className="flex items-center gap-2 mb-3">
@@ -287,6 +295,10 @@ export default function Diagnose() {
             </button>
           </div>
 
+          {domain === 'crop' && subject && (
+            <DiagnosisScene3D cropName={subject} label={subject} />
+          )}
+
           <div>
             <label className="block text-sm font-medium text-lt-text mb-1.5">
               Select {domain === 'crop' ? 'crop' : 'animal'} <span className="text-red-500">*</span>
@@ -378,6 +390,14 @@ export default function Diagnose() {
 
           {result && result.source !== 'unavailable' && (
             <>
+              {domain === 'crop' && subject && (
+                <DiagnosisScene3D
+                  cropName={subject}
+                  severity={confidencePct != null ? confidencePct / 100 : 0.5}
+                  label={likelyIssue}
+                />
+              )}
+
               <div className="border border-lt-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-semibold text-lt-text flex items-center gap-1.5">

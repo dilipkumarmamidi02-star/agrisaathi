@@ -4,12 +4,24 @@ import { CloudSun, Wind, Droplets, MapPin } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import WeatherScene3D from '../components/WeatherScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
 
 export default function Weather() {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Real value only — Weather.jsx fetches more detail than Home's
+  // hero, so this becomes a second real writer of the shared
+  // `weather` context key (Dashboard's farm scene already reads it).
+  const weatherCondition = weather?.description
+    ? mapWeatherDescriptionToCondition(weather.description)
+    : 'default';
+
+  usePageContext({ page: 'weather', weather: weatherCondition });
 
   function fetchWeather(lat, lon) {
     setLoading(true);
@@ -37,6 +49,15 @@ export default function Weather() {
 
       {loading && <p className="text-sm text-lt-text-muted">Loading weather...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
+
+      {weather && (
+        <WeatherScene3D
+          condition={weatherCondition}
+          windSpeed={weather.wind_speed || 0}
+          label={weather.description}
+          height="h-48"
+        />
+      )}
 
       {weather && (
         <Card className="bg-blue-600 text-white mb-4">

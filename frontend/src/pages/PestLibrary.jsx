@@ -6,6 +6,15 @@ import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import { useLang } from '../lib/i18n';
+import PestScene3D from '../components/PestScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+
+// The library's `affects` field is a free-text list like "Rice, Wheat,
+// Maize" — take the first named crop as the representative one to show.
+function firstAffectedCrop(affects) {
+  if (!affects) return null;
+  return affects.split(/[,/]/)[0].trim();
+}
 
 
 const TYPE_COLORS = {
@@ -21,6 +30,13 @@ export default function PestLibrary() {
   const [tab, setTab] = useState('crop');
   const [filter, setFilter] = useState('all');
   const [disclaimer, setDisclaimer] = useState('');
+  const [selectedPest, setSelectedPest] = useState(null);
+
+  usePageContext({
+    page: 'pest-library',
+    pest: selectedPest?.name || null,
+    crop: selectedPest ? firstAffectedCrop(selectedPest.affects) : null,
+  });
 
   useEffect(() => {
     api.get('/api/pest-library')
@@ -53,7 +69,19 @@ export default function PestLibrary() {
           </div>
           <div className="space-y-2">
             {filtered.map((p, i) => (
-              <Card key={i}><CardContent className="pt-3">
+              <Card
+                key={i}
+                onClick={() => setSelectedPest(selectedPest === p ? null : p)}
+                className={`cursor-pointer transition-colors ${selectedPest === p ? 'border-lt-primary ring-1 ring-lt-primary/30' : ''}`}
+              >
+                <CardContent className="pt-3">
+                {selectedPest === p && (
+                  <PestScene3D
+                    cropName={firstAffectedCrop(p.affects)}
+                    type={p.type}
+                    label={`${p.name} on ${firstAffectedCrop(p.affects) || 'crop'}`}
+                  />
+                )}
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">{p.name}</p>
                   <Badge className={TYPE_COLORS[p.type] || 'bg-lt-bg text-lt-text'}>{p.type}</Badge>

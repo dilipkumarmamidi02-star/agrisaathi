@@ -62,9 +62,11 @@ import CropEncyclopediaDetail from './pages/CropEncyclopediaDetail.jsx';
 import Weather from './pages/Weather.jsx';
 import Community from './pages/Community.jsx';
 import DataGovLiveData from './pages/DataGovLiveData';
+import { AgricultureProvider } from './contexts/AgricultureContext.jsx';
 
 function App() {
   return (
+    <AgricultureProvider>
     <Router>
       <Layout>
         <Routes>
@@ -144,6 +146,7 @@ function App() {
       </Layout>
       <AgriHelperWidget />
     </Router>
+    </AgricultureProvider>
   );
 }
 

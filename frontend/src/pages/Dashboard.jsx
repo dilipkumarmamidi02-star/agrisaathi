@@ -3,7 +3,8 @@ import {
   useEffect
 } from 'react'
 import {
-  Link
+  Link,
+  useNavigate
 } from 'react-router-dom';
 import {
   LayoutGrid,
@@ -40,13 +41,17 @@ import PageHeader from '../components/PageHeader';
 import ProfitCalculator from '../components/ProfitCalculator';
 import PincodeLocationFields from '../components/PincodeLocationFields';
 import { useLocationContext } from '../lib/LocationContext';
+import DashboardFarmScene from '../components/DashboardFarmScene';
+import { usePageContext, useAgricultureContext } from '../contexts/AgricultureContext';
 
 const today = new Date().toISOString().slice(0, 10);
 const daysUntil = (d) => Math.ceil((new Date(d) - new Date(today)) / 86400000);
 
 export default function Dashboard() {
   const { t } = useLang();
+  const navigate = useNavigate();
   const { location: farmLocation } = useLocationContext();
+  const { context } = useAgricultureContext();
   const [farms, setFarms] = useState([]);
   const [cycles, setCycles] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -85,6 +90,20 @@ export default function Dashboard() {
     .filter((l) => l.scheduled_date)
     .map((l) => ({ date: l.scheduled_date, label: `${l.animal_type} · ${l.title}`, kind: 'maintenance' }));
 
+  const urgentPlotNames = urgentCycles.map((c) => c.plot_name);
+
+  // Feed real dashboard state into the global 3D context engine (spec #66)
+  // so any other scene mounted elsewhere in the app stays consistent with
+  // what's actually happening on the farmer's dashboard.
+  usePageContext({
+    page: 'dashboard',
+    alert: (alerts.length + urgentCycles.length) > 0 ? 'urgent' : null,
+  });
+
+  const goToFarm = (farm) => {
+    navigate('/crop-planner', { state: { plotName: farm.plot_name, cropName: farm.current_crop } });
+  };
+
   const addPlot = async () => {
     if (!form.plot_name || !form.crop_name) { alert('Plot name and crop are required'); return; }
     const farm = await appClient.entities.Farm.create({
@@ -112,6 +131,17 @@ export default function Dashboard() {
   return (
     <div>
       <PageHeader titleKey="dashboard" icon={LayoutGrid} />
+
+      <div className="mb-4">
+        <DashboardFarmScene
+          farms={farms}
+          urgentPlotNames={urgentPlotNames}
+          livestockPending={livestock.length}
+          weather={context.weather}
+          onSelectFarm={goToFarm}
+          onSelectLivestock={() => navigate('/livestock-care')}
+        />
+      </div>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
         <Card className="bg-lt-success/10 border-lt-primary/10"><CardContent className="pt-3 text-center">

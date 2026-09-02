@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { getDataGovResource } from '../lib/dataGov';
+import { usePageContext, useAgricultureContext } from '../contexts/AgricultureContext';
+import SpeakContextScene3D from '../components/SpeakContextScene3D';
 
 /*
  * SPEAK TO AGRISAATHI
@@ -69,6 +71,29 @@ function extractCropKeyword(text) {
   return CROP_KEYWORDS.find((kw) => lower.includes(kw.toLowerCase())) || null;
 }
 
+// Topic detection for the 3D scene (spec #14 — "the scene should change
+// AFTER the system identifies the topic/response"). Checked in priority
+// order so e.g. "how do I control pests in paddy" reads as pest (not
+// just crop), and "today's tomato price" reads as market (not crop).
+// Falls through to 'crop' only if a real crop keyword was found, and to
+// 'default' (neutral, no invented topic) otherwise.
+const PEST_TOPIC_KEYWORDS = ['pest', 'insect', 'worm', 'armyworm', 'aphid', 'disease', 'fungus', 'fungal', 'blight', 'infestation'];
+const MARKET_TOPIC_KEYWORDS = ['price', 'mandi', 'market', 'sell', 'rate', 'msp'];
+const SCHEME_TOPIC_KEYWORDS = ['scheme', 'subsidy', 'yojana', 'pm-kisan', 'pm kisan', 'loan', 'insurance', 'benefit'];
+const IRRIGATION_TOPIC_KEYWORDS = ['irrigate', 'irrigation', 'watering', 'drip', 'sprinkler', 'moisture'];
+const WEATHER_TOPIC_KEYWORDS = ['rain', 'weather', 'monsoon', 'forecast', 'temperature', 'humidity', 'storm'];
+
+function detectSpeakTopic(text) {
+  const lower = text.toLowerCase();
+  if (PEST_TOPIC_KEYWORDS.some((kw) => lower.includes(kw))) return 'pest';
+  if (MARKET_TOPIC_KEYWORDS.some((kw) => lower.includes(kw))) return 'market';
+  if (SCHEME_TOPIC_KEYWORDS.some((kw) => lower.includes(kw))) return 'scheme';
+  if (IRRIGATION_TOPIC_KEYWORDS.some((kw) => lower.includes(kw))) return 'irrigation';
+  if (WEATHER_TOPIC_KEYWORDS.some((kw) => lower.includes(kw))) return 'weather';
+  if (extractCropKeyword(text)) return 'crop';
+  return 'default';
+}
+
 function scoreRecordAgainstQuery(record, queryText) {
   const q = queryText.toLowerCase();
   const hay = `${record.query || ''} ${record.answer || ''} ${record.crop || ''} ${record.category || ''}`.toLowerCase();
@@ -87,8 +112,22 @@ export default function SpeakToAgriSaathi() {
   const [responseText, setResponseText] = useState('');
   const [matchedRecords, setMatchedRecords] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [speakTopic, setSpeakTopic] = useState(null);
+  const [speakCrop, setSpeakCrop] = useState(null);
 
   const recognitionRef = useRef(null);
+  const { context } = useAgricultureContext();
+
+  // Weather topic reuses whatever real condition Home/Weather already
+  // wrote to the shared context this session (spec #66) — this page has
+  // no forecast fetch of its own, so it never invents a condition; if
+  // nothing has been fetched yet this session it stays neutral.
+  usePageContext({
+    page: 'speak-to-agrisaathi',
+    speakTopic,
+    crop: speakCrop,
+    marketCommodity: speakTopic === 'market' ? speakCrop : null,
+  });
 
   const speak = useCallback((text) => {
     if (!('speechSynthesis' in window)) {
@@ -107,6 +146,9 @@ export default function SpeakToAgriSaathi() {
   const runRetrievalAndRespond = useCallback(async (queryText) => {
     setState(STATES.UNDERSTANDING);
     const crop = extractCropKeyword(queryText);
+    const topic = detectSpeakTopic(queryText);
+    setSpeakCrop(crop);
+    setSpeakTopic(topic);
 
     setState(STATES.RETRIEVING);
     let records = [];
@@ -175,6 +217,8 @@ export default function SpeakToAgriSaathi() {
     setTranscript('');
     setResponseText('');
     setMatchedRecords([]);
+    setSpeakTopic(null);
+    setSpeakCrop(null);
 
     const recognition = new SpeechRecognition();
     recognition.lang = language;
@@ -222,6 +266,8 @@ export default function SpeakToAgriSaathi() {
     setResponseText('');
     setMatchedRecords([]);
     setTranscript('');
+    setSpeakTopic(null);
+    setSpeakCrop(null);
     setState(STATES.IDLE);
   }, []);
 
@@ -262,6 +308,15 @@ export default function SpeakToAgriSaathi() {
         {state === STATES.GENERATING && 'Preparing an answer…'}
         {state === STATES.SPEAKING && 'Speaking…'}
       </p>
+
+      {speakTopic && (
+        <SpeakContextScene3D
+          topic={speakTopic}
+          crop={speakCrop}
+          commodity={speakTopic === 'market' ? speakCrop : null}
+          weatherCondition={context.weather}
+        />
+      )}
 
       {transcript && (
         <div className="mt-8 w-full max-w-lg bg-lt-bg border border-lt-border rounded-lg p-4 text-left">

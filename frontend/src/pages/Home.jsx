@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mic, Camera, Droplets, Sprout, MapPin, Wallet, Stethoscope, TrendingUp, FlaskConical, ShieldCheck, Landmark, Wheat, User, Banknote, MessageSquare, CloudRain, Store, GraduationCap, FolderArchive, ShieldPlus, Package, ListTodo, Bug, Gauge, UserCheck, Trophy, BellRing, Contact, Bell, FileSpreadsheet, PawPrint } from 'lucide-react';
 import api from '../api/apiClient';
 import { useLang } from '../lib/i18n';
+import HomeHeroScene3D from '../components/HomeHeroScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
 export default function Home() {
   const { t } = useLang();
@@ -35,6 +38,12 @@ export default function Home() {
     rec.start();
     setListening(true);
   };
+
+  const weatherCondition = weather?.description
+    ? mapWeatherDescriptionToCondition(weather.description)
+    : 'default';
+
+  usePageContext({ page: 'home', weather: weatherCondition });
 
   const quickLinks = [
     { to: '/fertilizer', icon: Droplets, label: t('fertilizer'), color: 'bg-cyan-500/10 text-cyan-400' },
@@ -71,6 +80,8 @@ export default function Home() {
           <span className="text-sm text-lt-success">✅ Backend: {health.status} ({health.version})</span>
         </div>
       )}
+
+      <HomeHeroScene3D condition={weatherCondition} />
 
       <div className="text-center py-2">
         <h2 className="text-lg font-semibold text-lt-text">{t('speakToAgriSaathi')}</h2>

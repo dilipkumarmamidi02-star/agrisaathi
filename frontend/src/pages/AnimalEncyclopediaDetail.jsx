@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Home, Syringe, Utensils, Thermometer, TrendingUp,
@@ -10,6 +10,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import animalData from '@/data/animalEncyclopedia.json';
+import AnimalEncyclopediaScene3D from '@/components/AnimalEncyclopediaScene3D';
+import { usePageContext } from '@/contexts/AgricultureContext';
 
 
 function buildAnimalReadableText(animal, category) {
@@ -54,6 +56,14 @@ export default function AnimalEncyclopediaDetail() {
   const category = animalData.categories.find((c) => c.id === categoryId);
   const animal = category?.types.find((tItem) => tItem.id === typeId);
 
+  const [activeStage, setActiveStage] = useState(null);
+
+  usePageContext({
+    page: 'animal-encyclopedia-detail',
+    animalCategory: categoryId,
+    animal: animal?.name || null,
+  });
+
   useEffect(() => {
     if (!animal || !category) return undefined;
     registerReadableContent(animal.name, buildAnimalReadableText(animal, category));
@@ -85,6 +95,15 @@ export default function AnimalEncyclopediaDetail() {
         <h1 className="text-lg font-bold text-lt-text">{animal.name}</h1>
         <p className="text-sm text-lt-text-secondary">{category.name} &middot; {animal.purpose}</p>
       </div>
+
+      <AnimalEncyclopediaScene3D
+        category={categoryId}
+        maturity={
+          activeStage != null
+            ? (activeStage + 1) / animal.yield_timeline.length
+            : 1
+        }
+      />
 
       {/* Breeds */}
       <Card className="mb-3">
@@ -171,8 +190,15 @@ export default function AnimalEncyclopediaDetail() {
           <div className="relative pl-4 space-y-3">
             <div className="absolute left-1.5 top-1 bottom-1 w-px bg-lt-primary/20" />
             {animal.yield_timeline.map((y, i) => (
-              <div key={i} className="relative">
-                <div className="absolute -left-4 top-1 h-2.5 w-2.5 rounded-full bg-lt-success/100" />
+              <div
+                key={i}
+                role="button"
+                tabIndex={0}
+                onClick={() => setActiveStage(activeStage === i ? null : i)}
+                onKeyDown={(e) => e.key === 'Enter' && setActiveStage(activeStage === i ? null : i)}
+                className={`relative cursor-pointer rounded-md -ml-1 pl-1 py-0.5 transition-colors ${activeStage === i ? 'bg-lt-success/10' : ''}`}
+              >
+                <div className={`absolute -left-4 top-1 h-2.5 w-2.5 rounded-full ${activeStage === i ? 'bg-lt-success ring-2 ring-lt-success/30' : 'bg-lt-success/100'}`} />
                 <p className="text-xs font-semibold text-lt-text">{y.stage} <span className="text-lt-text-muted font-normal">&middot; {y.age_range}</span></p>
                 <p className="text-[11px] text-lt-text-secondary">{y.milestone}</p>
               </div>
@@ -180,6 +206,10 @@ export default function AnimalEncyclopediaDetail() {
           </div>
         </CardContent>
       </Card>
+
+      <p className="text-[10px] text-lt-text-muted -mt-2 mb-3 text-center">
+        Tap a yield stage above to see it reflected in the 3D animal &middot; tap again for fully grown
+      </p>
 
       {/* Common Diseases */}
       <Card className="mb-3">

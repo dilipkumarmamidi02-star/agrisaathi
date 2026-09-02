@@ -34,6 +34,8 @@ import {
 import PageHeader from '../components/PageHeader';
 import YieldEstimator from '../components/YieldEstimator';
 import { STATES } from '../lib/indianLocations';
+import CropPlannerScene3D from '../components/CropPlannerScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 const FALLBACK_CROPS = [
   { id: 'rice', name_en: 'Rice', category: 'Cereal', typical_states: 'Telangana, Andhra Pradesh, West Bengal, Punjab', water_requirement: 'High', season: 'Kharif', duration_days: '120-150' },
@@ -71,7 +73,13 @@ export default function CropPlanner() {
   const [soilCtx, setSoilCtx] = useState(null);
   const [waterCtx, setWaterCtx] = useState(null);
   const [districtOptions, setDistrictOptions] = useState([]);
+  const [plannerStage, setPlannerStage] = useState(5); // 0..5, defaults to fully grown
   const { browseDistricts } = useLocationContext();
+
+  usePageContext({
+    page: 'crop-planner',
+    crop: ranked[0]?.name_en || null,
+  });
 
   useEffect(() => {
     base44.entities.Crop.list('name_en', 300).then((list) => {
@@ -171,6 +179,14 @@ export default function CropPlanner() {
         </div>
         <Button onClick={plan} className="w-full bg-lt-primary hover:bg-lt-primary-dark h-12">{t('rankByFit')}</Button>
       </div>
+
+      {ranked.length > 0 && (
+        <CropPlannerScene3D
+          cropName={ranked[0].name_en}
+          stageIndex={plannerStage}
+          onStageChange={setPlannerStage}
+        />
+      )}
 
       {(soilCtx || waterCtx) && (
         <Card className="mb-4 bg-lt-success/10 border-lt-primary/10"><CardContent className="pt-3 text-xs">

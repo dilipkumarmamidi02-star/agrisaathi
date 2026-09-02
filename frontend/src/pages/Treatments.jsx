@@ -9,6 +9,8 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import TreatmentScene3D from '../components/TreatmentScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 export default function Treatments() {
   const { t } = useLang();
@@ -19,6 +21,9 @@ export default function Treatments() {
   const [result, setResult] = useState(null);
 
   useEffect(() => { appClient.entities.Crop.list('name_en', 200).then(setCrops).catch(() => {}); }, []);
+
+  usePageContext({ page: 'treatments', crop: crop || null, pest: issue || null });
+
 
   const search = async () => {
     if (!crop || !issue) { alert('Select crop and enter issue'); return; }
@@ -49,6 +54,14 @@ export default function Treatments() {
     <div>
       <PageHeader titleKey="treatments" icon={FlaskConical} />
       <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('aiAssisted')}</p>
+
+      {crop && (
+        <TreatmentScene3D
+          cropName={crop}
+          hasOrganic={!!result?.organic_treatment}
+          hasChemical={!!result?.chemical_treatment}
+        />
+      )}
 
       <div className="space-y-3 mb-4">
         <div><Label className="mb-1.5 block">{t('selectCrop')}</Label>

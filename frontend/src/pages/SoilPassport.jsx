@@ -47,6 +47,8 @@ import {
 } from '../components/ui/select';
 import { Image } from '../components/ui/image';
 import PageHeader from '../components/PageHeader';
+import SoilCrossSection3D from '../components/SoilCrossSection3D';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 const API_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:8001';
@@ -134,6 +136,8 @@ export default function SoilPassport() {
   const [records, setRecords] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [selectedRecordId, setSelectedRecordId] = useState(null);
+  const [activeNutrient, setActiveNutrient] = useState(null);
 
   const [soilProfiles, setSoilProfiles] = useState([]);
   const [refState, setRefState] = useState('');
@@ -865,6 +869,10 @@ export default function SoilPassport() {
    * ------------------------------------------------------------
    */
 
+  const selectedRecord = records.find((r) => r.id === selectedRecordId) || records[0] || null;
+
+  usePageContext({ page: 'soil-passport', sensor: activeNutrient });
+
   return (
     <div className="space-y-4">
       <PageHeader
@@ -1291,6 +1299,12 @@ export default function SoilPassport() {
             </Badge>
           </div>
 
+          <SoilCrossSection3D
+            record={selectedRecord}
+            activeNutrient={activeNutrient}
+            onSelectNutrient={setActiveNutrient}
+          />
+
           <div className="space-y-2">
             {records.length === 0 ? (
               <p className="text-sm text-lt-text-muted">
@@ -1298,7 +1312,11 @@ export default function SoilPassport() {
               </p>
             ) : (
               records.map((r) => (
-                <Card key={r.id}>
+                <Card
+                  key={r.id}
+                  onClick={() => setSelectedRecordId(r.id)}
+                  className={`cursor-pointer transition-colors ${selectedRecordId === r.id || (!selectedRecordId && r === records[0]) ? 'border-lt-primary ring-1 ring-lt-primary/30' : ''}`}
+                >
                   <CardContent className="pt-3">
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">

@@ -3,6 +3,8 @@ import { ShieldCheck, Search, CheckCircle2, XCircle } from 'lucide-react';
 import api from '../api/apiClient';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import CropPassportScene3D from '../components/CropPassportScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 
 export default function CropPassport() {
@@ -12,6 +14,7 @@ export default function CropPassport() {
   const [selected, setSelected] = useState(null);
   const [chain, setChain] = useState(null);
   const [generating, setGenerating] = useState(false);
+  const [layer, setLayer] = useState('field');
 
   useEffect(() => {
     api.get('/api/crop-passport/requirements')
@@ -23,6 +26,8 @@ export default function CropPassport() {
   }, []);
 
   const current = requirements.find((r) => r.crop === selected);
+
+  usePageContext({ page: 'crop-passport', crop: selected });
 
   const generatePassport = async () => {
     if (!current) return;
@@ -37,6 +42,7 @@ export default function CropPassport() {
       const chainRes = await api.get('/api/ledger/chain/crop_passport/${encodeURIComponent(current.crop)}'
       );
       setChain(chainRes.data);
+      setLayer('records');
     } catch {
       setChain(null);
     } finally {
@@ -61,7 +67,7 @@ export default function CropPassport() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-lt-text-muted" />
         <select
           value={selected || ''}
-          onChange={(e) => { setSelected(e.target.value); setChain(null); }}
+          onChange={(e) => { setSelected(e.target.value); setChain(null); setLayer('field'); }}
           className="w-full pl-9 pr-3 py-2 border border-lt-border rounded-lg text-sm"
         >
           <option value="">{t('selectACrop')}</option>
@@ -73,6 +79,13 @@ export default function CropPassport() {
 
       {current && (
         <div className="space-y-2 mb-4">
+          <CropPassportScene3D
+            cropName={current.crop}
+            requirements={current}
+            chain={chain}
+            layer={layer}
+            onLayerChange={setLayer}
+          />
           <div className="bg-lt-card p-3 rounded-lg border grid grid-cols-2 gap-2 text-xs">
             <div><p className="text-lt-text-muted">Soil pH</p><p className="font-medium">{current.soil_ph}</p></div>
             <div><p className="text-lt-text-muted">Nitrogen (kg/ha)</p><p className="font-medium">{current.nitrogen_kg_ha}</p></div>

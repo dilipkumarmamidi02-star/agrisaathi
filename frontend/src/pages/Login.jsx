@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import FloatingLeaves from '../components/FloatingLeaves';
+import AuthScene3D from '../components/AuthScene3D';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-[#0a0f0d] px-4 relative overflow-hidden">
       {/* ambient glow */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-green-500/10 blur-[120px]" />
-      <FloatingLeaves count={10} />
+      <AuthScene3D />
 
       <div className="w-full max-w-sm relative">
         <div className="flex items-center gap-2 mb-6 font-mono text-xs text-green-400 tracking-widest uppercase">

@@ -7,6 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import cropData from '@/data/cropEncyclopedia.json';
+import CropCategoryPreviewScene3D from '@/components/CropCategoryPreviewScene3D';
+import { CATEGORY_PREVIEW_CROP } from '@/three/config/cropVisuals';
+import { usePageContext } from '@/contexts/AgricultureContext';
 
 const CATEGORY_COLORS = {
   amber: 'bg-amber-50 border-amber-100 text-amber-700',
@@ -25,6 +28,11 @@ export default function Crops() {
   const [activeCategory, setActiveCategory] = useState('all');
 
   const categories = cropData.categories;
+
+  const previewCategory = categories.find((c) => c.id === activeCategory);
+  const previewCrop = CATEGORY_PREVIEW_CROP[activeCategory] || CATEGORY_PREVIEW_CROP.cereals;
+
+  usePageContext({ page: 'crops', crop: previewCrop });
 
   const filteredCategories = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -48,6 +56,11 @@ export default function Crops() {
       <p className="text-xs text-gray-500 mb-3">
         {t('cropEncyclopediaIntro')}
       </p>
+
+      <CropCategoryPreviewScene3D
+        cropName={previewCrop}
+        label={previewCategory ? previewCategory.name : t('allCategories')}
+      />
 
       <div className="relative mb-3">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

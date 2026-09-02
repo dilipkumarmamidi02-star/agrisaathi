@@ -5,6 +5,9 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
+import WeatherScene3D from '../components/WeatherScene3D';
+import { usePageContext } from '../contexts/AgricultureContext';
+import { mapWmoCodeToCondition } from '../three/config/marketVisuals';
 
 const WMO = {
   0: { label: 'Clear', icon: Sun, color: 'text-amber-500' },
@@ -70,12 +73,25 @@ export default function WeatherAlerts() {
     ? `${t('cropImpactPrefix')} ${plantedCrops.join(', ')}. ${t('cropImpactAdvice')}`
     : null;
 
+  // Worst real extreme wins over today's plain forecast — a storm
+  // warning further out should still be reflected here (spec #31),
+  // never a milder guessed condition.
+  const sceneCode = extremes.length > 0 ? extremes[0].code : forecast?.weather_code?.[0];
+  const sceneCondition = mapWmoCodeToCondition(sceneCode);
+  const sceneWind = extremes.length > 0 ? extremes[0].wind : forecast?.wind_speed_10m_max?.[0];
+
+  usePageContext({ page: 'weather-alerts', weather: sceneCondition });
+
   return (
     <div>
       <PageHeader titleKey="weatherAlerts" icon={CloudRain} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('weatherAlertsIntro')}</p>
 
       <Button onClick={fetchWeather} variant="outline" size="sm" className="mb-3"><Navigation className="h-3 w-3 mr-1" />{t('refresh')}</Button>
+
+      {forecast && (
+        <WeatherScene3D condition={sceneCondition} windSpeed={sceneWind || 0} height="h-40" />
+      )}
 
       {plantedCrops.length > 0 && (
         <Card className="mb-3 bg-lt-success/10 border-lt-primary/20"><CardContent className="pt-3">

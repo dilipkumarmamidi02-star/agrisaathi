@@ -52,6 +52,9 @@ import {
 
 import * as dataGovRegistryModule from '../data/dataGovResources';
 import { useLang } from '../lib/i18n';
+import LivestockScene3D from '../components/LivestockScene3D';
+import { dominantAnimalCategory } from '../three/config/animalVisuals';
+import { usePageContext } from '../contexts/AgricultureContext';
 
 const LIVESTOCK_KEY_PREFIX =
   'livestock_census_';
@@ -754,6 +757,16 @@ export default function Livestock() {
       [displayRecords]
     );
 
+  const totalPig =
+    useMemo(
+      () =>
+        getTotalForField(
+          displayRecords,
+          'pig'
+        ),
+      [displayRecords]
+    );
+
   const grandTotal =
     useMemo(
       () =>
@@ -766,6 +779,27 @@ export default function Livestock() {
   const stateName =
     selectedResource?.state_name ||
     'State / Union Territory';
+
+  const dominantCategory = dominantAnimalCategory({
+    cattle: totalCattle,
+    buffalo: totalBuffalo,
+    sheep: totalSheep,
+    goat: totalGoat,
+    poultry: totalPoultry,
+    pig: totalPig,
+  });
+  const dominantTotal = {
+    dairy: totalCattle + totalBuffalo,
+    'goat-sheep': totalSheep + totalGoat,
+    poultry: totalPoultry,
+    piggery: totalPig,
+  }[dominantCategory] || 0;
+
+  usePageContext({
+    page: 'livestock',
+    animalCategory: dominantCategory,
+    location: districtFilter || stateName,
+  });
 
   return (
     <div className="space-y-6">
@@ -793,7 +827,6 @@ export default function Livestock() {
             all available Indian States and Union Territories.
           </p>
         </div>
-
         <button
           type="button"
           onClick={() =>
@@ -817,6 +850,14 @@ export default function Livestock() {
           Refresh
         </button>
       </div>
+
+      {dominantCategory && (
+        <LivestockScene3D
+          category={dominantCategory}
+          total={dominantTotal}
+          districtLabel={districtFilter || null}
+        />
+      )}
 
       {/* Location selector */}
       <section className="rounded-xl border bg-card p-5 shadow-sm">

@@ -4,6 +4,7 @@ import {
   getDataGovResources,
   getDataGovResourceRecords,
 } from '../lib/dataGov';
+import GovDataScene3D from '../components/GovDataScene3D';
 
 const ERROR_STATUS = 'API-ERROR';
 const EMPTY_STATUS = 'LIVE-EMPTY';
@@ -387,6 +388,14 @@ export default function DataGovLiveData() {
           Live resource registry and API data from Agrisaathi.
         </p>
       </div>
+
+      <GovDataScene3D
+        resourceCount={resources.length}
+        liveCount={summary.live}
+        emptyCount={summary.empty}
+        errorCount={summary.errors}
+        loading={Boolean(loadingKey)}
+      />
 
       {globalError && (
         <div className="rounded-xl border border-red-200 bg-red-500/10 p-4 text-sm text-red-400">

@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState, useEffect } from 'react'
 import { FileSpreadsheet, Plus, ShieldCheck, ShieldAlert, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import appClient from '../api/appClient';
@@ -11,6 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import LedgerDeskScene3D from '../components/LedgerDeskScene3D';
 
 const CATEGORIES = {
   income: ['Crop Sale', 'Livestock Sale', 'Government Subsidy', 'Other Income'],
@@ -79,6 +78,11 @@ export default function FarmLedger() {
       <p className="text-xs text-lt-text-secondary mb-3">
         Every entry is written to a tamper-evident, hash-chained ledger — nothing can be silently edited or deleted after the fact.
       </p>
+
+      <LedgerDeskScene3D
+        valid={valid}
+        incomeRatio={totalIncome + totalExpense > 0 ? totalIncome / (totalIncome + totalExpense) : 0.5}
+      />
 
       <div className="grid grid-cols-3 gap-2 mb-3">
         <Card><CardContent className="pt-3">

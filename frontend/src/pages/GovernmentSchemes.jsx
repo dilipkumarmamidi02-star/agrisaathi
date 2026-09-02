@@ -9,6 +9,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import { useLang } from '../lib/i18n';
+import SchemeFieldScene3D from '../components/SchemeFieldScene3D';
 
 // Fields the rules checker can use, per scheme. Keep this small and honest --
 // only ask what's actually needed to evaluate that scheme's published rules.
@@ -84,6 +85,11 @@ export default function GovernmentSchemes() {
     s === 'likely_not_eligible' ? 'Likely not eligible' :
     'Need more info';
 
+  // Spec #27: "selected scheme controls visual theme / benefit card ...".
+  // Once a scheme is opened and checked, its real result status drives
+  // the scene's accent color; nothing here is invented ahead of the check.
+  const activeStatus = openScheme ? results[openScheme]?.status || null : null;
+
   return (
     <div>
       <PageHeader titleKey="govSchemes" icon={Landmark} />
@@ -91,6 +97,8 @@ export default function GovernmentSchemes() {
         Central + state scheme reference. Eligibility is checked against each scheme's published rules — not a live government
         decision. Always confirm on the official portal before relying on a result.
       </p>
+
+      <SchemeFieldScene3D status={activeStatus} schemeCount={schemes.length} />
 
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="h-4 w-4 text-lt-primary shrink-0" />
@@ -157,8 +165,8 @@ export default function GovernmentSchemes() {
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      if (!isOpen) { setOpenScheme(s.id); return; }
-                      runCheck(s.id);
+                      setOpenScheme(s.id);
+                      if (isOpen) runCheck(s.id);
                     }}
                     disabled={checking === s.id}
                     className="flex-1"
@@ -181,4 +189,3 @@ export default function GovernmentSchemes() {
     </div>
   );
 }
-

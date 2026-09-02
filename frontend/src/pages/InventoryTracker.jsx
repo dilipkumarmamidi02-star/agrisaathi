@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState, useEffect, useCallback } from 'react';
 import { Package, Plus, ShieldCheck, ShieldAlert, AlertTriangle } from 'lucide-react';
 import api from '../api/apiClient';
@@ -12,6 +10,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import InventoryStorageScene3D from '../components/InventoryStorageScene3D';
 
 const CATEGORIES = ['Seed', 'Fertilizer', 'Pesticide', 'Equipment', 'Fuel', 'Other'];
 const UNITS = ['kg', 'litre', 'bag', 'unit', 'packet'];
@@ -83,6 +82,14 @@ export default function InventoryTracker() {
       <p className="text-xs text-lt-text-secondary mb-3">
         Log seed, fertilizer, pesticide and equipment stock. Set a low-stock threshold to get warned before you run out.
       </p>
+
+      <InventoryStorageScene3D
+        items={currentStock.map((b) => ({
+          item: b.payload.item,
+          category: b.payload.category,
+          low: b.payload?.low_stock_at != null && b.payload.quantity <= b.payload.low_stock_at,
+        }))}
+      />
 
       {lowStockItems.length > 0 && (
         <Card className="mb-3 border-amber-300 bg-amber-500/10">

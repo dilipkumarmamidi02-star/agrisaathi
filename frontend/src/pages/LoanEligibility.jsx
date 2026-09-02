@@ -7,6 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
+import LoanFieldScene3D from '../components/LoanFieldScene3D';
 
 export default function LoanEligibility() {
   const { t } = useLang();
@@ -14,6 +15,7 @@ export default function LoanEligibility() {
   const [farms, setFarms] = useState([]);
   const [results, setResults] = useState({});
   const [checking, setChecking] = useState(null);
+  const [lastChecked, setLastChecked] = useState(null); // loan.id of most recent real result
 
   useEffect(() => {
     appClient.entities.GovLoan.list('name', 50).then(setLoans).catch(() => {});
@@ -51,8 +53,11 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
         },
       });
       setResults((prev) => ({ ...prev, [loan.id]: res }));
+      setLastChecked(loan.id);
     } catch {
-      setResults((prev) => ({ ...prev, [loan.id]: { status: 'partially', reason: t('checkFailed'), documents_needed: loan.required_documents || [] } }));
+      const fallback = { status: 'partially', reason: t('checkFailed'), documents_needed: loan.required_documents || [] };
+      setResults((prev) => ({ ...prev, [loan.id]: fallback }));
+      setLastChecked(loan.id);
     } finally {
       setChecking(null);
     }
@@ -67,10 +72,21 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
     s === 'partially' ? t('partiallyEligible') :
     t('notEligible');
 
+  // Spec #45: "the actual eligibility result controls the visualization
+  // ... do not imply guaranteed approval." Only the most recently
+  // checked loan's real result drives the scene's status seal.
+  const activeStatus = lastChecked ? results[lastChecked]?.status || null : null;
+
   return (
     <div>
       <PageHeader titleKey="loanEligibility" icon={Banknote} />
       <p className="text-xs text-lt-text-secondary mb-4">{t('loanIntro')}</p>
+
+      <LoanFieldScene3D
+        cropName={farms[0]?.current_crop}
+        status={activeStatus}
+        hasFarm={farms.length > 0}
+      />
 
       {loans.length === 0 ? (
         <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">{t('noLoans')}</CardContent></Card>

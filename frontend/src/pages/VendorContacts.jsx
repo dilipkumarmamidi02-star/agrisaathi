@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import VendorTypeScene3D from '../components/VendorTypeScene3D';
 import { useLang } from '../lib/i18n';
 
 const VENDOR_TYPES = ['Seed dealer', 'Fertilizer dealer', 'Pesticide dealer', 'Equipment rental', 'Buyer/Trader', 'Transport', 'Other'];
@@ -96,12 +97,15 @@ export default function VendorContacts() {
             </div>
             <div>
               <Label>{t('type')}</Label>
-              <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {VENDOR_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                </SelectContent>
-              </Select>
+              <div className="flex items-center gap-2">
+                <VendorTypeScene3D type={form.type} className="h-10 w-10" />
+                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {VENDOR_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div>
               <Label>{t('phoneNumber')}</Label>
@@ -131,10 +135,13 @@ export default function VendorContacts() {
           {vendors.map((b) => (
             <Card key={b.payload.name}>
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium">{b.payload.name}</p>
-                  <p className="text-[11px] text-lt-text-muted">{b.payload.type}{b.payload.location ? ` · ${b.payload.location}` : ''}</p>
-                  {b.payload.notes && <p className="text-xs text-lt-text-secondary mt-0.5">{b.payload.notes}</p>}
+                <div className="flex items-center gap-2 min-w-0">
+                  <VendorTypeScene3D type={b.payload.type} className="h-9 w-9" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">{b.payload.name}</p>
+                    <p className="text-[11px] text-lt-text-muted">{b.payload.type}{b.payload.location ? ` · ${b.payload.location}` : ''}</p>
+                    {b.payload.notes && <p className="text-xs text-lt-text-secondary mt-0.5">{b.payload.notes}</p>}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <a href={`tel:${b.payload.phone}`} className="p-2 rounded-full bg-lt-primary text-white" aria-label={`Call ${b.payload.name}`}>

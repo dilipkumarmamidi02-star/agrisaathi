@@ -1,6 +1,7 @@
 import { Users, Sprout, Stethoscope, GraduationCap, Landmark, Phone } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
+import ExpertCardScene3D from '../components/ExpertCardScene3D';
 import { useLang } from '../lib/i18n';
 
 const EXPERT_TYPES = [
@@ -23,9 +24,7 @@ export default function ExpertDirectory() {
         {EXPERT_TYPES.map((e) => (
           <Card key={e.title}>
             <CardContent className="pt-4 pb-4 flex items-center gap-3">
-              <div className="p-2 rounded-full bg-lt-success/10">
-                <e.icon className="h-5 w-5 text-lt-success" />
-              </div>
+              <ExpertCardScene3D title={e.title} />
               <div className="flex-1">
                 <p className="text-sm font-semibold">{e.title}</p>
                 <p className="text-xs text-lt-text-secondary">{e.description}</p>

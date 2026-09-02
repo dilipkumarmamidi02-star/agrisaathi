@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import {
   useState,
   useEffect
@@ -39,6 +37,7 @@ import {
   Legend
 } from 'recharts';
 import PageHeader from '../components/PageHeader';
+import SensorHubScene3D from '../components/SensorHubScene3D';
 
 export default function SensorHub() {
   const { t } = useLang();
@@ -81,6 +80,8 @@ export default function SensorHub() {
     <div>
       <PageHeader titleKey="sensorHub" icon={Activity} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('sensorHubIntro')}</p>
+
+      <SensorHubScene3D latest={latest} readingCount={readings.length} />
 
       {latest && (
         <Card className="mb-4 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200"><CardContent className="pt-4">

@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import NearMeBeaconScene3D from '../components/NearMeBeaconScene3D';
 
 const haversine = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -134,6 +135,11 @@ export default function NearMe() {
   return (
     <div>
       <PageHeader titleKey="nearMe" icon={MapPin} />
+
+      {/* Spec #26: real map stays exactly as-is. This is a small
+          supplementary beacon that confirms the active category/focus
+          — it never replaces the OSM map or Overpass data below. */}
+      <NearMeBeaconScene3D category={filter} focused={!!selected} />
 
       <div className="rounded-xl overflow-hidden border mb-3 h-44">
         <iframe src={mapSrc} width="100%" height="100%" style={{ border: 0 }} loading="lazy" title="map" />

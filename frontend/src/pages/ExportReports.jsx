@@ -7,6 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Label } from '../components/ui/label';
 import { Checkbox } from '../components/ui/checkbox';
 import PageHeader from '../components/PageHeader';
+import ReportDeskScene3D from '../components/ReportDeskScene3D';
 import jsPDF from 'jspdf';
 
 export default function ExportReports() {
@@ -91,6 +92,7 @@ export default function ExportReports() {
   return (
     <div>
       <PageHeader titleKey="exportReports" icon={FileDown} />
+      <ReportDeskScene3D sectionsOn={Object.values(sections).filter(Boolean).length} generating={generating} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('exportReportsIntro')}</p>
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">

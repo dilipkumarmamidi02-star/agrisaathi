@@ -6,6 +6,7 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import PageHeader from '../components/PageHeader';
+import LoanCalcScene3D from '../components/LoanCalcScene3D';
 
 export default function LoanCalculator() {
   const { t } = useLang();
@@ -37,10 +38,19 @@ export default function LoanCalculator() {
 
   const fmt = (v) => '₹' + Math.round(v).toLocaleString('en-IN');
 
+  // Spec #46: sliders must immediately update calculations, charts, and
+  // the contextual visualization together — this reuses the exact same
+  // principal/interest numbers the chart below renders, nothing separate.
+  const P = Number(amount) || 0;
+  const principalRatio = totalPayable > 0 ? P / totalPayable : 0.7;
+  const stackHeight = Math.max(3, Math.min(10, Number(tenure) || 3));
+
   return (
     <div>
       <PageHeader titleKey="loanCalculator" icon={Calculator} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('loanCalcIntro')}</p>
+
+      <LoanCalcScene3D principalRatio={principalRatio} stackHeight={stackHeight} />
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">
         <div><Label className="mb-1 block text-xs">{t('loanAmount')} (₹)</Label><Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} /></div>

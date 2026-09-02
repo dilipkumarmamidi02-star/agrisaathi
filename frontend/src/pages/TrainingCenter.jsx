@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import TrainingCenterScene3D from '../components/TrainingCenterScene3D';
 
 const CATEGORIES = [
   { value: '', label: 'all' },
@@ -34,6 +35,8 @@ export default function TrainingCenter() {
     <div>
       <PageHeader titleKey="trainingCenter" icon={GraduationCap} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('trainingIntro')}</p>
+
+      <TrainingCenterScene3D category={filter || 'crop'} resourceCount={list.length} />
 
       <div className="relative mb-3">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-lt-text-muted" />

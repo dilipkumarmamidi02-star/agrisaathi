@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import {
   useState,
   useEffect
@@ -31,6 +29,7 @@ import {
   Legend
 } from 'recharts';
 import PageHeader from '../components/PageHeader';
+import ExpenseFieldScene3D from '../components/ExpenseFieldScene3D';
 
 const PIE_COLORS = ['#16a34a', '#f59e0b', '#ef4444', '#3b82f6', '#a855f7', '#ec4899', '#14b8a6', '#64748b'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -64,6 +63,10 @@ export default function ExpenseAnalytics() {
     <div>
       <PageHeader titleKey="expenseAnalytics" icon={BarChart3} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('expenseAnalyticsIntro')}</p>
+
+      <ExpenseFieldScene3D
+        topCategories={pieData.slice(0, 3).map((c, i) => ({ ...c, color: PIE_COLORS[i % PIE_COLORS.length] }))}
+      />
 
       <div className="grid grid-cols-3 gap-2 mb-4">
         <Card className="bg-red-500/10 border-red-100"><CardContent className="pt-3 text-center">

@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import VoiceWaveScene3D from '../components/VoiceWaveScene3D';
 
 export default function VoiceNotes() {
   const { t } = useLang();
@@ -76,6 +77,7 @@ export default function VoiceNotes() {
   return (
     <div>
       <PageHeader titleKey="voiceNotes" icon={Mic} />
+      <VoiceWaveScene3D recording={recording} hasTranscript={Boolean(transcript.trim())} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('voiceNotesIntro')}</p>
 
       <div className="mb-3">

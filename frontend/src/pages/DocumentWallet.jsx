@@ -12,6 +12,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import { Image } from '../components/ui/image';
 import PageHeader from '../components/PageHeader';
+import DocumentVaultScene3D from '../components/DocumentVaultScene3D';
 
 const DOC_TYPES = [
   { value: 'land_deed', label: 'Land Deed', color: 'bg-amber-100 text-amber-400' },
@@ -58,9 +59,13 @@ export default function DocumentWallet() {
 
   const remove = async (id) => { await appClient.entities.DocumentWallet.delete(id); load(); };
 
+  const today = new Date().toISOString().slice(0, 10);
+  const expiringCount = docs.filter((d) => d.expiry_date && d.expiry_date < today).length;
+
   return (
     <div>
       <PageHeader titleKey="documentWallet" icon={FolderArchive} />
+      <DocumentVaultScene3D docCount={docs.length} expiringCount={expiringCount} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('documentWalletIntro')}</p>
 
       <div className="space-y-2 mb-4">

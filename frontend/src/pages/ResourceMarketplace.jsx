@@ -16,6 +16,7 @@ import {
 
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import ResourceMarketplaceScene3D from '../components/ResourceMarketplaceScene3D';
 import { useLang } from '../lib/i18n';
 
 const LOCAL_RESOURCES = [
@@ -45,6 +46,7 @@ export default function ResourceMarketplace() {
   const { t } = useLang();
   const [resources, setResources] = useState([]);
   const [query, setQuery] = useState('');
+  const [category, setCategory] = useState(LOCAL_RESOURCES[0].name);
 
   useEffect(() => {
     getDataGovResources()
@@ -76,6 +78,7 @@ export default function ResourceMarketplace() {
 
   const filtered = LOCAL_RESOURCES.filter(
     (item) =>
+      item.name === category &&
       `${item.name} ${item.note}`
         .toLowerCase()
         .includes(query.toLowerCase())
@@ -92,6 +95,20 @@ export default function ResourceMarketplace() {
         Farmer resource directory. This page does not
         claim live seller prices or stock.
       </p>
+
+      <ResourceMarketplaceScene3D category={category} sourceCount={marketplaceResources.length} />
+
+      <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
+        {LOCAL_RESOURCES.map((item) => (
+          <button
+            key={item.name}
+            onClick={() => setCategory(item.name)}
+            className={`px-3 py-1 rounded-full text-xs whitespace-nowrap ${category === item.name ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}
+          >
+            {item.name}
+          </button>
+        ))}
+      </div>
 
       <input
         value={query}

@@ -6,6 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
+import FeedbackGardenScene3D from '../components/FeedbackGardenScene3D';
 import { useLang } from '../lib/i18n';
 
 
@@ -80,14 +81,17 @@ export default function FeedbackCorner() {
       {showForm && (
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
-            <div>
-              <p className="text-sm mb-1">How's your experience?</p>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <button key={n} onClick={() => setRating(n)} aria-label={`${n} star`}>
-                    <Star className={`h-6 w-6 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-lt-border'}`} />
-                  </button>
-                ))}
+            <div className="flex items-center gap-3">
+              <FeedbackGardenScene3D rating={rating} />
+              <div>
+                <p className="text-sm mb-1">How's your experience?</p>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button key={n} onClick={() => setRating(n)} aria-label={`${n} star`}>
+                      <Star className={`h-6 w-6 ${n <= rating ? 'fill-amber-400 text-amber-400' : 'text-lt-border'}`} />
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <Textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="What worked well, what didn't, what would you like to see?" rows={4} />

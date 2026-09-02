@@ -4,6 +4,7 @@ import api from '../api/apiClient';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
+import AlertWatchtowerScene3D from '../components/AlertWatchtowerScene3D';
 import { useLang } from '../lib/i18n';
 
 
@@ -65,6 +66,11 @@ export default function AlertsCenter() {
   return (
     <div>
       <PageHeader title={t('alertsCenterTitle')} icon={Bell} />
+      <AlertWatchtowerScene3D
+        stockAlerts={lowStockItems.length}
+        weatherAlerts={forecastDays.length}
+        priceAlerts={priceAlerts.length}
+      />
       <p className="text-xs text-lt-text-secondary mb-3">
         {totalAlerts > 0
           ? `${totalAlerts} alert${totalAlerts > 1 ? 's' : ''} need your attention.`

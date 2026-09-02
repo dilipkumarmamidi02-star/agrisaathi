@@ -37,6 +37,7 @@ import {
 } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import InsuranceFieldScene3D from '../components/InsuranceFieldScene3D';
 
 const CLAIM_STATUS = {
   none: { label: 'No claim', color: 'bg-lt-bg text-lt-text-secondary' },
@@ -51,6 +52,7 @@ export default function InsuranceHub() {
   const [policies, setPolicies] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState({ policy_name: '', provider: '', crop_name: '', plot_name: '', premium_amount: '', sum_insured: '', start_date: '', end_date: '' });
+  const [focused, setFocused] = useState(null);
 
   const load = () => appClient.entities.InsurancePolicy.list('-created_date').then(setPolicies).catch(() => []);
   useEffect(() => { load(); }, []);
@@ -74,10 +76,21 @@ export default function InsuranceHub() {
   const active = policies.filter((p) => p.status === 'active');
   const filedClaims = policies.filter((p) => p.claim_status !== 'none');
 
+  // Spec #28: "selected crop -> protected crop field ... claims -> claim
+  // timeline visualization." The farmer's most recently tapped policy
+  // (or the first one) drives the scene; real crop_name/claim_status only.
+  const focusedPolicy = policies.find((p) => p.id === focused) || policies[0] || null;
+
   return (
     <div>
       <PageHeader titleKey="insuranceHub" icon={ShieldPlus} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('insuranceIntro')}</p>
+
+      <InsuranceFieldScene3D
+        cropName={focusedPolicy?.crop_name}
+        claimStatus={focusedPolicy?.claim_status || 'none'}
+        policyCount={policies.length}
+      />
 
       <div className="grid grid-cols-2 gap-2 mb-4">
         <Card className="bg-lt-success/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
@@ -96,20 +109,20 @@ export default function InsuranceHub() {
         ) : policies.map((p) => {
           const cs = CLAIM_STATUS[p.claim_status] || CLAIM_STATUS.none;
           return (
-            <Card key={p.id}><CardContent className="pt-3 space-y-2">
+            <Card key={p.id} onClick={() => setFocused(p.id)} className="cursor-pointer"><CardContent className="pt-3 space-y-2">
               <div className="flex items-start justify-between">
                 <div className="min-w-0">
                   <p className="text-sm font-medium truncate">{p.policy_name}</p>
-                  <p className="text-xs text-lt-text-muted">{p.provider}{p.crop_name ? ` · ${p.crop_name}` : ''}{p.plot_name ? ` · ${p.plot_name}` : ''}</p>
+                  <p className="text-xs text-lt-text-muted truncate">{p.provider}{p.crop_name ? ` · ${p.crop_name}` : ''}{p.plot_name ? ` · ${p.plot_name}` : ''}</p>
                 </div>
-                <button onClick={() => remove(p.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                <button onClick={(e) => { e.stopPropagation(); remove(p.id); }} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
               </div>
               <div className="flex flex-wrap gap-2 text-xs">
                 {p.sum_insured && <Badge variant="secondary">₹{p.sum_insured.toLocaleString('en-IN')} {t('covered')}</Badge>}
                 {p.premium_amount && <Badge variant="secondary">₹{p.premium_amount.toLocaleString('en-IN')} {t('premium')}</Badge>}
                 {p.end_date && <Badge variant="outline">{t('until')} {p.end_date}</Badge>}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                 <Badge className={cs.color}>{cs.label}</Badge>
                 {p.claim_status !== 'approved' && p.claim_status !== 'rejected' && (
                   <Select value={p.claim_status} onValueChange={(v) => updateClaim(p, v)}>

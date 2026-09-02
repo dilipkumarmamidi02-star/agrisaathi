@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState, useEffect } from 'react'
 import { Wheat, Plus, Trash2, TrendingUp } from 'lucide-react';
 import { useLang } from '../lib/i18n';
@@ -13,6 +11,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
+import HarvestFieldScene3D from '../components/HarvestFieldScene3D';
 
 export default function HarvestRecords() {
   const { t } = useLang();
@@ -60,6 +59,8 @@ export default function HarvestRecords() {
     <div>
       <PageHeader titleKey="harvestRecords" icon={Wheat} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('harvestIntro')}</p>
+
+      <HarvestFieldScene3D cropName={records[0]?.crop_name} hasRecords={records.length > 0} />
 
       <div className="grid grid-cols-2 gap-2 mb-3">
         <Card><CardContent className="pt-3"><p className="text-xs text-lt-text-secondary">{t('totalHarvested')}</p><p className="text-lg font-bold text-lt-success">{totalQty.toFixed(1)} q</p></CardContent></Card>

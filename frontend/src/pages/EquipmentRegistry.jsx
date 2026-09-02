@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState, useEffect, useCallback } from 'react';
 import { Wrench, Plus, AlertTriangle } from 'lucide-react';
 import api from '../api/apiClient';
@@ -10,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import EquipmentYardScene3D from '../components/EquipmentYardScene3D';
 
 
 export default function EquipmentRegistry() {
@@ -67,6 +66,14 @@ export default function EquipmentRegistry() {
     <div>
       <PageHeader title={t('equipmentRegistryTitle')} icon={Wrench} />
       <p className="text-xs text-lt-text-secondary mb-3">Track your machinery and its maintenance schedule.</p>
+
+      <EquipmentYardScene3D
+        equipment={equipment.map((b) => ({
+          name: b.payload.name,
+          type: b.payload.type,
+          overdue: Boolean(b.payload.next_maintenance && b.payload.next_maintenance < today),
+        }))}
+      />
 
       <div className="flex justify-end mb-3">
         <Button size="sm" onClick={() => setShowForm((s) => !s)}>

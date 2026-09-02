@@ -42,7 +42,7 @@ import ProfitCalculator from '../components/ProfitCalculator';
 import PincodeLocationFields from '../components/PincodeLocationFields';
 import { useLocationContext } from '../lib/LocationContext';
 import DashboardFarmScene from '../components/DashboardFarmScene';
-import { usePageContext } from '../contexts/AgricultureContext';
+import { usePageContext, useAgricultureContext } from '../contexts/AgricultureContext';
 
 const today = new Date().toISOString().slice(0, 10);
 const daysUntil = (d) => Math.ceil((new Date(d) - new Date(today)) / 86400000);
@@ -51,6 +51,7 @@ export default function Dashboard() {
   const { t } = useLang();
   const navigate = useNavigate();
   const { location: farmLocation } = useLocationContext();
+  const { context } = useAgricultureContext();
   const [farms, setFarms] = useState([]);
   const [cycles, setCycles] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -136,7 +137,7 @@ export default function Dashboard() {
           farms={farms}
           urgentPlotNames={urgentPlotNames}
           livestockPending={livestock.length}
-          weather={null}
+          weather={context.weather}
           onSelectFarm={goToFarm}
           onSelectLivestock={() => navigate('/livestock-care')}
         />

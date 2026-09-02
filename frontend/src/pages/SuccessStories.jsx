@@ -8,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
+import StoryFieldScene3D from '../components/StoryFieldScene3D';
 import { useLang } from '../lib/i18n';
 
 
@@ -58,6 +59,7 @@ export default function SuccessStories() {
   return (
     <div>
       <PageHeader title={t('successStoriesTitle')} icon={Trophy} />
+      <StoryFieldScene3D storyCount={stories.length} />
       <p className="text-xs text-lt-text-secondary mb-3">
         Real stories shared by farmers using AgriSaathi — visible to everyone.
       </p>

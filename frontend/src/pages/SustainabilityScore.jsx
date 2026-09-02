@@ -5,6 +5,7 @@ import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
+import EcosystemScene3D from '../components/EcosystemScene3D';
 import { useLang } from '../lib/i18n';
 
 
@@ -72,6 +73,7 @@ export default function SustainabilityScore() {
   return (
     <div>
       <PageHeader title={t('sustainabilityScoreTitle')} icon={Leaf} />
+      <EcosystemScene3D score={score} />
       <p className="text-xs text-lt-text-secondary mb-3">
         A simple self-assessment based on practices you actually follow — not an automated guess.
       </p>

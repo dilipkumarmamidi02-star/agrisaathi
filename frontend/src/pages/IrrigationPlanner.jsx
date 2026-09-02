@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState, useEffect } from 'react'
 import { Droplets, Plus, Check, Trash2, Calendar } from 'lucide-react';
 import { useLang } from '../lib/i18n';
@@ -11,6 +9,7 @@ import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
+import IrrigationFieldScene3D from '../components/IrrigationFieldScene3D';
 
 const METHODS = ['drip', 'sprinkler', 'flood', 'furrow', 'rainfed'];
 
@@ -49,11 +48,18 @@ export default function IrrigationPlanner() {
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = sessions.filter((s) => s.status === 'scheduled' && s.session_date >= today);
   const past = sessions.filter((s) => s.status !== 'scheduled' || s.session_date < today);
+  const focusSession = upcoming[0] || sessions[0];
 
   return (
     <div>
       <PageHeader titleKey="irrigationPlanner" icon={Droplets} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('irrigationIntro')}</p>
+
+      <IrrigationFieldScene3D
+        cropName={focusSession?.crop_name}
+        method={focusSession?.method || 'drip'}
+        hasSession={Boolean(focusSession)}
+      />
 
       <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark">
         <Plus className="h-4 w-4" /> {t('logIrrigation')}

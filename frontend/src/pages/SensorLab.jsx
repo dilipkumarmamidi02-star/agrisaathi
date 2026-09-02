@@ -1,5 +1,3 @@
-import { Phase7RouteIntegration } from "../components/phase7";
-
 import { useState } from 'react'
 import api from '../api/apiClient';
 import { Gauge, Bluetooth } from 'lucide-react';
@@ -9,6 +7,7 @@ import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
+import SensorLabScene3D from '../components/SensorLabScene3D';
 
 
 export default function SensorLab() {
@@ -100,6 +99,17 @@ export default function SensorLab() {
         <button onClick={() => setTab('soil')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'soil' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>Soil (15)</button>
         <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>Water (5)</button>
       </div>
+
+      <SensorLabScene3D
+        tab={tab}
+        soilRecord={{
+          ph: soilResult ? soilResult.avg_ph : (soilSamples.filter((v) => v !== '').map(Number).reduce((s, v, _, a) => s + v / a.length, 0) || null),
+          nitrogen: n ? Number(n) : null,
+          phosphorus: p ? Number(p) : null,
+          potassium: k ? Number(k) : null,
+          organic_carbon: oc ? Number(oc) : null,
+        }}
+      />
 
       {tab === 'soil' ? (
         <>

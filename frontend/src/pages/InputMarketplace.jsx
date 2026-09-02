@@ -6,6 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
+import InputMarketplaceScene3D from '../components/InputMarketplaceScene3D';
 
 const haversine = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -49,6 +50,8 @@ export default function InputMarketplace() {
     <div>
       <PageHeader titleKey="inputMarketplace" icon={Store} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('marketplaceIntro')}</p>
+
+      <InputMarketplaceScene3D category={filter} shopCount={list.length} />
 
       <Button onClick={useLocation} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark"><Navigation className="h-4 w-4 mr-1" />{t('useMyLocation')}</Button>
 

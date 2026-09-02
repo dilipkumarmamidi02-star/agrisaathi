@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { getWeatherVisual } from '../config/cropVisuals';
-import CropField from './CropField';
+import * as THREE from 'three';
+import { getCropVisual, getWeatherVisual } from '../config/cropVisuals';
 
 /**
  * Dashboard = "3D Farm Command Center" (spec #6).
@@ -18,10 +18,31 @@ import CropField from './CropField';
  */
 
 function FieldPatch({ farm, position, urgent, onSelect }) {
+  const visual = getCropVisual(farm.current_crop);
   const groupRef = useRef();
   const [hovered, setHovered] = useState(false);
 
-  useFrame(() => {
+  const bladeCount = visual.density === 'dense' ? 40 : visual.density === 'medium' ? 24 : 14;
+  const blades = useMemo(
+    () =>
+      Array.from({ length: bladeCount }, () => ({
+        x: THREE.MathUtils.randFloatSpread(1.5),
+        z: THREE.MathUtils.randFloatSpread(1.5),
+        phase: THREE.MathUtils.randFloat(0, Math.PI * 2),
+        scale: THREE.MathUtils.randFloat(0.7, 1.15),
+      })),
+    [bladeCount]
+  );
+
+  const bladeRefs = useRef([]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    bladeRefs.current.forEach((mesh, i) => {
+      if (!mesh) return;
+      const b = blades[i];
+      mesh.rotation.z = Math.sin(t * 1.4 + b.phase) * 0.12;
+    });
     if (groupRef.current) {
       groupRef.current.position.y = hovered ? 0.06 : 0;
     }
@@ -45,7 +66,33 @@ function FieldPatch({ farm, position, urgent, onSelect }) {
         document.body.style.cursor = 'auto';
       }}
     >
-      <CropField cropName={farm.current_crop} size={1.7} />
+      {/* soil bed */}
+      <mesh position={[0, -0.02, 0]} receiveShadow>
+        <boxGeometry args={[1.7, 0.05, 1.7]} />
+        <meshStandardMaterial color={hovered ? '#5a4632' : '#3f3123'} />
+      </mesh>
+
+      {/* optional standing water for wetland crops (paddy etc.) */}
+      {visual.water && (
+        <mesh position={[0, 0.005, 0]}>
+          <boxGeometry args={[1.55, 0.01, 1.55]} />
+          <meshStandardMaterial color="#6fa8c9" transparent opacity={0.55} />
+        </mesh>
+      )}
+
+      {/* crop blades */}
+      {blades.map((b, i) => (
+        <mesh
+          key={i}
+          ref={(el) => (bladeRefs.current[i] = el)}
+          position={[b.x, visual.height * b.scale * 0.5, b.z]}
+        >
+          <coneGeometry args={[0.05 * b.scale, visual.height * b.scale, 5]} />
+          <meshStandardMaterial color={visual.color} />
+        </mesh>
+      ))}
+
+      {/* urgent-alert pulse ring */}
       {urgent && <PulseRing color="#ef4444" />}
     </group>
   );

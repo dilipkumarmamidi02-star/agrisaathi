@@ -28,23 +28,8 @@ export const CROP_VISUALS = {
 export function getCropVisual(cropName) {
   if (!cropName) return CROP_VISUALS.default;
   const key = cropName.trim().toLowerCase();
-  if (CROP_VISUALS[key]) return CROP_VISUALS[key];
-  // Encyclopedia/DB crop names often carry extra text, e.g. "Rice (Paddy)"
-  // or "Chilli (Red Pepper)" — match on whichever known key appears inside.
-  const found = Object.keys(CROP_VISUALS).find((k) => k !== 'default' && key.includes(k));
-  return found ? CROP_VISUALS[found] : CROP_VISUALS.default;
+  return CROP_VISUALS[key] || CROP_VISUALS.default;
 }
-
-/** Category id (crop encyclopedia) → a representative crop, for previews
- * shown before the user has drilled into a specific crop. */
-export const CATEGORY_PREVIEW_CROP = {
-  cereals: 'rice',
-  pulses: 'soybean',
-  oilseeds: 'groundnut',
-  vegetables: 'tomato',
-  'cash-crops': 'cotton',
-  spices: 'turmeric',
-};
 
 /** Weather → lighting/sky mapping used by any scene that reacts to weather. */
 export const WEATHER_VISUALS = {
@@ -59,21 +44,4 @@ export const WEATHER_VISUALS = {
 export function getWeatherVisual(weather) {
   if (!weather) return WEATHER_VISUALS.default;
   return WEATHER_VISUALS[weather.toLowerCase()] || WEATHER_VISUALS.default;
-}
-
-/**
- * Maps a free-text weather description (as returned by the real weather
- * API on Home, e.g. "light rain", "scattered clouds", "clear sky") to one
- * of the WEATHER_VISUALS buckets. Never invents a condition — if nothing
- * matches, falls back to the neutral default rather than guessing.
- */
-export function mapWeatherDescriptionToCondition(description) {
-  if (!description) return 'default';
-  const d = description.toLowerCase();
-  if (/(thunder|storm)/.test(d)) return 'storm';
-  if (/(rain|drizzle|shower)/.test(d)) return 'rain';
-  if (/(fog|mist|haze)/.test(d)) return 'fog';
-  if (/(cloud|overcast)/.test(d)) return 'cloudy';
-  if (/(clear|sun)/.test(d)) return 'sunny';
-  return 'default';
 }

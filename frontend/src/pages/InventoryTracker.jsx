@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import { useState, useEffect, useCallback } from 'react';
 import { Package, Plus, ShieldCheck, ShieldAlert, AlertTriangle } from 'lucide-react';
 import api from '../api/apiClient';
@@ -78,7 +80,7 @@ export default function InventoryTracker() {
   return (
     <div>
       <PageHeader title={t('inventoryTrackerTitle')} icon={Package} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Log seed, fertilizer, pesticide and equipment stock. Set a low-stock threshold to get warned before you run out.
       </p>
 
@@ -152,9 +154,9 @@ export default function InventoryTracker() {
       )}
 
       {loading ? (
-        <p className="text-sm text-text-muted text-center py-8">Loading inventory…</p>
+        <p className="text-sm text-lt-text-muted text-center py-8">Loading inventory…</p>
       ) : currentStock.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No inventory logged yet. Add your first item above.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No inventory logged yet. Add your first item above.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {currentStock.map((b) => (
@@ -162,7 +164,7 @@ export default function InventoryTracker() {
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">{b.payload.item}</p>
-                  <p className="text-[11px] text-text-muted">{b.payload.category} · updated {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                  <p className="text-[11px] text-lt-text-muted">{b.payload.category} · updated {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
                 </div>
                 <p className="text-sm font-bold">{b.payload.quantity} {b.payload.unit}</p>
               </CardContent>

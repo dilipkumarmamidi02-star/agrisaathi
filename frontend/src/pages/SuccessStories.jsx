@@ -58,7 +58,7 @@ export default function SuccessStories() {
   return (
     <div>
       <PageHeader title={t('successStoriesTitle')} icon={Trophy} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Real stories shared by farmers using AgriSaathi — visible to everyone.
       </p>
 
@@ -91,9 +91,9 @@ export default function SuccessStories() {
       )}
 
       {loading ? (
-        <p className="text-sm text-text-muted text-center py-8">Loading stories…</p>
+        <p className="text-sm text-lt-text-muted text-center py-8">Loading stories…</p>
       ) : stories.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No stories shared yet. Be the first!</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No stories shared yet. Be the first!</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {stories.map((b) => (
@@ -103,8 +103,8 @@ export default function SuccessStories() {
                   <Sprout className="h-4 w-4 text-lt-primary" />
                   <p className="text-sm font-medium">{b.payload?.farmer_name} · {b.payload?.crop}</p>
                 </div>
-                <p className="text-xs text-text-secondary">{b.payload?.story}</p>
-                <p className="text-[11px] text-text-muted mt-1">{new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                <p className="text-xs text-lt-text-secondary">{b.payload?.story}</p>
+                <p className="text-[11px] text-lt-text-muted mt-1">{new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
               </CardContent>
             </Card>
           ))}

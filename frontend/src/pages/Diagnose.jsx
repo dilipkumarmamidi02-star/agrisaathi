@@ -187,24 +187,24 @@ export default function Diagnose() {
         {step > 1 && (
           <button
             onClick={() => setStep(step - 1)}
-            className="h-8 w-8 flex items-center justify-center rounded-full bg-surface-hover text-text-secondary"
+            className="h-8 w-8 flex items-center justify-center rounded-full bg-lt-bg text-lt-text-secondary"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
         )}
         <Camera className="h-5 w-5 text-lt-primary" />
-        <h1 className="text-xl font-bold text-text-primary">Diagnose</h1>
+        <h1 className="text-xl font-bold text-lt-text">Diagnose</h1>
       </div>
 
       {step === 1 && (
-        <p className="text-text-secondary text-sm mb-3">AI-powered crop &amp; livestock diagnosis</p>
+        <p className="text-lt-text-secondary text-sm mb-3">AI-powered crop &amp; livestock diagnosis</p>
       )}
 
       <div className="flex items-center gap-1 mb-1">
         {STEPS.map((s, i) => (
           <div
             key={s.id}
-            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-mint/100' : 'bg-lt-border'}`}
+            className={`h-1.5 flex-1 rounded-full ${step >= s.id ? 'bg-lt-success/100' : 'bg-lt-border'}`}
           />
         ))}
       </div>
@@ -212,7 +212,7 @@ export default function Diagnose() {
         {STEPS.map((s) => (
           <span
             key={s.id}
-            className={`text-[11px] ${step >= s.id ? 'text-mint font-medium' : 'text-text-muted'}`}
+            className={`text-[11px] ${step >= s.id ? 'text-lt-success font-medium' : 'text-lt-text-muted'}`}
           >
             {s.id}. {s.label}
           </span>
@@ -227,7 +227,7 @@ export default function Diagnose() {
       {/* STEP 1 — Take a photo */}
       {step === 1 && (
         <div className="space-y-4">
-          <div className="border-2 border-dashed border-mint/40 bg-mint/10/40 rounded-xl p-6 text-center hover:border-green-400 transition-colors">
+          <div className="border-2 border-dashed border-lt-success/40 bg-lt-success/10/40 rounded-xl p-6 text-center hover:border-green-400 transition-colors">
             {preview ? (
               <div className="relative">
                 <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg object-contain" />
@@ -237,13 +237,13 @@ export default function Diagnose() {
                 >
                   <X size={20} />
                 </button>
-                <p className="text-sm text-text-secondary mt-2">{file.name}</p>
+                <p className="text-sm text-lt-text-secondary mt-2">{file.name}</p>
               </div>
             ) : (
               <label className="cursor-pointer block">
                 <Camera className="h-10 w-10 mx-auto text-lt-primary" />
-                <p className="text-mint font-medium mt-2">Take / upload photo</p>
-                <p className="text-xs text-text-muted mt-1">Supports JPG, PNG, WEBP</p>
+                <p className="text-lt-success font-medium mt-2">Take / upload photo</p>
+                <p className="text-xs text-lt-text-muted mt-1">Supports JPG, PNG, WEBP</p>
                 <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
               </label>
             )}
@@ -268,11 +268,11 @@ export default function Diagnose() {
       {/* STEP 2 — Confirm crop / animal */}
       {step === 2 && (
         <div className="space-y-4">
-          <div className="flex rounded-lg border border-border overflow-hidden">
+          <div className="flex rounded-lg border border-lt-border overflow-hidden">
             <button
               onClick={() => { setDomain('crop'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'crop' ? 'bg-lt-primary text-white' : 'bg-surface text-text-secondary'
+                domain === 'crop' ? 'bg-lt-primary text-white' : 'bg-lt-card text-lt-text-secondary'
               }`}
             >
               <Sprout className="h-4 w-4" /> Crop
@@ -280,7 +280,7 @@ export default function Diagnose() {
             <button
               onClick={() => { setDomain('livestock'); setSubject(''); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-sm font-medium transition ${
-                domain === 'livestock' ? 'bg-lt-primary text-white' : 'bg-surface text-text-secondary'
+                domain === 'livestock' ? 'bg-lt-primary text-white' : 'bg-lt-card text-lt-text-secondary'
               }`}
             >
               <PawPrint className="h-4 w-4" /> Animal / Livestock
@@ -288,13 +288,13 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">
+            <label className="block text-sm font-medium text-lt-text mb-1.5">
               Select {domain === 'crop' ? 'crop' : 'animal'} <span className="text-red-500">*</span>
             </label>
             <select
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full p-3 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent bg-surface"
+              className="w-full p-3 border border-lt-border rounded-lg focus:ring-2 focus:ring-lt-accent/50 focus:border-transparent bg-lt-card"
             >
               <option value="">Select {domain === 'crop' ? 'crop' : 'animal'}</option>
               {Object.entries(groupedSubjectOptions).map(([category, opts]) => (
@@ -308,11 +308,11 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Select plot (optional)</label>
+            <label className="block text-sm font-medium text-lt-text mb-1.5">Select plot (optional)</label>
             <select
               value={plotId}
               onChange={(e) => setPlotId(e.target.value)}
-              className="w-full p-3 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent bg-surface"
+              className="w-full p-3 border border-lt-border rounded-lg focus:ring-2 focus:ring-lt-accent/50 focus:border-transparent bg-lt-card"
             >
               <option value="">Select plot (optional)</option>
               {plots.map((p) => (
@@ -322,14 +322,14 @@ export default function Diagnose() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-1.5">Describe symptoms (optional)</label>
+            <label className="block text-sm font-medium text-lt-text mb-1.5">Describe symptoms (optional)</label>
             <div className="relative">
               <textarea
                 value={symptoms}
                 onChange={(e) => setSymptoms(e.target.value)}
                 placeholder="e.g. leaves turning yellow with brown spots"
                 rows={3}
-                className="w-full p-3 pr-12 border border-border-strong rounded-lg focus:ring-2 focus:ring-accent/50 focus:border-transparent resize-none"
+                className="w-full p-3 pr-12 border border-lt-border rounded-lg focus:ring-2 focus:ring-lt-accent/50 focus:border-transparent resize-none"
               />
               <button
                 type="button"
@@ -352,7 +352,7 @@ export default function Diagnose() {
           <div className="flex gap-2">
             <button
               onClick={() => setStep(1)}
-              className="flex-1 border border-border-strong text-text-primary py-3 rounded-lg font-semibold hover:bg-surface-hover transition-colors"
+              className="flex-1 border border-lt-border text-lt-text py-3 rounded-lg font-semibold hover:bg-lt-bg transition-colors"
             >
               Back
             </button>
@@ -378,9 +378,9 @@ export default function Diagnose() {
 
           {result && result.source !== 'unavailable' && (
             <>
-              <div className="border border-border rounded-xl p-4">
+              <div className="border border-lt-border rounded-xl p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold text-lt-text flex items-center gap-1.5">
                     <Leaf className="h-4 w-4 text-lt-primary" /> Likely issue
                   </h3>
                   {confidencePct !== null && (
@@ -389,12 +389,12 @@ export default function Diagnose() {
                     </span>
                   )}
                 </div>
-                <p className="text-lg font-semibold text-text-primary">{likelyIssue}</p>
+                <p className="text-lg font-semibold text-lt-text">{likelyIssue}</p>
 
                 {alternatives.length > 0 && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-text-secondary mb-1">Other possibilities</p>
-                    <ul className="list-disc list-inside text-sm text-text-secondary space-y-0.5">
+                    <p className="text-xs font-medium text-lt-text-secondary mb-1">Other possibilities</p>
+                    <ul className="list-disc list-inside text-sm text-lt-text-secondary space-y-0.5">
                       {alternatives.map((a, i) => <li key={i}>{a}</li>)}
                     </ul>
                   </div>
@@ -402,15 +402,15 @@ export default function Diagnose() {
 
                 {evidence && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-text-secondary mb-1">Evidence</p>
-                    <p className="text-sm text-text-primary">{evidence}</p>
+                    <p className="text-xs font-medium text-lt-text-secondary mb-1">Evidence</p>
+                    <p className="text-sm text-lt-text">{evidence}</p>
                   </div>
                 )}
               </div>
 
               {organicTreatment && (
-                <div className="p-3 bg-mint/10 border border-lt-primary/10 rounded-xl">
-                  <p className="text-xs font-semibold text-mint flex items-center gap-1.5 mb-1">
+                <div className="p-3 bg-lt-success/10 border border-lt-primary/10 rounded-xl">
+                  <p className="text-xs font-semibold text-lt-success flex items-center gap-1.5 mb-1">
                     <Leaf className="h-4 w-4" /> Organic (try first)
                   </p>
                   <p className="text-sm text-lt-primary">{organicTreatment}</p>
@@ -443,7 +443,7 @@ export default function Diagnose() {
               </div>
 
               {(result.source || result.model_name) && (
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-lt-text-muted">
                   Source: {result.source} {result.model_name ? `| Model: ${result.model_name}` : ''}
                 </p>
               )}
@@ -460,7 +460,7 @@ export default function Diagnose() {
 
           <button
             onClick={startOver}
-            className="w-full border border-border-strong text-text-primary py-3 rounded-lg font-semibold hover:bg-surface-hover transition-colors mt-2"
+            className="w-full border border-lt-border text-lt-text py-3 rounded-lg font-semibold hover:bg-lt-bg transition-colors mt-2"
           >
             Diagnose another
           </button>

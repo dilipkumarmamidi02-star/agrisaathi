@@ -38,15 +38,15 @@ export default function PestLibrary() {
       <PageHeader titleKey="pestLibrary" icon={Bug} />
 
       <div className="flex gap-2 mb-3">
-        <button onClick={() => setTab('crop')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'crop' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'}`}>Crop pests & weeds</button>
-        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-surface text-text-secondary border-border'}`}>{t('livestockVaccines')}</button>
+        <button onClick={() => setTab('crop')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'crop' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-lt-card text-lt-text-secondary border-lt-border'}`}>Crop pests & weeds</button>
+        <button onClick={() => setTab('livestock')} className={`px-3 py-1.5 rounded-full text-xs font-medium border ${tab === 'livestock' ? 'bg-lt-primary text-white border-lt-primary' : 'bg-lt-card text-lt-text-secondary border-lt-border'}`}>{t('livestockVaccines')}</button>
       </div>
 
       {tab === 'crop' ? (
         <>
           <div className="flex gap-2 overflow-x-auto pb-2 mb-3">
             {['all', 'pest', 'disease', 'weed'].map((f) => (
-              <button key={f} onClick={() => setFilter(f)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${filter === f ? 'bg-lt-text text-white border-lt-text' : 'bg-surface text-text-secondary border-border'}`}>
+              <button key={f} onClick={() => setFilter(f)} className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border ${filter === f ? 'bg-lt-text text-white border-lt-text' : 'bg-lt-card text-lt-text-secondary border-lt-border'}`}>
                 {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
             ))}
@@ -56,11 +56,11 @@ export default function PestLibrary() {
               <Card key={i}><CardContent className="pt-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">{p.name}</p>
-                  <Badge className={TYPE_COLORS[p.type] || 'bg-surface-hover text-text-primary'}>{p.type}</Badge>
+                  <Badge className={TYPE_COLORS[p.type] || 'bg-lt-bg text-lt-text'}>{p.type}</Badge>
                 </div>
-                <p className="text-xs text-text-muted mt-0.5">Affects: {p.affects}</p>
-                <p className="text-xs text-text-secondary mt-1"><span className="font-medium">Symptoms:</span> {p.symptoms}</p>
-                <p className="text-xs text-text-secondary mt-1"><span className="font-medium">Management:</span> {p.management}</p>
+                <p className="text-xs text-lt-text-muted mt-0.5">Affects: {p.affects}</p>
+                <p className="text-xs text-lt-text-secondary mt-1"><span className="font-medium">Symptoms:</span> {p.symptoms}</p>
+                <p className="text-xs text-lt-text-secondary mt-1"><span className="font-medium">Management:</span> {p.management}</p>
               </CardContent></Card>
             ))}
           </div>
@@ -73,8 +73,8 @@ export default function PestLibrary() {
                 <p className="text-sm font-medium">{v.disease}</p>
                 <Badge className="bg-blue-100 text-cyan-400">{v.species}</Badge>
               </div>
-              <p className="text-xs text-text-secondary mt-1"><span className="font-medium">Vaccine:</span> {v.vaccine}</p>
-              <p className="text-xs text-text-secondary mt-1"><span className="font-medium">Schedule:</span> {v.schedule}</p>
+              <p className="text-xs text-lt-text-secondary mt-1"><span className="font-medium">Vaccine:</span> {v.vaccine}</p>
+              <p className="text-xs text-lt-text-secondary mt-1"><span className="font-medium">Schedule:</span> {v.schedule}</p>
             </CardContent></Card>
           ))}
         </div>

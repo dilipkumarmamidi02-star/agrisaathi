@@ -59,7 +59,7 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
   };
 
   const statusStyle = (s) =>
-    s === 'eligible' ? 'bg-mint/20 text-mint' :
+    s === 'eligible' ? 'bg-lt-success/20 text-lt-success' :
     s === 'partially' ? 'bg-amber-100 text-amber-400' :
     'bg-red-100 text-red-400';
   const statusLabel = (s) =>
@@ -70,10 +70,10 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
   return (
     <div>
       <PageHeader titleKey="loanEligibility" icon={Banknote} />
-      <p className="text-xs text-text-secondary mb-4">{t('loanIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-4">{t('loanIntro')}</p>
 
       {loans.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">{t('noLoans')}</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">{t('noLoans')}</CardContent></Card>
       ) : (
         <div className="space-y-3">
           {loans.map((l) => {
@@ -84,14 +84,14 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
                   <h3 className="font-semibold text-sm leading-tight">{l.name}</h3>
                   {r && <Badge className={statusStyle(r.status)}>{statusLabel(r.status)}</Badge>}
                 </div>
-                {l.provider && <p className="text-xs text-text-secondary">{l.provider}</p>}
+                {l.provider && <p className="text-xs text-lt-text-secondary">{l.provider}</p>}
                 <div className="flex flex-wrap gap-2 text-xs">
                   {l.max_amount && <Badge variant="secondary">₹{l.max_amount.toLocaleString('en-IN')} max</Badge>}
                   {l.interest_rate && <Badge variant="secondary">{l.interest_rate}</Badge>}
                 </div>
-                {l.purpose && <p className="text-sm text-text-primary">{l.purpose}</p>}
-                {l.eligibility_summary && <p className="text-xs text-text-secondary"><span className="font-medium">Eligibility:</span> {l.eligibility_summary}</p>}
-                {r?.reason && <div className="bg-surface-hover rounded-lg p-2 text-xs text-text-secondary">{r.reason}</div>}
+                {l.purpose && <p className="text-sm text-lt-text">{l.purpose}</p>}
+                {l.eligibility_summary && <p className="text-xs text-lt-text-secondary"><span className="font-medium">Eligibility:</span> {l.eligibility_summary}</p>}
+                {r?.reason && <div className="bg-lt-bg rounded-lg p-2 text-xs text-lt-text-secondary">{r.reason}</div>}
                 {r?.documents_needed?.length > 0 && (
                   <div className="bg-cyan-500/10 rounded-lg p-2">
                     <p className="text-xs font-semibold text-cyan-400 flex items-center gap-1 mb-1"><FileText className="h-3 w-3" />{t('documentsNeeded')}</p>
@@ -100,7 +100,7 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
                     </ul>
                   </div>
                 )}
-                {r?.next_steps && <div className="bg-mint/10 rounded-lg p-2 text-xs text-mint">{r.next_steps}</div>}
+                {r?.next_steps && <div className="bg-lt-success/10 rounded-lg p-2 text-xs text-lt-success">{r.next_steps}</div>}
                 <div className="flex gap-2 pt-1">
                   <Button size="sm" variant="outline" onClick={() => check(l)} disabled={checking === l.id} className="flex-1">
                     {checking === l.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />}

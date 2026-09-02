@@ -61,12 +61,12 @@ export default function FeedbackCorner() {
   return (
     <div>
       <PageHeader title={t('feedbackCornerTitle')} icon={MessageSquareHeart} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Tell us what's working and what isn't. Your feedback shapes what gets built next.
       </p>
 
       {submitted && !showForm && (
-        <Card className="mb-3 border-mint/40 bg-mint/10">
+        <Card className="mb-3 border-lt-success/40 bg-lt-success/10">
           <CardContent className="pt-3 text-sm text-lt-primary">Thank you — your feedback was recorded.</CardContent>
         </Card>
       )}
@@ -99,9 +99,9 @@ export default function FeedbackCorner() {
       )}
 
       {loading ? (
-        <p className="text-sm text-text-muted text-center py-8">Loading your feedback history…</p>
+        <p className="text-sm text-lt-text-muted text-center py-8">Loading your feedback history…</p>
       ) : history.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No feedback submitted yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No feedback submitted yet.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {history.map((b) => (
@@ -111,9 +111,9 @@ export default function FeedbackCorner() {
                   {[1, 2, 3, 4, 5].map((n) => (
                     <Star key={n} className={`h-3.5 w-3.5 ${n <= (b.payload?.rating || 0) ? 'fill-amber-400 text-amber-400' : 'text-lt-border'}`} />
                   ))}
-                  <span className="text-[11px] text-text-muted ml-2">{new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                  <span className="text-[11px] text-lt-text-muted ml-2">{new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>
-                <p className="text-xs text-text-secondary">{b.payload?.message}</p>
+                <p className="text-xs text-lt-text-secondary">{b.payload?.message}</p>
               </CardContent>
             </Card>
           ))}

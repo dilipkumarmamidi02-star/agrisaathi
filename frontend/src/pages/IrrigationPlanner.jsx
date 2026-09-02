@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import { useState, useEffect } from 'react'
 import { Droplets, Plus, Check, Trash2, Calendar } from 'lucide-react';
 import { useLang } from '../lib/i18n';
@@ -51,7 +53,7 @@ export default function IrrigationPlanner() {
   return (
     <div>
       <PageHeader titleKey="irrigationPlanner" icon={Droplets} />
-      <p className="text-xs text-text-secondary mb-3">{t('irrigationIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-3">{t('irrigationIntro')}</p>
 
       <Button onClick={() => setShowForm(!showForm)} className="w-full mb-3 bg-lt-primary hover:bg-lt-primary-dark">
         <Plus className="h-4 w-4" /> {t('logIrrigation')}
@@ -92,13 +94,13 @@ export default function IrrigationPlanner() {
 
       {upcoming.length > 0 && (
         <div className="mb-4">
-          <h3 className="text-sm font-semibold text-text-secondary mb-2 flex items-center gap-1"><Calendar className="h-4 w-4" />{t('upcomingSessions')}</h3>
+          <h3 className="text-sm font-semibold text-lt-text-secondary mb-2 flex items-center gap-1"><Calendar className="h-4 w-4" />{t('upcomingSessions')}</h3>
           <div className="space-y-2">
             {upcoming.map((s) => (
               <Card key={s.id}><CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-sm font-medium truncate">{s.plot_name} · {s.crop_name || '—'}</p>
-                  <p className="text-xs text-text-secondary">{s.session_date} · {t(s.method)} · {s.water_litres ? `${s.water_litres}L` : ''}</p>
+                  <p className="text-xs text-lt-text-secondary">{s.session_date} · {t(s.method)} · {s.water_litres ? `${s.water_litres}L` : ''}</p>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   <Button size="icon" variant="ghost" onClick={() => markDone(s.id)}><Check className="h-4 w-4 text-lt-primary" /></Button>
@@ -110,18 +112,18 @@ export default function IrrigationPlanner() {
         </div>
       )}
 
-      <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('history')}</h3>
+      <h3 className="text-sm font-semibold text-lt-text-secondary mb-2">{t('history')}</h3>
       {past.length === 0 ? (
-        <p className="text-xs text-text-muted">{t('noRecords')}</p>
+        <p className="text-xs text-lt-text-muted">{t('noRecords')}</p>
       ) : (
         <div className="space-y-2">
           {past.map((s) => (
             <Card key={s.id}><CardContent className="pt-3 pb-3 flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-sm font-medium truncate">{s.plot_name} · {s.crop_name || '—'}</p>
-                <p className="text-xs text-text-secondary">{s.session_date} · {t(s.method)}{s.water_litres ? ` · ${s.water_litres}L` : ''}</p>
+                <p className="text-xs text-lt-text-secondary">{s.session_date} · {t(s.method)}{s.water_litres ? ` · ${s.water_litres}L` : ''}</p>
               </div>
-              <Badge className={s.status === 'done' ? 'bg-mint/20 text-mint' : 'bg-surface-hover text-text-secondary'}>{t(s.status)}</Badge>
+              <Badge className={s.status === 'done' ? 'bg-lt-success/20 text-lt-success' : 'bg-lt-bg text-lt-text-secondary'}>{t(s.status)}</Badge>
             </CardContent></Card>
           ))}
         </div>

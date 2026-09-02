@@ -25,6 +25,8 @@ const SIDEBAR_SECTIONS = [
     heading: 'Farm Tools',
     items: [
       { path: '/diagnose', icon: Camera, label: 'Diagnosis' },
+      { path: '/crops', icon: Sprout, label: 'Crops' },
+      { path: '/animal-encyclopedia', icon: PawPrint, label: 'Animals' },
       { path: '/fertilizer', icon: Droplets, label: 'Fertilizers' },
       { path: '/pest-library', icon: Bug, label: 'Pesticides' },
       { path: '/irrigation-planner', icon: Droplets, label: 'Irrigation' },

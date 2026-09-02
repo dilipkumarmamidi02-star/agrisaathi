@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import {
   useState,
   useEffect
@@ -61,26 +63,26 @@ export default function ExpenseAnalytics() {
   return (
     <div>
       <PageHeader titleKey="expenseAnalytics" icon={BarChart3} />
-      <p className="text-xs text-text-secondary mb-3">{t('expenseAnalyticsIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-3">{t('expenseAnalyticsIntro')}</p>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
         <Card className="bg-red-500/10 border-red-100"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-red-600">₹{total.toLocaleString('en-IN')}</div>
-          <div className="text-[10px] text-text-secondary">{t('totalSpent')}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('totalSpent')}</div>
         </CardContent></Card>
         <Card className="bg-amber-500/10 border-amber-100"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-amber-600">₹{Math.round(avgMonth).toLocaleString('en-IN')}</div>
-          <div className="text-[10px] text-text-secondary">{t('avgPerMonth')}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('avgPerMonth')}</div>
         </CardContent></Card>
         <Card className="bg-cyan-500/10 border-blue-100"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-cyan-400 truncate">{topCategory ? topCategory.name : '—'}</div>
-          <div className="text-[10px] text-text-secondary">{t('topCategory')}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('topCategory')}</div>
         </CardContent></Card>
       </div>
 
       {pieData.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary mb-2">{t('spendingByCategory')}</h3>
+          <h3 className="text-sm font-semibold text-lt-text mb-2">{t('spendingByCategory')}</h3>
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -97,7 +99,7 @@ export default function ExpenseAnalytics() {
 
       {monthData.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingDown className="h-4 w-4 text-red-500" />{t('monthlyTrend')}</h3>
+          <h3 className="text-sm font-semibold text-lt-text flex items-center gap-1.5 mb-2"><TrendingDown className="h-4 w-4 text-red-500" />{t('monthlyTrend')}</h3>
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>

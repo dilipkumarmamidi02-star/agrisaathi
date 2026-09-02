@@ -47,7 +47,7 @@ export default function CropPassport() {
   return (
     <div className="p-4 max-w-md mx-auto">
       <PageHeader title={t('cropPassportTitle')} icon={ShieldCheck} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Reference soil and water requirements per crop, recorded to a tamper-evident ledger.
       </p>
 
@@ -58,11 +58,11 @@ export default function CropPassport() {
       )}
 
       <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-lt-text-muted" />
         <select
           value={selected || ''}
           onChange={(e) => { setSelected(e.target.value); setChain(null); }}
-          className="w-full pl-9 pr-3 py-2 border border-border-strong rounded-lg text-sm"
+          className="w-full pl-9 pr-3 py-2 border border-lt-border rounded-lg text-sm"
         >
           <option value="">{t('selectACrop')}</option>
           {requirements.map((r) => (
@@ -73,14 +73,14 @@ export default function CropPassport() {
 
       {current && (
         <div className="space-y-2 mb-4">
-          <div className="bg-surface p-3 rounded-lg border grid grid-cols-2 gap-2 text-xs">
-            <div><p className="text-text-muted">Soil pH</p><p className="font-medium">{current.soil_ph}</p></div>
-            <div><p className="text-text-muted">Nitrogen (kg/ha)</p><p className="font-medium">{current.nitrogen_kg_ha}</p></div>
-            <div><p className="text-text-muted">Phosphorus (kg/ha)</p><p className="font-medium">{current.phosphorus_kg_ha}</p></div>
-            <div><p className="text-text-muted">Potassium (kg/ha)</p><p className="font-medium">{current.potassium_kg_ha}</p></div>
-            <div><p className="text-text-muted">Temperature (°C)</p><p className="font-medium">{current.temperature_c}</p></div>
-            <div><p className="text-text-muted">Water need</p><p className="font-medium">{current.water_requirement}</p></div>
-            <div className="col-span-2"><p className="text-text-muted">Moisture</p><p className="font-medium">{current.moisture}</p></div>
+          <div className="bg-lt-card p-3 rounded-lg border grid grid-cols-2 gap-2 text-xs">
+            <div><p className="text-lt-text-muted">Soil pH</p><p className="font-medium">{current.soil_ph}</p></div>
+            <div><p className="text-lt-text-muted">Nitrogen (kg/ha)</p><p className="font-medium">{current.nitrogen_kg_ha}</p></div>
+            <div><p className="text-lt-text-muted">Phosphorus (kg/ha)</p><p className="font-medium">{current.phosphorus_kg_ha}</p></div>
+            <div><p className="text-lt-text-muted">Potassium (kg/ha)</p><p className="font-medium">{current.potassium_kg_ha}</p></div>
+            <div><p className="text-lt-text-muted">Temperature (°C)</p><p className="font-medium">{current.temperature_c}</p></div>
+            <div><p className="text-lt-text-muted">Water need</p><p className="font-medium">{current.water_requirement}</p></div>
+            <div className="col-span-2"><p className="text-lt-text-muted">Moisture</p><p className="font-medium">{current.moisture}</p></div>
           </div>
 
           <button
@@ -94,7 +94,7 @@ export default function CropPassport() {
       )}
 
       {chain && (
-        <div className="bg-surface p-3 rounded-lg border">
+        <div className="bg-lt-card p-3 rounded-lg border">
           <div className="flex items-center gap-2 mb-2">
             {chain.valid ? (
               <CheckCircle2 className="h-4 w-4 text-lt-primary" />
@@ -107,11 +107,11 @@ export default function CropPassport() {
           </div>
           <div className="space-y-1">
             {chain.blocks.map((b) => (
-              <div key={b.index} className="text-xs text-text-secondary border-b border-lt-bg pb-1">
-                <span className="font-medium text-text-primary">#{b.index} {b.event_type}</span>
+              <div key={b.index} className="text-xs text-lt-text-secondary border-b border-lt-bg pb-1">
+                <span className="font-medium text-lt-text">#{b.index} {b.event_type}</span>
                 {' — '}
                 {new Date(b.timestamp).toLocaleString()}
-                <p className="text-[10px] text-text-muted truncate">hash: {b.hash}</p>
+                <p className="text-[10px] text-lt-text-muted truncate">hash: {b.hash}</p>
               </div>
             ))}
           </div>

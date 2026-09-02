@@ -38,12 +38,12 @@ export default function Home() {
 
   const quickLinks = [
     { to: '/fertilizer', icon: Droplets, label: t('fertilizer'), color: 'bg-cyan-500/10 text-cyan-400' },
-    { to: '/soil-passport', icon: Sprout, label: t('soil'), color: 'bg-mint/10 text-mint' },
+    { to: '/soil-passport', icon: Sprout, label: t('soil'), color: 'bg-lt-success/10 text-lt-success' },
     { to: '/crop-planner', icon: TrendingUp, label: t('planner'), color: 'bg-purple-50 text-purple-700' },
     { to: '/livestock-care', icon: Stethoscope, label: t('livestock'), color: 'bg-rose-50 text-rose-700' },
     { to: '/market-prices', icon: Wallet, label: t('marketPrices'), color: 'bg-orange-50 text-orange-700' },
     { to: '/farm-ledger', icon: FileSpreadsheet, label: t('ledger'), color: 'bg-lime-50 text-lime-700' },
-    { to: '/crop-passport', icon: ShieldCheck, label: t('cropPassportTitle'), color: 'bg-mint/10 text-mint' },
+    { to: '/crop-passport', icon: ShieldCheck, label: t('cropPassportTitle'), color: 'bg-lt-success/10 text-lt-success' },
     { to: '/schemes', icon: Landmark, label: t('govSchemes'), color: 'bg-cyan-500/10 text-cyan-400' },
     { to: '/sensor-lab', icon: FlaskConical, label: t('sensorLab'), color: 'bg-cyan-50 text-cyan-700' },
     { to: '/irrigation-planner', icon: Droplets, label: t('irrigation'), color: 'bg-cyan-50 text-cyan-700' },
@@ -58,23 +58,23 @@ export default function Home() {
       <div className="flex justify-between items-center mb-2">
         <div>
           <h1 className="text-2xl font-bold text-lt-primary">🌾 AgriSaathi</h1>
-          <p className="text-sm text-text-secondary">One Voice, Every Acre, Every Plot</p>
+          <p className="text-sm text-lt-text-secondary">One Voice, Every Acre, Every Plot</p>
         </div>
         <div className="flex gap-2">
-          <Link to="/alerts-center"><Bell className="h-5 w-5 text-text-secondary" /></Link>
-          <Link to="/profile-settings"><User className="h-5 w-5 text-text-secondary" /></Link>
+          <Link to="/alerts-center"><Bell className="h-5 w-5 text-lt-text-secondary" /></Link>
+          <Link to="/profile-settings"><User className="h-5 w-5 text-lt-text-secondary" /></Link>
         </div>
       </div>
 
       {health && (
-        <div className="bg-mint/10 border border-lt-primary/20 rounded-xl p-3 flex items-center gap-2">
-          <span className="text-sm text-mint">✅ Backend: {health.status} ({health.version})</span>
+        <div className="bg-lt-success/10 border border-lt-primary/20 rounded-xl p-3 flex items-center gap-2">
+          <span className="text-sm text-lt-success">✅ Backend: {health.status} ({health.version})</span>
         </div>
       )}
 
       <div className="text-center py-2">
-        <h2 className="text-lg font-semibold text-text-primary">{t('speakToAgriSaathi')}</h2>
-        <p className="text-sm text-text-secondary">{t('tapAndSpeak')}</p>
+        <h2 className="text-lg font-semibold text-lt-text">{t('speakToAgriSaathi')}</h2>
+        <p className="text-sm text-lt-text-secondary">{t('tapAndSpeak')}</p>
       </div>
 
       <div className="flex flex-col items-center gap-3">
@@ -84,12 +84,12 @@ export default function Home() {
         >
           <Mic className="h-10 w-10" />
         </button>
-        <span className="text-sm font-medium text-text-secondary">{listening ? 'Listening…' : 'Tap to speak'}</span>
+        <span className="text-sm font-medium text-lt-text-secondary">{listening ? 'Listening…' : 'Tap to speak'}</span>
       </div>
 
       {transcript && (
-        <div className="bg-mint/10 border border-lt-primary/20 rounded-xl p-4">
-          <p className="text-sm text-text-primary">"{transcript}"</p>
+        <div className="bg-lt-success/10 border border-lt-primary/20 rounded-xl p-4">
+          <p className="text-sm text-lt-text">"{transcript}"</p>
         </div>
       )}
 
@@ -114,14 +114,14 @@ export default function Home() {
       </Link>
 
       <div>
-        <h3 className="text-sm font-semibold text-text-secondary mb-3">{t('allTools')}</h3>
+        <h3 className="text-sm font-semibold text-lt-text-secondary mb-3">{t('allTools')}</h3>
         <div className="grid grid-cols-4 gap-3">
           {quickLinks.map(({ to, icon: Icon, label, color }) => (
             <Link key={to} to={to} className="flex flex-col items-center gap-1.5">
               <span className={`flex h-14 w-14 items-center justify-center rounded-2xl ${color}`}>
                 <Icon className="h-6 w-6" />
               </span>
-              <span className="text-[11px] text-text-secondary text-center leading-tight">{label}</span>
+              <span className="text-[11px] text-lt-text-secondary text-center leading-tight">{label}</span>
             </Link>
           ))}
         </div>

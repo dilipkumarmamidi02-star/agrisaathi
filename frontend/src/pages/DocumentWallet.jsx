@@ -15,11 +15,11 @@ import PageHeader from '../components/PageHeader';
 
 const DOC_TYPES = [
   { value: 'land_deed', label: 'Land Deed', color: 'bg-amber-100 text-amber-400' },
-  { value: 'soil_card', label: 'Soil Health Card', color: 'bg-mint/20 text-mint' },
+  { value: 'soil_card', label: 'Soil Health Card', color: 'bg-lt-success/20 text-lt-success' },
   { value: 'identity', label: 'Identity (Aadhaar/PAN)', color: 'bg-blue-100 text-cyan-400' },
   { value: 'insurance', label: 'Insurance', color: 'bg-purple-100 text-purple-700' },
   { value: 'loan', label: 'Loan Document', color: 'bg-indigo-100 text-indigo-700' },
-  { value: 'other', label: 'Other', color: 'bg-surface-hover text-text-primary' },
+  { value: 'other', label: 'Other', color: 'bg-lt-bg text-lt-text' },
 ];
 
 const meta = (v) => DOC_TYPES.find((d) => d.value === v) || DOC_TYPES[5];
@@ -61,25 +61,25 @@ export default function DocumentWallet() {
   return (
     <div>
       <PageHeader titleKey="documentWallet" icon={FolderArchive} />
-      <p className="text-xs text-text-secondary mb-3">{t('documentWalletIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-3">{t('documentWalletIntro')}</p>
 
       <div className="space-y-2 mb-4">
         {docs.length === 0 ? (
-          <p className="text-sm text-text-muted">{t('noDocuments')}</p>
+          <p className="text-sm text-lt-text-muted">{t('noDocuments')}</p>
         ) : docs.map((d) => {
           const m = meta(d.doc_type);
           return (
             <Card key={d.id}><CardContent className="pt-3">
               <div className="flex items-start gap-3">
-                {d.file_url ? <Image src={d.file_url} className="h-16 w-16 rounded-lg shrink-0" fittingType="fill" /> : <div className="h-16 w-16 rounded-lg bg-surface-hover flex items-center justify-center shrink-0"><FileText className="h-6 w-6 text-text-muted" /></div>}
+                {d.file_url ? <Image src={d.file_url} className="h-16 w-16 rounded-lg shrink-0" fittingType="fill" /> : <div className="h-16 w-16 rounded-lg bg-lt-bg flex items-center justify-center shrink-0"><FileText className="h-6 w-6 text-lt-text-muted" /></div>}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-sm font-medium truncate">{d.title}</p>
                     <button onClick={() => remove(d.id)} className="text-lt-border hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
                   </div>
                   <Badge className={`${m.color} mb-1`}>{m.label}</Badge>
-                  <p className="text-xs text-text-muted">{d.issued_date ? `Issued: ${d.issued_date}` : ''}{d.expiry_date ? ` · Expires: ${d.expiry_date}` : ''}</p>
-                  {d.notes && <p className="text-xs text-text-secondary mt-1">{d.notes}</p>}
+                  <p className="text-xs text-lt-text-muted">{d.issued_date ? `Issued: ${d.issued_date}` : ''}{d.expiry_date ? ` · Expires: ${d.expiry_date}` : ''}</p>
+                  {d.notes && <p className="text-xs text-lt-text-secondary mt-1">{d.notes}</p>}
                 </div>
               </div>
             </CardContent>
@@ -115,7 +115,7 @@ export default function DocumentWallet() {
           </div>
         </CardContent></Card>
       ) : (
-        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-mint/40 text-mint"><Plus className="h-4 w-4 mr-1" />{t('addDocument')}</Button>
+        <Button onClick={() => setShowAdd(true)} variant="outline" className="w-full border-lt-success/40 text-lt-success"><Plus className="h-4 w-4 mr-1" />{t('addDocument')}</Button>
       )}
     </div>
   );

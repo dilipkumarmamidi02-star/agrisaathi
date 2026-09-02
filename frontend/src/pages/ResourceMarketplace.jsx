@@ -88,7 +88,7 @@ export default function ResourceMarketplace() {
         icon={Store}
       />
 
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Farmer resource directory. This page does not
         claim live seller prices or stock.
       </p>
@@ -108,7 +108,7 @@ export default function ResourceMarketplace() {
                 {item.name}
               </p>
 
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-lt-text-secondary">
                 {item.note}
               </p>
             </CardContent>
@@ -124,7 +124,7 @@ export default function ResourceMarketplace() {
             Data.gov marketplace sources
           </p>
 
-          <p className="text-xs text-text-secondary mt-1">
+          <p className="text-xs text-lt-text-secondary mt-1">
             {marketplaceResources.length} registered
             source
             {marketplaceResources.length === 1 ? '' : 's'}

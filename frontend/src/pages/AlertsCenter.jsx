@@ -65,7 +65,7 @@ export default function AlertsCenter() {
   return (
     <div>
       <PageHeader title={t('alertsCenterTitle')} icon={Bell} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         {totalAlerts > 0
           ? `${totalAlerts} alert${totalAlerts > 1 ? 's' : ''} need your attention.`
           : 'No active alerts right now.'}
@@ -73,13 +73,13 @@ export default function AlertsCenter() {
 
       {/* Low stock — real, from Inventory Tracker */}
       <div className="mb-4">
-        <p className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1">
+        <p className="text-sm font-semibold text-lt-text mb-2 flex items-center gap-1">
           <AlertTriangle className="h-4 w-4 text-amber-600" /> Low Stock
         </p>
         {loading ? (
-          <p className="text-sm text-text-muted">Checking inventory…</p>
+          <p className="text-sm text-lt-text-muted">Checking inventory…</p>
         ) : lowStockItems.length === 0 ? (
-          <Card><CardContent className="pt-4 text-sm text-text-muted">Nothing running low.</CardContent></Card>
+          <Card><CardContent className="pt-4 text-sm text-lt-text-muted">Nothing running low.</CardContent></Card>
         ) : (
           <div className="space-y-2">
             {lowStockItems.map((b) => (
@@ -97,13 +97,13 @@ export default function AlertsCenter() {
       {/* Weather risk — not yet available; backend only fetches current
           conditions, not a forecast. Being upfront instead of faking data. */}
       <div className="mb-4">
-        <p className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1">
+        <p className="text-sm font-semibold text-lt-text mb-2 flex items-center gap-1">
           <CloudRain className="h-4 w-4 text-blue-500" /> Weather Risk
         </p>
         {loading ? (
-          <p className="text-sm text-text-muted">Checking forecast…</p>
+          <p className="text-sm text-lt-text-muted">Checking forecast…</p>
         ) : forecastDays.length === 0 ? (
-          <Card><CardContent className="pt-4 text-sm text-text-muted">No high rain risk in the next 5 days.</CardContent></Card>
+          <Card><CardContent className="pt-4 text-sm text-lt-text-muted">No high rain risk in the next 5 days.</CardContent></Card>
         ) : (
           <div className="space-y-2">
             {forecastDays.map((d) => (
@@ -121,22 +121,22 @@ export default function AlertsCenter() {
       {/* Price alerts — not yet available; no price history is stored yet
           to compute a % change against. */}
       <div>
-        <p className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-1">
+        <p className="text-sm font-semibold text-lt-text mb-2 flex items-center gap-1">
           <TrendingUp className="h-4 w-4 text-lt-primary" /> Price Changes
         </p>
         {loading ? (
-          <p className="text-sm text-text-muted">Checking prices…</p>
+          <p className="text-sm text-lt-text-muted">Checking prices…</p>
         ) : priceAlerts.length === 0 ? (
-          <Card><CardContent className="pt-4 text-sm text-text-muted">
+          <Card><CardContent className="pt-4 text-sm text-lt-text-muted">
             No price swings of 5% or more recorded yet. Alerts build up as prices are checked over time — visit Market Prices a few times to start tracking changes.
           </CardContent></Card>
         ) : (
           <div className="space-y-2">
             {priceAlerts.map((p) => (
-              <Card key={`${p.market}-${p.commodity}`} className={p.direction === 'up' ? 'border-mint/40 bg-mint/10' : 'border-red-300 bg-red-500/10'}>
+              <Card key={`${p.market}-${p.commodity}`} className={p.direction === 'up' ? 'border-lt-success/40 bg-lt-success/10' : 'border-red-300 bg-red-500/10'}>
                 <CardContent className="pt-3 pb-3">
                   <p className="text-sm font-medium">{p.commodity} — {p.market}</p>
-                  <p className={`text-xs ${p.direction === 'up' ? 'text-mint' : 'text-red-400'}`}>
+                  <p className={`text-xs ${p.direction === 'up' ? 'text-lt-success' : 'text-red-400'}`}>
                     ₹{p.previous_price} → ₹{p.current_price} ({p.direction === 'up' ? '+' : ''}{p.pct_change}%)
                   </p>
                 </CardContent>

@@ -33,6 +33,20 @@ import {
 } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
 import YieldEstimator from '../components/YieldEstimator';
+import { STATES } from '../lib/indianLocations';
+
+const FALLBACK_CROPS = [
+  { id: 'rice', name_en: 'Rice', category: 'Cereal', typical_states: 'Telangana, Andhra Pradesh, West Bengal, Punjab', water_requirement: 'High', season: 'Kharif', duration_days: '120-150' },
+  { id: 'wheat', name_en: 'Wheat', category: 'Cereal', typical_states: 'Punjab, Uttar Pradesh, Madhya Pradesh, Haryana', water_requirement: 'Medium', season: 'Rabi', duration_days: '110-130' },
+  { id: 'cotton', name_en: 'Cotton', category: 'Cash Crop', typical_states: 'Maharashtra, Gujarat, Telangana, Andhra Pradesh', water_requirement: 'Medium', season: 'Kharif', duration_days: '150-180' },
+  { id: 'groundnut', name_en: 'Groundnut', category: 'Oilseed', typical_states: 'Gujarat, Andhra Pradesh, Tamil Nadu, Karnataka', water_requirement: 'Low', season: 'Kharif', duration_days: '100-130' },
+  { id: 'chilli', name_en: 'Chilli', category: 'Spice', typical_states: 'Andhra Pradesh, Telangana, Karnataka', water_requirement: 'Medium', season: 'Kharif', duration_days: '150-180' },
+  { id: 'soybean', name_en: 'Soybean', category: 'Oilseed', typical_states: 'Madhya Pradesh, Maharashtra, Rajasthan', water_requirement: 'Medium', season: 'Kharif', duration_days: '90-110' },
+  { id: 'maize', name_en: 'Maize', category: 'Cereal', typical_states: 'Karnataka, Madhya Pradesh, Bihar, Telangana', water_requirement: 'Medium', season: 'Kharif', duration_days: '90-110' },
+  { id: 'turmeric', name_en: 'Turmeric', category: 'Spice', typical_states: 'Telangana, Andhra Pradesh, Tamil Nadu', water_requirement: 'Medium', season: 'Kharif', duration_days: '210-240' },
+  { id: 'sugarcane', name_en: 'Sugarcane', category: 'Cash Crop', typical_states: 'Uttar Pradesh, Maharashtra, Karnataka', water_requirement: 'High', season: 'Perennial', duration_days: '300-365' },
+];
+
 
 const waterScore = (need, avail) => {
   if (!need) return 1;
@@ -60,7 +74,9 @@ export default function CropPlanner() {
   const { browseDistricts } = useLocationContext();
 
   useEffect(() => {
-    base44.entities.Crop.list('name_en', 300).then(setCrops).catch(() => []);
+    base44.entities.Crop.list('name_en', 300).then((list) => {
+      setCrops(list && list.length > 0 ? list : FALLBACK_CROPS);
+    }).catch(() => setCrops(FALLBACK_CROPS));
     base44.entities.StateSoilProfile.list().then(setProfiles).catch(() => []);
   }, []);
 
@@ -132,7 +148,7 @@ export default function CropPlanner() {
         <div><Label className="mb-1.5 block">{t('state')}</Label>
           <Select value={state} onValueChange={(v) => { setState(v); setDistrict(''); }}>
             <SelectTrigger><SelectValue placeholder={t('state')} /></SelectTrigger>
-            <SelectContent className="max-h-72">{profiles.map((p) => <SelectItem key={p.id} value={p.state_ut}>{p.state_ut}</SelectItem>)}</SelectContent>
+            <SelectContent className="max-h-72">{STATES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <div><Label className="mb-1.5 block">{t('district')}</Label>
@@ -157,10 +173,10 @@ export default function CropPlanner() {
       </div>
 
       {(soilCtx || waterCtx) && (
-        <Card className="mb-4 bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-xs">
-          <p className="font-semibold text-mint flex items-center gap-1 mb-1"><FlaskConical className="h-3 w-3" />{t('soilWaterContext')}</p>
-          {soilCtx && <p className="text-text-secondary">pH {soilCtx.ph ?? '—'} · N {soilCtx.nitrogen ?? '—'} · P {soilCtx.phosphorus ?? '—'} · K {soilCtx.potassium ?? '—'}</p>}
-          {waterCtx && <p className="text-text-secondary">Water pH {waterCtx.water_ph ?? '—'} · EC {waterCtx.water_ec ?? '—'}</p>}
+        <Card className="mb-4 bg-lt-success/10 border-lt-primary/10"><CardContent className="pt-3 text-xs">
+          <p className="font-semibold text-lt-success flex items-center gap-1 mb-1"><FlaskConical className="h-3 w-3" />{t('soilWaterContext')}</p>
+          {soilCtx && <p className="text-lt-text-secondary">pH {soilCtx.ph ?? '—'} · N {soilCtx.nitrogen ?? '—'} · P {soilCtx.phosphorus ?? '—'} · K {soilCtx.potassium ?? '—'}</p>}
+          {waterCtx && <p className="text-lt-text-secondary">Water pH {waterCtx.water_ph ?? '—'} · EC {waterCtx.water_ec ?? '—'}</p>}
         </CardContent></Card>
       )}
 
@@ -171,23 +187,23 @@ export default function CropPlanner() {
             <Card key={c.id}><CardContent className="pt-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/20 text-mint text-xs font-bold">{i + 1}</span>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lt-success/20 text-lt-success text-xs font-bold">{i + 1}</span>
                   <div>
                     <p className="text-sm font-medium">{c.name_en}</p>
-                    <p className="text-xs text-text-muted">{c.category}</p>
+                    <p className="text-xs text-lt-text-muted">{c.category}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <Badge className="bg-cyan-500/10 text-cyan-400">{c.water_requirement}</Badge>
-                  <p className="text-[10px] text-text-muted mt-0.5">{c.season} · {c.duration_days}</p>
+                  <p className="text-[10px] text-lt-text-muted mt-0.5">{c.season} · {c.duration_days}</p>
                 </div>
               </div>
-              {loading && <p className="text-xs text-text-muted mt-1">{t('loading')}</p>}
+              {loading && <p className="text-xs text-lt-text-muted mt-1">{t('loading')}</p>}
               {est && (
                 <div className="grid grid-cols-3 gap-1 mt-2 text-center text-xs">
-                  <div className="bg-red-500/10 rounded p-1"><div className="text-text-muted">{t('cost')}</div><div className="font-medium">{est.cost}</div></div>
-                  <div className="bg-mint/10 rounded p-1"><div className="text-text-muted">{t('revenue')}</div><div className="font-medium">{est.revenue}</div></div>
-                  <div className="bg-amber-500/10 rounded p-1"><div className="text-text-muted">{t('margin')}</div><div className="font-medium">{est.margin}</div></div>
+                  <div className="bg-red-500/10 rounded p-1"><div className="text-lt-text-muted">{t('cost')}</div><div className="font-medium">{est.cost}</div></div>
+                  <div className="bg-lt-success/10 rounded p-1"><div className="text-lt-text-muted">{t('revenue')}</div><div className="font-medium">{est.revenue}</div></div>
+                  <div className="bg-amber-500/10 rounded p-1"><div className="text-lt-text-muted">{t('margin')}</div><div className="font-medium">{est.margin}</div></div>
                 </div>
               )}
             </CardContent></Card>

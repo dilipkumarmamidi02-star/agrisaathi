@@ -76,7 +76,7 @@ export default function VoiceNotes() {
   return (
     <div>
       <PageHeader titleKey="voiceNotes" icon={Mic} />
-      <p className="text-xs text-text-secondary mb-3">{t('voiceNotesIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-3">{t('voiceNotesIntro')}</p>
 
       <div className="mb-3">
         <Select value={selectedPlot} onValueChange={setSelectedPlot}>
@@ -95,32 +95,32 @@ export default function VoiceNotes() {
         >
           {recording ? <Square className="h-10 w-10" /> : <Mic className="h-10 w-10" />}
         </button>
-        <span className="text-sm font-medium text-text-secondary">{recording ? t('listening') : t('tapToSpeak')}</span>
+        <span className="text-sm font-medium text-lt-text-secondary">{recording ? t('listening') : t('tapToSpeak')}</span>
       </div>
 
       {(transcript || interim) && (
-        <Card className="mb-4 bg-mint/10 border-lt-primary/20"><CardContent className="pt-4">
-          <p className="text-sm text-text-primary">{transcript} <span className="text-text-muted">{interim}</span></p>
+        <Card className="mb-4 bg-lt-success/10 border-lt-primary/20"><CardContent className="pt-4">
+          <p className="text-sm text-lt-text">{transcript} <span className="text-lt-text-muted">{interim}</span></p>
           <Button onClick={save} disabled={saving || !transcript.trim()} className="mt-3 w-full bg-lt-primary hover:bg-lt-primary-dark">
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} {t('saveNote')}
           </Button>
         </CardContent></Card>
       )}
 
-      <h3 className="text-sm font-semibold text-text-secondary mb-2">{t('savedNotes')}</h3>
+      <h3 className="text-sm font-semibold text-lt-text-secondary mb-2">{t('savedNotes')}</h3>
       {notes.length === 0 ? (
-        <p className="text-xs text-text-muted">{t('noNotes')}</p>
+        <p className="text-xs text-lt-text-muted">{t('noNotes')}</p>
       ) : (
         <div className="space-y-2">
           {notes.map((n) => (
             <Card key={n.id}><CardContent className="pt-3 pb-3">
               <div className="flex items-start justify-between gap-2">
-                <p className="text-sm text-text-primary flex-1">{n.transcript}</p>
+                <p className="text-sm text-lt-text flex-1">{n.transcript}</p>
                 <Button size="icon" variant="ghost" onClick={() => remove(n.id)}><Trash2 className="h-4 w-4 text-red-500" /></Button>
               </div>
               <div className="flex items-center gap-2 mt-1.5">
                 {n.plot_name && <Badge className="bg-cyan-500/10 text-blue-600"><MapPin className="h-3 w-3 mr-0.5" />{n.plot_name}</Badge>}
-                <span className="text-[10px] text-text-muted">{new Date(n.created_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                <span className="text-[10px] text-lt-text-muted">{new Date(n.created_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
               </div>
             </CardContent></Card>
           ))}

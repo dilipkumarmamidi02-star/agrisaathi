@@ -229,14 +229,14 @@ export default function SpeakToAgriSaathi() {
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-10 text-center">
-      <h1 className="text-2xl font-bold text-text-primary mb-1">Speak to AgriSaathi</h1>
-      <p className="text-text-secondary mb-6">Tap and speak your problem</p>
+      <h1 className="text-2xl font-bold text-lt-text mb-1">Speak to AgriSaathi</h1>
+      <p className="text-lt-text-secondary mb-6">Tap and speak your problem</p>
 
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
         disabled={isBusy}
-        className="mb-8 border border-border-strong rounded-lg px-3 py-2 text-sm"
+        className="mb-8 border border-lt-border rounded-lg px-3 py-2 text-sm"
       >
         {VOICE_LANGUAGES.map((lang) => (
           <option key={lang.code} value={lang.code}>{lang.label}</option>
@@ -253,7 +253,7 @@ export default function SpeakToAgriSaathi() {
         {state === STATES.LISTENING ? 'Stop' : '🎤'}
       </button>
 
-      <p className="mt-4 text-sm text-text-secondary">
+      <p className="mt-4 text-sm text-lt-text-secondary">
         {state === STATES.IDLE && 'Tap to speak'}
         {state === STATES.LISTENING && 'Listening…'}
         {state === STATES.TRANSCRIBING && 'Transcribing…'}
@@ -264,9 +264,9 @@ export default function SpeakToAgriSaathi() {
       </p>
 
       {transcript && (
-        <div className="mt-8 w-full max-w-lg bg-surface-hover border border-border rounded-lg p-4 text-left">
-          <p className="text-xs uppercase tracking-wide text-text-muted mb-1">You said</p>
-          <p className="text-text-primary">{transcript}</p>
+        <div className="mt-8 w-full max-w-lg bg-lt-bg border border-lt-border rounded-lg p-4 text-left">
+          <p className="text-xs uppercase tracking-wide text-lt-text-muted mb-1">You said</p>
+          <p className="text-lt-text">{transcript}</p>
         </div>
       )}
 
@@ -280,14 +280,14 @@ export default function SpeakToAgriSaathi() {
       )}
 
       {responseText && state === STATES.RESPONDING && (
-        <div className="mt-6 w-full max-w-lg bg-surface border border-border rounded-lg p-4 text-left shadow-sm">
+        <div className="mt-6 w-full max-w-lg bg-lt-card border border-lt-border rounded-lg p-4 text-left shadow-sm">
           <p className="text-xs uppercase tracking-wide text-amber-600 mb-1">
             {matchedRecords.length > 0 ? 'Historical KCC Reference' : 'No Verified Match'}
           </p>
-          <p className="text-text-primary mb-3">{responseText}</p>
+          <p className="text-lt-text mb-3">{responseText}</p>
 
           {matchedRecords.length > 0 && (
-            <div className="text-xs text-text-muted border-t border-border pt-2 space-y-1">
+            <div className="text-xs text-lt-text-muted border-t border-lt-border pt-2 space-y-1">
               <p>Source: Data.gov.in — Kisan Call Centre (KCC) transcripts</p>
               <p>resource_id: cef25fe2-9231-4128-8aec-2c948fedd43f</p>
               <p>Status: Historical — not a current recommendation</p>
@@ -297,11 +297,11 @@ export default function SpeakToAgriSaathi() {
           <div className="mt-3 flex gap-3">
             <button
               onClick={() => speak(responseText)}
-              className="text-sm font-medium text-mint underline"
+              className="text-sm font-medium text-lt-success underline"
             >
               🔊 Speak answer
             </button>
-            <button onClick={retry} className="text-sm font-medium text-text-secondary underline">
+            <button onClick={retry} className="text-sm font-medium text-lt-text-secondary underline">
               Ask another question
             </button>
           </div>

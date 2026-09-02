@@ -38,6 +38,8 @@ export default {
       fontFamily: {
         display: ["'Space Grotesk'", "sans-serif"],
         mono: ["'JetBrains Mono'", "monospace"],
+        serif: ["'Playfair Display'", "serif"],
+        sans: ["'Inter'", "sans-serif"],
       },
     },
   },

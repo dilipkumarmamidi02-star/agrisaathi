@@ -40,7 +40,7 @@ export default function LoanCalculator() {
   return (
     <div>
       <PageHeader titleKey="loanCalculator" icon={Calculator} />
-      <p className="text-xs text-text-secondary mb-3">{t('loanCalcIntro')}</p>
+      <p className="text-xs text-lt-text-secondary mb-3">{t('loanCalcIntro')}</p>
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">
         <div><Label className="mb-1 block text-xs">{t('loanAmount')} (₹)</Label><Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} /></div>
@@ -51,23 +51,23 @@ export default function LoanCalculator() {
       </CardContent></Card>
 
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Card className="bg-mint/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
-          <div className="text-base font-bold text-mint">{fmt(emi)}</div>
-          <div className="text-[10px] text-text-secondary">{t('monthlyEmi')}</div>
+        <Card className="bg-lt-success/10 border-lt-primary/10"><CardContent className="pt-3 text-center">
+          <div className="text-base font-bold text-lt-success">{fmt(emi)}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('monthlyEmi')}</div>
         </CardContent></Card>
         <Card className="bg-amber-500/10 border-amber-100"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-amber-400">{fmt(totalInterest)}</div>
-          <div className="text-[10px] text-text-secondary">{t('totalInterest')}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('totalInterest')}</div>
         </CardContent></Card>
         <Card className="bg-cyan-500/10 border-blue-100"><CardContent className="pt-3 text-center">
           <div className="text-base font-bold text-cyan-400">{fmt(totalPayable)}</div>
-          <div className="text-[10px] text-text-secondary">{t('totalPayable')}</div>
+          <div className="text-[10px] text-lt-text-secondary">{t('totalPayable')}</div>
         </CardContent></Card>
       </div>
 
       {schedule.length > 0 && (
         <Card className="mb-4"><CardContent className="pt-4">
-          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-lt-primary" />{t('repaymentSchedule')}</h3>
+          <h3 className="text-sm font-semibold text-lt-text flex items-center gap-1.5 mb-2"><TrendingUp className="h-4 w-4 text-lt-primary" />{t('repaymentSchedule')}</h3>
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={schedule} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
@@ -83,7 +83,7 @@ export default function LoanCalculator() {
           </div>
         </CardContent></Card>
       )}
-      <p className="text-[11px] text-text-muted">{t('loanCalcDisclaimer')}</p>
+      <p className="text-[11px] text-lt-text-muted">{t('loanCalcDisclaimer')}</p>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import { useState, useEffect, useCallback } from 'react';
 import { Wrench, Plus, AlertTriangle } from 'lucide-react';
 import api from '../api/apiClient';
@@ -64,7 +66,7 @@ export default function EquipmentRegistry() {
   return (
     <div>
       <PageHeader title={t('equipmentRegistryTitle')} icon={Wrench} />
-      <p className="text-xs text-text-secondary mb-3">Track your machinery and its maintenance schedule.</p>
+      <p className="text-xs text-lt-text-secondary mb-3">Track your machinery and its maintenance schedule.</p>
 
       <div className="flex justify-end mb-3">
         <Button size="sm" onClick={() => setShowForm((s) => !s)}>
@@ -101,9 +103,9 @@ export default function EquipmentRegistry() {
       )}
 
       {loading ? (
-        <p className="text-sm text-text-muted text-center py-8">Loading equipment…</p>
+        <p className="text-sm text-lt-text-muted text-center py-8">Loading equipment…</p>
       ) : equipment.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No equipment registered yet.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No equipment registered yet.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {equipment.map((b) => {
@@ -115,9 +117,9 @@ export default function EquipmentRegistry() {
                     <p className="text-sm font-medium">{b.payload.name}</p>
                     {overdue && <AlertTriangle className="h-4 w-4 text-amber-600" />}
                   </div>
-                  <p className="text-[11px] text-text-muted">{b.payload.type}</p>
+                  <p className="text-[11px] text-lt-text-muted">{b.payload.type}</p>
                   {b.payload.next_maintenance && (
-                    <p className={`text-xs mt-1 ${overdue ? 'text-amber-400 font-medium' : 'text-text-secondary'}`}>
+                    <p className={`text-xs mt-1 ${overdue ? 'text-amber-400 font-medium' : 'text-lt-text-secondary'}`}>
                       Next service: {new Date(b.payload.next_maintenance).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       {overdue ? ' — overdue' : ''}
                     </p>

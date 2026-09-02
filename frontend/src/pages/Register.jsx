@@ -3,8 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-import PincodeLocationFields from '../components/PincodeLocationFields';
-import { useLocationContext } from '../lib/LocationContext';
+import FloatingLeaves from '../components/FloatingLeaves';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -19,9 +18,12 @@ const LANGUAGES = [
   { code: 'pa', label: 'ਪੰਜਾਬੀ' },
 ];
 
+const inputClass =
+  'w-full bg-[#0a0f0d] border border-green-900/50 focus:border-green-500 focus:outline-none rounded-lg px-3 py-2.5 text-sm text-white placeholder-gray-600 transition-colors';
+const labelClass = 'block text-xs font-mono uppercase tracking-wider text-gray-500 mb-1';
+
 export default function Register() {
   const navigate = useNavigate();
-  const { location: pincodeLocation } = useLocationContext();
   const [step, setStep] = useState(1); // 1: account, 2: language + land details
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +33,9 @@ export default function Register() {
     email: '',
     password: '',
     language: 'en',
+    state: '',
+    district: '',
+    village: '',
     landSizeAcres: '',
     primaryCrop: '',
   });
@@ -60,16 +65,14 @@ export default function Register() {
         email: form.email,
         language: form.language,
         landDetails: {
-          pincode: pincodeLocation.pincode,
-          state: pincodeLocation.state,
-          district: pincodeLocation.district,
-          mandal: pincodeLocation.mandal,
-          village: pincodeLocation.village,
+          state: form.state,
+          district: form.district,
+          village: form.village,
           landSizeAcres: form.landSizeAcres,
           primaryCrop: form.primaryCrop,
         },
         createdAt: new Date().toISOString(),
-      }, { merge: true });
+      });
 
       navigate('/');
     } catch (err) {
@@ -80,126 +83,133 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-hover px-4 py-10">
-      <div className="w-full max-w-md bg-surface rounded-2xl shadow-sm border border-border p-6">
-        <h1 className="text-2xl font-bold text-text-primary mb-1">Create your AgriSaathi account</h1>
-        <p className="text-sm text-text-secondary mb-6">
-          Step {step} of 2 — {step === 1 ? 'account details' : 'language & land details'}
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0f0d] px-4 py-10 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-green-500/10 blur-[120px]" />
+      <FloatingLeaves count={12} />
 
-        {error && (
-          <div className="mb-4 bg-red-500/10 border border-red-200 text-red-400 text-sm rounded-lg p-3">
-            {error}
-          </div>
-        )}
+      <div className="w-full max-w-md relative">
+        <div className="flex items-center justify-between mb-6 font-mono text-xs text-green-400 tracking-widest uppercase">
+          <span className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+            </span>
+            AUTH_NODE / REGISTER
+          </span>
+          <span className="text-gray-600">STEP_{step}/2</span>
+        </div>
 
-        {step === 1 && (
-          <form onSubmit={handleAccountSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">Full name</label>
-              <input
-                type="text"
-                value={form.name}
-                onChange={update('name')}
-                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
-                required
-              />
+        <div className="bg-[#0f1512] border border-green-900/40 rounded-2xl p-6 shadow-[0_0_40px_-15px_rgba(34,197,94,0.25)]">
+          <h1 className="text-2xl font-black text-white uppercase tracking-tight mb-1">Create Your Account</h1>
+          <p className="text-sm text-gray-500 mb-6">
+            {step === 1 ? 'Account details' : 'Language & land details'}
+          </p>
+
+          {error && (
+            <div className="mb-4 bg-red-950/60 border border-red-800/60 text-red-300 text-sm rounded-lg p-3 font-mono">
+              {error}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={update('email')}
-                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">Password</label>
-              <input
-                type="password"
-                value={form.password}
-                onChange={update('password')}
-                minLength={6}
-                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm"
-            >
-              Continue
-            </button>
-          </form>
-        )}
+          )}
 
-        {step === 2 && (
-          <form onSubmit={handleFinalSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">Preferred language</label>
-              <select
-                value={form.language}
-                onChange={update('language')}
-                className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
-              >
-                {LANGUAGES.map((l) => (
-                  <option key={l.code} value={l.code}>{l.label}</option>
-                ))}
-              </select>
-            </div>
-
-            <PincodeLocationFields />
-
-            <div className="grid grid-cols-2 gap-3">
+          {step === 1 && (
+            <form onSubmit={handleAccountSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1">Land size (acres)</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={form.landSizeAcres}
-                  onChange={update('landSizeAcres')}
-                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
-                />
+                <label className={labelClass}>Full name</label>
+                <input type="text" value={form.name} onChange={update('name')} className={inputClass} required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1">Primary crop</label>
+                <label className={labelClass}>Email</label>
+                <input type="email" value={form.email} onChange={update('email')} className={inputClass} required />
+              </div>
+              <div>
+                <label className={labelClass}>Password</label>
                 <input
-                  type="text"
-                  value={form.primaryCrop}
-                  onChange={update('primaryCrop')}
-                  className="w-full border border-border-strong rounded-lg px-3 py-2 text-sm"
+                  type="password"
+                  value={form.password}
+                  onChange={update('password')}
+                  minLength={6}
+                  className={inputClass}
+                  required
                 />
               </div>
-            </div>
-
-            <p className="text-xs text-text-muted">
-              You can change any of these later from Profile Settings.
-            </p>
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="flex-1 border border-border-strong text-text-primary font-medium py-2.5 rounded-lg text-sm"
-              >
-                Back
-              </button>
               <button
                 type="submit"
-                disabled={loading}
-                className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg text-sm"
+                className="w-full bg-green-500 hover:bg-green-400 text-[#0a0f0d] font-bold uppercase tracking-wide py-3 rounded-lg text-sm transition-colors"
               >
-                {loading ? 'Creating account…' : 'Create account'}
+                Continue ▸
               </button>
-            </div>
-          </form>
-        )}
+            </form>
+          )}
 
-        <p className="text-sm text-text-secondary text-center mt-6">
+          {step === 2 && (
+            <form onSubmit={handleFinalSubmit} className="space-y-4">
+              <div>
+                <label className={labelClass}>Preferred language</label>
+                <select value={form.language} onChange={update('language')} className={inputClass}>
+                  {LANGUAGES.map((l) => (
+                    <option key={l.code} value={l.code}>{l.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelClass}>State</label>
+                  <input type="text" value={form.state} onChange={update('state')} className={inputClass} />
+                </div>
+                <div>
+                  <label className={labelClass}>District</label>
+                  <input type="text" value={form.district} onChange={update('district')} className={inputClass} />
+                </div>
+              </div>
+
+              <div>
+                <label className={labelClass}>Village / area</label>
+                <input type="text" value={form.village} onChange={update('village')} className={inputClass} />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelClass}>Land size (acres)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={form.landSizeAcres}
+                    onChange={update('landSizeAcres')}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Primary crop</label>
+                  <input type="text" value={form.primaryCrop} onChange={update('primaryCrop')} className={inputClass} />
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-600 font-mono">You can change any of these later in Profile Settings.</p>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="flex-1 border border-green-900/50 text-gray-300 hover:border-green-700 font-bold uppercase tracking-wide py-3 rounded-lg text-sm transition-colors"
+                >
+                  Back
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-green-500 hover:bg-green-400 disabled:opacity-50 text-[#0a0f0d] font-bold uppercase tracking-wide py-3 rounded-lg text-sm transition-colors"
+                >
+                  {loading ? 'Creating…' : 'Create Account'}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        <p className="text-sm text-gray-500 text-center mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-mint font-medium">Sign in</Link>
+          <Link to="/login" className="text-green-400 font-medium hover:text-green-300">Sign in</Link>
         </p>
       </div>
     </div>

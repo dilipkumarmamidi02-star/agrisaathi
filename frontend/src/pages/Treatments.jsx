@@ -66,13 +66,13 @@ export default function Treatments() {
       {result && (
         <Card className="border-lt-primary/20"><CardContent className="pt-4 space-y-3">
           <h3 className="font-bold">{result.summary}</h3>
-          {result.organic_treatment && <div className="bg-mint/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-mint flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
+          {result.organic_treatment && <div className="bg-lt-success/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-lt-success flex items-center gap-1"><Leaf className="h-3 w-3" />{t('organicFirst')}</p><p className="text-sm mt-0.5">{result.organic_treatment}</p></div>}
           {result.chemical_treatment && <div className="bg-cyan-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-cyan-400">{t('chemical')}</p><p className="text-sm mt-0.5">{result.chemical_treatment}</p></div>}
-          {result.application_method && <div><p className="text-xs font-semibold text-text-secondary">{t('method')}</p><p className="text-sm">{result.application_method}</p></div>}
-          {result.timing && <div><p className="text-xs font-semibold text-text-secondary">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
+          {result.application_method && <div><p className="text-xs font-semibold text-lt-text-secondary">{t('method')}</p><p className="text-sm">{result.application_method}</p></div>}
+          {result.timing && <div><p className="text-xs font-semibold text-lt-text-secondary">{t('timing')}</p><p className="text-sm">{result.timing}</p></div>}
           {result.precautions && <div className="bg-amber-500/10 rounded-lg p-2.5"><p className="text-xs font-semibold text-amber-400 flex items-center gap-1"><Shield className="h-3 w-3" />{t('precautions')}</p><p className="text-sm mt-0.5">{result.precautions}</p></div>}
-          {result.pre_harvest_interval && <p className="text-xs text-text-secondary">{t('preHarvestInterval')}: {result.pre_harvest_interval}</p>}
-          {result.source && <p className="text-[10px] text-text-muted">{t('source')}: {result.source}</p>}
+          {result.pre_harvest_interval && <p className="text-xs text-lt-text-secondary">{t('preHarvestInterval')}: {result.pre_harvest_interval}</p>}
+          {result.source && <p className="text-[10px] text-lt-text-muted">{t('source')}: {result.source}</p>}
         </CardContent></Card>
       )}
     </div>

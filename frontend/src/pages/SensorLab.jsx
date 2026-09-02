@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import { useState } from 'react'
 import api from '../api/apiClient';
 import { Gauge, Bluetooth } from 'lucide-react';
@@ -84,7 +86,7 @@ export default function SensorLab() {
             <Bluetooth className="h-5 w-5 text-blue-500" />
             <div>
               <p className="text-sm font-medium">{t('connectSensor')}</p>
-              <p className="text-xs text-text-muted">{bleStatus}</p>
+              <p className="text-xs text-lt-text-muted">{bleStatus}</p>
             </div>
           </div>
           <Button variant="outline" onClick={connectSensor}>{t('connect')}</Button>
@@ -95,8 +97,8 @@ export default function SensorLab() {
       </CardContent></Card>
 
       <div className="flex gap-2 mb-3">
-        <button onClick={() => setTab('soil')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'soil' ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>Soil (15)</button>
-        <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-lt-primary text-white' : 'bg-surface-hover text-text-secondary'}`}>Water (5)</button>
+        <button onClick={() => setTab('soil')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'soil' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>Soil (15)</button>
+        <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>Water (5)</button>
       </div>
 
       {tab === 'soil' ? (
@@ -122,15 +124,15 @@ export default function SensorLab() {
           {soilResult && (
             <Card><CardContent className="pt-4 space-y-2">
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="bg-surface-hover rounded p-2"><div className="text-[10px] text-text-muted">{t('avgPh')}</div><div className="text-sm font-medium">{soilResult.avg_ph}</div></div>
-                <div className="bg-surface-hover rounded p-2"><div className="text-[10px] text-text-muted">{t('range')}</div><div className="text-sm font-medium">{soilResult.min_ph}-{soilResult.max_ph}</div></div>
-                <div className="bg-surface-hover rounded p-2"><div className="text-[10px] text-text-muted">{t('variation')}</div><div className="text-sm font-medium">{soilResult.variation}</div></div>
+                <div className="bg-lt-bg rounded p-2"><div className="text-[10px] text-lt-text-muted">{t('avgPh')}</div><div className="text-sm font-medium">{soilResult.avg_ph}</div></div>
+                <div className="bg-lt-bg rounded p-2"><div className="text-[10px] text-lt-text-muted">{t('range')}</div><div className="text-sm font-medium">{soilResult.min_ph}-{soilResult.max_ph}</div></div>
+                <div className="bg-lt-bg rounded p-2"><div className="text-[10px] text-lt-text-muted">{t('variation')}</div><div className="text-sm font-medium">{soilResult.variation}</div></div>
               </div>
               <Badge className="bg-blue-100 text-cyan-400">{soilResult.ph_classification}</Badge>
-              <p className="text-xs text-text-secondary">{soilResult.variation_note}</p>
-              <p className="text-xs font-medium text-text-primary mt-2">{t('suitableCropsAtPh')}</p>
+              <p className="text-xs text-lt-text-secondary">{soilResult.variation_note}</p>
+              <p className="text-xs font-medium text-lt-text mt-2">{t('suitableCropsAtPh')}</p>
               <div className="flex flex-wrap gap-1">
-                {soilResult.suitable_crops.map((c) => <Badge key={c} className="bg-mint/10 text-mint">{c}</Badge>)}
+                {soilResult.suitable_crops.map((c) => <Badge key={c} className="bg-lt-success/10 text-lt-success">{c}</Badge>)}
               </div>
             </CardContent></Card>
           )}
@@ -156,10 +158,10 @@ export default function SensorLab() {
           {waterResult && (
             <Card><CardContent className="pt-4 space-y-2">
               <div className="grid grid-cols-2 gap-2 text-center">
-                <div className="bg-surface-hover rounded p-2"><div className="text-[10px] text-text-muted">{t('avgPh')}</div><div className="text-sm font-medium">{waterResult.avg_ph ?? '—'}</div></div>
-                <div className="bg-surface-hover rounded p-2"><div className="text-[10px] text-text-muted">{t('avgEc')}</div><div className="text-sm font-medium">{waterResult.avg_ec ?? '—'}</div></div>
+                <div className="bg-lt-bg rounded p-2"><div className="text-[10px] text-lt-text-muted">{t('avgPh')}</div><div className="text-sm font-medium">{waterResult.avg_ph ?? '—'}</div></div>
+                <div className="bg-lt-bg rounded p-2"><div className="text-[10px] text-lt-text-muted">{t('avgEc')}</div><div className="text-sm font-medium">{waterResult.avg_ec ?? '—'}</div></div>
               </div>
-              <ul className="text-xs text-text-secondary list-disc pl-4 mt-2">
+              <ul className="text-xs text-lt-text-secondary list-disc pl-4 mt-2">
                 {waterResult.issues.map((issue, i) => <li key={i}>{issue}</li>)}
               </ul>
             </CardContent></Card>

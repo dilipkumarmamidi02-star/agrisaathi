@@ -1,3 +1,5 @@
+import { Phase7RouteIntegration } from "../components/phase7";
+
 import { useState, useEffect } from 'react'
 import { FileSpreadsheet, Plus, ShieldCheck, ShieldAlert, ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import appClient from '../api/appClient';
@@ -74,22 +76,22 @@ export default function FarmLedger() {
   return (
     <div>
       <PageHeader title={t('ledger')} icon={FileSpreadsheet} />
-      <p className="text-xs text-text-secondary mb-3">
+      <p className="text-xs text-lt-text-secondary mb-3">
         Every entry is written to a tamper-evident, hash-chained ledger — nothing can be silently edited or deleted after the fact.
       </p>
 
       <div className="grid grid-cols-3 gap-2 mb-3">
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-text-secondary">{t('income')}</p>
-          <p className="text-base font-bold text-mint">₹{totalIncome.toLocaleString('en-IN')}</p>
+          <p className="text-xs text-lt-text-secondary">{t('income')}</p>
+          <p className="text-base font-bold text-lt-success">₹{totalIncome.toLocaleString('en-IN')}</p>
         </CardContent></Card>
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-text-secondary">{t('expense')}</p>
+          <p className="text-xs text-lt-text-secondary">{t('expense')}</p>
           <p className="text-base font-bold text-red-600">₹{totalExpense.toLocaleString('en-IN')}</p>
         </CardContent></Card>
         <Card><CardContent className="pt-3">
-          <p className="text-xs text-text-secondary">{t('net')}</p>
-          <p className={`text-base font-bold ${net >= 0 ? 'text-mint' : 'text-red-600'}`}>₹{net.toLocaleString('en-IN')}</p>
+          <p className="text-xs text-lt-text-secondary">{t('net')}</p>
+          <p className={`text-base font-bold ${net >= 0 ? 'text-lt-success' : 'text-red-600'}`}>₹{net.toLocaleString('en-IN')}</p>
         </CardContent></Card>
       </div>
 
@@ -143,9 +145,9 @@ export default function FarmLedger() {
       )}
 
       {loading ? (
-        <p className="text-sm text-text-muted text-center py-8">Loading ledger…</p>
+        <p className="text-sm text-lt-text-muted text-center py-8">Loading ledger…</p>
       ) : blocks.length === 0 ? (
-        <Card><CardContent className="pt-6 text-center text-sm text-text-muted">No entries yet. Add your first income or expense above.</CardContent></Card>
+        <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No entries yet. Add your first income or expense above.</CardContent></Card>
       ) : (
         <div className="space-y-2">
           {[...blocks].reverse().map((b) => (
@@ -157,13 +159,13 @@ export default function FarmLedger() {
                     : <ArrowDownCircle className="h-5 w-5 text-red-500 shrink-0" />}
                   <div>
                     <p className="text-sm font-medium">{b.payload?.category}</p>
-                    <p className="text-[11px] text-text-muted">
+                    <p className="text-[11px] text-lt-text-muted">
                       {new Date(b.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       {b.payload?.note ? ` · ${b.payload.note}` : ''}
                     </p>
                   </div>
                 </div>
-                <p className={`text-sm font-bold ${b.event_type === 'income' ? 'text-mint' : 'text-red-600'}`}>
+                <p className={`text-sm font-bold ${b.event_type === 'income' ? 'text-lt-success' : 'text-red-600'}`}>
                   {b.event_type === 'income' ? '+' : '−'}₹{(b.payload?.amount || 0).toLocaleString('en-IN')}
                 </p>
               </CardContent>

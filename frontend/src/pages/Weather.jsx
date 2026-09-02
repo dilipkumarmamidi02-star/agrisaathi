@@ -35,7 +35,7 @@ export default function Weather() {
     <div>
       <PageHeader titleKey="weather" icon={CloudSun} />
 
-      {loading && <p className="text-sm text-text-muted">Loading weather...</p>}
+      {loading && <p className="text-sm text-lt-text-muted">Loading weather...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
 
       {weather && (

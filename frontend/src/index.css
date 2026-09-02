@@ -4,10 +4,10 @@
 
 @layer base {
   body {
-    @apply bg-ink text-text-primary font-sans;
+    @apply bg-lt-bg text-lt-text font-sans;
   }
   h1, h2, h3, h4 {
-    @apply font-display;
+    @apply font-serif text-lt-primary;
   }
 
   /* Global default for every form control that doesn't set its own

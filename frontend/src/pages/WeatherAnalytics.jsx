@@ -21,7 +21,7 @@ import {
 
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import WeatherScene3D from '../components/WeatherScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
@@ -164,7 +164,7 @@ export default function WeatherAnalytics() {
 
       {current && (
         <>
-          <WeatherScene3D
+          <DynamicScenePhoto fallbackQuery="farm field sky weather"
             condition={analyticsCondition}
             windSpeed={current.wind_speed || 0}
             height="h-28"

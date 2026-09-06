@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   TrendingUp,
   FlaskConical
@@ -34,7 +34,7 @@ import {
 import PageHeader from '../components/PageHeader';
 import YieldEstimator from '../components/YieldEstimator';
 import { STATES } from '../lib/indianLocations';
-import CropPlannerScene3D from '../components/CropPlannerScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 const FALLBACK_CROPS = [
@@ -181,7 +181,7 @@ export default function CropPlanner() {
       </div>
 
       {ranked.length > 0 && (
-        <CropPlannerScene3D
+        <DynamicScenePhoto fallbackQuery="crop field planning"
           cropName={ranked[0].name_en}
           stageIndex={plannerStage}
           onStageChange={setPlannerStage}

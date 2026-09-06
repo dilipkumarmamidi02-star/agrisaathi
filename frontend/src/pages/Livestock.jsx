@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useEffect,
   useMemo,
@@ -52,7 +52,7 @@ import {
 
 import * as dataGovRegistryModule from '../data/dataGovResources';
 import { useLang } from '../lib/i18n';
-import LivestockScene3D from '../components/LivestockScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { dominantAnimalCategory } from '../three/config/animalVisuals';
 import { usePageContext } from '../contexts/AgricultureContext';
 
@@ -852,7 +852,7 @@ export default function Livestock() {
       </div>
 
       {dominantCategory && (
-        <LivestockScene3D
+        <DynamicScenePhoto fallbackQuery="cow livestock farm"
           category={dominantCategory}
           total={dominantTotal}
           districtLabel={districtFilter || null}

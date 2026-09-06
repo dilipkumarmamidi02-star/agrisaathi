@@ -11,7 +11,7 @@ import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import PincodeLocationFields from '../components/PincodeLocationFields';
 import { useLocationContext } from '../lib/LocationContext';
-import FertilizerScene3D from '../components/FertilizerScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 // Derive which nutrient the *real* result/soil numbers point to. Prefers
@@ -97,7 +97,7 @@ export default function Fertilize() {
       <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">Estimate based on general crop reference data. Confirm with a soil test where possible.</p>
 
       {form.crop && (
-        <FertilizerScene3D cropName={form.crop} nutrientFocus={nutrientFocus} />
+        <DynamicScenePhoto fallbackQuery="fertilizer field crop" cropName={form.crop} nutrientFocus={nutrientFocus} />
       )}
 
       <div className="space-y-4">

@@ -17,7 +17,7 @@ export default class SceneErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    // eslint-disable-next-line no-console
+     
     console.warn('[3D scene] recovered from render error:', error);
   }
 

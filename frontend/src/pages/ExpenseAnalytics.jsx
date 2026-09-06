@@ -29,7 +29,7 @@ import {
   Legend
 } from 'recharts';
 import PageHeader from '../components/PageHeader';
-import ExpenseFieldScene3D from '../components/ExpenseFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const PIE_COLORS = ['#16a34a', '#f59e0b', '#ef4444', '#3b82f6', '#a855f7', '#ec4899', '#14b8a6', '#64748b'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -64,7 +64,7 @@ export default function ExpenseAnalytics() {
       <PageHeader titleKey="expenseAnalytics" icon={BarChart3} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('expenseAnalyticsIntro')}</p>
 
-      <ExpenseFieldScene3D
+      <DynamicScenePhoto fallbackQuery="farm expenses receipts"
         topCategories={pieData.slice(0, 3).map((c, i) => ({ ...c, color: PIE_COLORS[i % PIE_COLORS.length] }))}
       />
 

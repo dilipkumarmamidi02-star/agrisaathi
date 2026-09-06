@@ -8,7 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
-import VendorTypeScene3D from '../components/VendorTypeScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 const VENDOR_TYPES = ['Seed dealer', 'Fertilizer dealer', 'Pesticide dealer', 'Equipment rental', 'Buyer/Trader', 'Transport', 'Other'];
@@ -98,7 +98,7 @@ export default function VendorContacts() {
             <div>
               <Label>{t('type')}</Label>
               <div className="flex items-center gap-2">
-                <VendorTypeScene3D type={form.type} className="h-10 w-10" />
+                <DynamicScenePhoto fallbackQuery="agriculture vendor shop" type={form.type} className="h-10 w-10" />
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -136,7 +136,7 @@ export default function VendorContacts() {
             <Card key={b.payload.name}>
               <CardContent className="pt-3 pb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
-                  <VendorTypeScene3D type={b.payload.type} className="h-9 w-9" />
+                  <DynamicScenePhoto fallbackQuery="agriculture vendor shop" type={b.payload.type} className="h-9 w-9" />
                   <div className="min-w-0">
                     <p className="text-sm font-medium">{b.payload.name}</p>
                     <p className="text-[11px] text-lt-text-muted">{b.payload.type}{b.payload.location ? ` · ${b.payload.location}` : ''}</p>

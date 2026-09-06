@@ -1,6 +1,6 @@
 import { DownloadCloud } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
-import DataStreamScene3D from '../components/DataStreamScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 // Real, already-wired datasets this section will export once built —
@@ -13,7 +13,7 @@ export default function ExportData() {
   return (
     <div>
       <PageHeader title={t('exportDataTitle')} icon={DownloadCloud} />
-      <DataStreamScene3D datasetCount={DATASETS.length} />
+      <DynamicScenePhoto fallbackQuery="digital agriculture technology" datasetCount={DATASETS.length} />
       <p className="text-sm text-lt-text-secondary mb-3">This section is coming soon.</p>
       <p className="text-xs text-lt-text-muted">
         When it ships, it will let you export raw data from: {DATASETS.join(', ')}.

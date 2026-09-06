@@ -7,7 +7,7 @@ import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import SensorLabScene3D from '../components/SensorLabScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 
 export default function SensorLab() {
@@ -100,7 +100,7 @@ export default function SensorLab() {
         <button onClick={() => setTab('water')} className={`flex-1 py-2 rounded-lg text-sm font-medium ${tab === 'water' ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>Water (5)</button>
       </div>
 
-      <SensorLabScene3D
+      <DynamicScenePhoto fallbackQuery="soil testing lab"
         tab={tab}
         soilRecord={{
           ph: soilResult ? soilResult.avg_ph : (soilSamples.filter((v) => v !== '').map(Number).reduce((s, v, _, a) => s + v / a.length, 0) || null),

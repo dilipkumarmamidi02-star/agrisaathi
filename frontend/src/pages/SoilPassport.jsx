@@ -5,12 +5,6 @@ import {
   ScanLine,
   Plus,
   LineChart as LineChartIcon,
-  MapPin,
-  Droplets,
-  BarChart3,
-  Database,
-  RefreshCw,
-  AlertCircle,
   Navigation,
 } from 'lucide-react';
 import api from '../api/apiClient';
@@ -28,7 +22,6 @@ import {
 import { files, ai } from '../api/appClient';
 import { useLang } from '../lib/i18n';
 import {
-  getDataGovResourceRecords,
   getDataGovResource
 } from '../lib/dataGov';
 
@@ -393,7 +386,7 @@ export default function SoilPassport() {
     }
 
     loadGovernmentSoil(selectedState, selectedDistrict);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [selectedState, selectedDistrict]);
 
   /*

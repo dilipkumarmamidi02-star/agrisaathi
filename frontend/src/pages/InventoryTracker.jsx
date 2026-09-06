@@ -10,7 +10,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import InventoryStorageScene3D from '../components/InventoryStorageScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const CATEGORIES = ['Seed', 'Fertilizer', 'Pesticide', 'Equipment', 'Fuel', 'Other'];
 const UNITS = ['kg', 'litre', 'bag', 'unit', 'packet'];
@@ -83,7 +83,7 @@ export default function InventoryTracker() {
         Log seed, fertilizer, pesticide and equipment stock. Set a low-stock threshold to get warned before you run out.
       </p>
 
-      <InventoryStorageScene3D
+      <DynamicScenePhoto fallbackQuery="farm warehouse grain storage"
         items={currentStock.map((b) => ({
           item: b.payload.item,
           category: b.payload.category,

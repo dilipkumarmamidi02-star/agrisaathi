@@ -1,45 +1,75 @@
 import { useState, useEffect } from 'react'
 import api from '../api/apiClient';
-import { CloudSun, Wind, Droplets, MapPin } from 'lucide-react';
+import { CloudSun, Wind, Droplets, MapPin, Sunrise, Sunset, Gauge } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
-import WeatherScene3D from '../components/WeatherScene3D';
+import WeatherPhotoHero from '../components/WeatherPhotoHero';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
+const AQI_COLORS = {
+  1: 'text-green-600 bg-green-50',
+  2: 'text-lime-600 bg-lime-50',
+  3: 'text-yellow-600 bg-yellow-50',
+  4: 'text-orange-600 bg-orange-50',
+  5: 'text-red-600 bg-red-50',
+};
+
+function formatHour(iso) {
+  const d = new Date(iso);
+  return d.toLocaleTimeString([], { hour: 'numeric', hour12: true });
+}
+
+function formatDay(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00Z');
+  return d.toLocaleDateString([], { weekday: 'short' });
+}
+
+function formatClock(unixSeconds) {
+  if (!unixSeconds) return '--';
+  const d = new Date(unixSeconds * 1000);
+  return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
 
 export default function Weather() {
   const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState(null);
+  const [airQuality, setAirQuality] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Real value only — Weather.jsx fetches more detail than Home's
-  // hero, so this becomes a second real writer of the shared
-  // `weather` context key (Dashboard's farm scene already reads it).
   const weatherCondition = weather?.description
     ? mapWeatherDescriptionToCondition(weather.description)
     : 'default';
 
   usePageContext({ page: 'weather', weather: weatherCondition });
 
-  function fetchWeather(lat, lon) {
+  function fetchAll(lat, lon) {
     setLoading(true);
     setError(null);
-    api.get('/api/weather/current', { params: { lat, lon } })
-      .then((res) => setWeather(res.data))
-      .catch((err) => setError(err?.response?.data?.detail || 'Could not fetch weather'))
-      .finally(() => setLoading(false));
-  };
+
+    Promise.allSettled([
+      api.get('/api/weather/current', { params: { lat, lon } }),
+      api.get('/api/weather/forecast', { params: { lat, lon } }),
+      api.get('/api/weather/air-quality', { params: { lat, lon } }),
+    ]).then(([currentRes, forecastRes, aqRes]) => {
+      if (currentRes.status === 'fulfilled') setWeather(currentRes.value.data);
+      else setError(currentRes.reason?.response?.data?.detail || 'Could not fetch weather');
+
+      if (forecastRes.status === 'fulfilled') setForecast(forecastRes.value.data);
+      if (aqRes.status === 'fulfilled') setAirQuality(aqRes.value.data);
+    }).finally(() => setLoading(false));
+  }
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      fetchWeather(17.385, 78.4867);
+      fetchAll(17.385, 78.4867);
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      (pos) => fetchWeather(pos.coords.latitude, pos.coords.longitude),
-      () => fetchWeather(17.385, 78.4867)
+      (pos) => fetchAll(pos.coords.latitude, pos.coords.longitude),
+      () => fetchAll(17.385, 78.4867)
     );
   }, []);
 
@@ -50,14 +80,7 @@ export default function Weather() {
       {loading && <p className="text-sm text-lt-text-muted">Loading weather...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {weather && (
-        <WeatherScene3D
-          condition={weatherCondition}
-          windSpeed={weather.wind_speed || 0}
-          label={weather.description}
-          height="h-48"
-        />
-      )}
+      {weather && <WeatherPhotoHero condition={weatherCondition} />}
 
       {weather && (
         <Card className="bg-blue-600 text-white mb-4">
@@ -78,6 +101,88 @@ export default function Weather() {
           </CardContent>
         </Card>
       )}
+
+      {forecast?.hourly?.length > 0 && (
+        <Card className="mb-4">
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs font-semibold text-lt-text-muted uppercase mb-3">Next hours</p>
+            <div className="flex gap-4 overflow-x-auto pb-1">
+              {forecast.hourly.map((h, i) => (
+                <div key={i} className="flex flex-col items-center min-w-[56px]">
+                  <span className="text-xs text-lt-text-muted">{i === 0 ? 'Now' : formatHour(h.time)}</span>
+                  <img
+                    src={`https://openweathermap.org/img/wn/${h.icon}.png`}
+                    alt={h.description}
+                    className="w-8 h-8"
+                  />
+                  <span className="text-sm font-semibold">{Math.round(h.temp)}°</span>
+                  {h.pop > 10 && <span className="text-[10px] text-blue-500">{Math.round(h.pop)}%</span>}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {forecast?.days?.length > 0 && (
+        <Card className="mb-4">
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs font-semibold text-lt-text-muted uppercase mb-3">5-day forecast</p>
+            <div className="space-y-2">
+              {forecast.days.map((d, i) => (
+                <div key={i} className="flex items-center justify-between text-sm">
+                  <span className="w-12 font-medium">{i === 0 ? 'Today' : formatDay(d.date)}</span>
+                  <img
+                    src={`https://openweathermap.org/img/wn/${d.icon}.png`}
+                    alt={d.description}
+                    className="w-7 h-7"
+                  />
+                  <span className="w-12 text-xs text-blue-500 text-right">
+                    {d.rain_probability > 5 ? `${Math.round(d.rain_probability)}%` : ''}
+                  </span>
+                  <span className="w-20 text-right text-lt-text-muted">
+                    {Math.round(d.temp_min)}° / {Math.round(d.temp_max)}°
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        {airQuality && (
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-xs font-semibold text-lt-text-muted uppercase mb-2 flex items-center gap-1">
+                <Gauge className="h-3.5 w-3.5" /> Air Quality
+              </p>
+              <span className={`inline-block px-2 py-1 rounded text-sm font-semibold ${AQI_COLORS[airQuality.aqi] || ''}`}>
+                {airQuality.aqi_label}
+              </span>
+              {airQuality.pm2_5 != null && (
+                <p className="text-xs text-lt-text-muted mt-2">PM2.5: {airQuality.pm2_5.toFixed(1)} µg/m³</p>
+              )}
+              {airQuality.pm10 != null && (
+                <p className="text-xs text-lt-text-muted">PM10: {airQuality.pm10.toFixed(1)} µg/m³</p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {weather && (
+          <Card>
+            <CardContent className="pt-4 pb-4">
+              <p className="text-xs font-semibold text-lt-text-muted uppercase mb-2 flex items-center gap-1">
+                <Sunrise className="h-3.5 w-3.5" /> Sun
+              </p>
+              <p className="text-sm">Rise: {formatClock(weather.sunrise)}</p>
+              <p className="text-sm flex items-center gap-1"><Sunset className="h-3.5 w-3.5" /> Set: {formatClock(weather.sunset)}</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
       <DataGovFeaturePanel feature="Weather" />
     </div>
   );

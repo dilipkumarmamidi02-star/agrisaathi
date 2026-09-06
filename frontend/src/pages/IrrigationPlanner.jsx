@@ -9,7 +9,7 @@ import { Label } from '../components/ui/label';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
-import IrrigationFieldScene3D from '../components/IrrigationFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const METHODS = ['drip', 'sprinkler', 'flood', 'furrow', 'rainfed'];
 
@@ -55,7 +55,7 @@ export default function IrrigationPlanner() {
       <PageHeader titleKey="irrigationPlanner" icon={Droplets} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('irrigationIntro')}</p>
 
-      <IrrigationFieldScene3D
+      <DynamicScenePhoto fallbackQuery="drip irrigation farm field"
         cropName={focusSession?.crop_name}
         method={focusSession?.method || 'drip'}
         hasSession={Boolean(focusSession)}

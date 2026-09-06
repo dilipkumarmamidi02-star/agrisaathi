@@ -6,7 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import PageHeader from '../components/PageHeader';
-import FeedbackGardenScene3D from '../components/FeedbackGardenScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 
@@ -82,7 +82,7 @@ export default function FeedbackCorner() {
         <Card className="mb-4">
           <CardContent className="pt-4 space-y-3">
             <div className="flex items-center gap-3">
-              <FeedbackGardenScene3D rating={rating} />
+              <DynamicScenePhoto fallbackQuery="garden flowers growth" rating={rating} />
               <div>
                 <p className="text-sm mb-1">How's your experience?</p>
                 <div className="flex gap-1">

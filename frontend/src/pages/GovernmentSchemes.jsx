@@ -9,7 +9,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '.
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import { useLang } from '../lib/i18n';
-import SchemeFieldScene3D from '../components/SchemeFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 // Fields the rules checker can use, per scheme. Keep this small and honest --
 // only ask what's actually needed to evaluate that scheme's published rules.
@@ -98,7 +98,7 @@ export default function GovernmentSchemes() {
         decision. Always confirm on the official portal before relying on a result.
       </p>
 
-      <SchemeFieldScene3D status={activeStatus} schemeCount={schemes.length} />
+      <DynamicScenePhoto fallbackQuery="government scheme documents india" status={activeStatus} schemeCount={schemes.length} />
 
       <div className="flex items-center gap-2 mb-4">
         <MapPin className="h-4 w-4 text-lt-primary shrink-0" />

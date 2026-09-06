@@ -4,7 +4,7 @@ import { updateProfile, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import PincodeLocationFields from '../components/PincodeLocationFields';
-import FarmIdentityScene3D from '../components/FarmIdentityScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLocationContext } from '../lib/LocationContext';
 
 // The 22 languages listed in the Eighth Schedule of the Indian
@@ -136,7 +136,7 @@ export default function ProfileSettings() {
       <div className="w-full max-w-md bg-lt-card rounded-2xl shadow-sm border border-lt-border p-6">
         <h1 className="text-2xl font-bold text-lt-text mb-1">Profile settings</h1>
         <p className="text-sm text-lt-text-secondary mb-4">Update your language and land details</p>
-        <FarmIdentityScene3D landSizeAcres={form.landSizeAcres} hasCrop={Boolean(form.primaryCrop)} />
+        <DynamicScenePhoto fallbackQuery="indian farmer portrait field" landSizeAcres={form.landSizeAcres} hasCrop={Boolean(form.primaryCrop)} />
 
         {error && (
           <div className="mb-4 bg-red-500/10 border border-red-200 text-red-400 text-sm rounded-lg p-3">

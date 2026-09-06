@@ -10,7 +10,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
-import TaskFieldScene3D from '../components/TaskFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const CATEGORIES = [
   { value: 'planting', label: 'Planting', color: 'bg-lt-success/20 text-lt-success' },
@@ -57,7 +57,7 @@ export default function TaskManager() {
   return (
     <div>
       <PageHeader titleKey="taskManager" icon={ListTodo} />
-      <TaskFieldScene3D
+      <DynamicScenePhoto fallbackQuery="farm task checklist field"
         tasks={tasks}
         overdueCount={tasks.filter((tk) => tk.due_date && daysUntil(tk.due_date) < 0 && tk.status !== 'done').length}
       />

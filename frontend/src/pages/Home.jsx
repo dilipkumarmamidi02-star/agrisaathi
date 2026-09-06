@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { Mic, Camera, Droplets, Sprout, MapPin, Wallet, Stethoscope, TrendingUp, FlaskConical, ShieldCheck, Landmark, Wheat, User, Banknote, MessageSquare, CloudRain, Store, GraduationCap, FolderArchive, ShieldPlus, Package, ListTodo, Bug, Gauge, UserCheck, Trophy, BellRing, Contact, Bell, FileSpreadsheet, PawPrint } from 'lucide-react';
+import { Mic, Droplets, Sprout, Wallet, Stethoscope, TrendingUp, FlaskConical, ShieldCheck, Landmark, User, GraduationCap, Bug, UserCheck, BellRing, Bell, FileSpreadsheet, MapPin } from 'lucide-react';
 import api from '../api/apiClient';
 import { useLang } from '../lib/i18n';
-import HomeHeroScene3D from '../components/HomeHeroScene3D';
+import WeatherPhotoHero from '../components/WeatherPhotoHero';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
@@ -60,6 +60,7 @@ export default function Home() {
     { to: '/pest-library', icon: Bug, label: t('pestLibrary'), color: 'bg-red-500/10 text-red-400' },
     { to: '/expert-directory', icon: UserCheck, label: t('experts'), color: 'bg-cyan-500/10 text-cyan-400' },
     { to: '/farm-notifications', icon: BellRing, label: t('notifications'), color: 'bg-cyan-50 text-cyan-700' },
+    { to: '/near-me', icon: MapPin, label: t('nearMe') || 'Near Me', color: 'bg-lt-success/10 text-lt-success' },
   ];
 
   return (
@@ -75,13 +76,7 @@ export default function Home() {
         </div>
       </div>
 
-      {health && (
-        <div className="bg-lt-success/10 border border-lt-primary/20 rounded-xl p-3 flex items-center gap-2">
-          <span className="text-sm text-lt-success">✅ Backend: {health.status} ({health.version})</span>
-        </div>
-      )}
-
-      <HomeHeroScene3D condition={weatherCondition} />
+      <WeatherPhotoHero condition={weatherCondition} />
 
       <div className="text-center py-2">
         <h2 className="text-lg font-semibold text-lt-text">{t('speakToAgriSaathi')}</h2>

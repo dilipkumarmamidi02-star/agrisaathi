@@ -7,7 +7,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
-import LoanFieldScene3D from '../components/LoanFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 export default function LoanEligibility() {
   const { t } = useLang();
@@ -82,7 +82,7 @@ Known required documents: ${(loan.required_documents || []).join(', ')}`,
       <PageHeader titleKey="loanEligibility" icon={Banknote} />
       <p className="text-xs text-lt-text-secondary mb-4">{t('loanIntro')}</p>
 
-      <LoanFieldScene3D
+      <DynamicScenePhoto fallbackQuery="agriculture bank loan finance"
         cropName={farms[0]?.current_crop}
         status={activeStatus}
         hasFarm={farms.length > 0}

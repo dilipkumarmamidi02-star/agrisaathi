@@ -3,7 +3,7 @@ import { ShieldCheck, Search, CheckCircle2, XCircle } from 'lucide-react';
 import api from '../api/apiClient';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import CropPassportScene3D from '../components/CropPassportScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 
@@ -79,7 +79,7 @@ export default function CropPassport() {
 
       {current && (
         <div className="space-y-2 mb-4">
-          <CropPassportScene3D
+          <DynamicScenePhoto fallbackQuery="crop field certificate"
             cropName={current.crop}
             requirements={current}
             chain={chain}

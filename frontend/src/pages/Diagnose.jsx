@@ -8,7 +8,7 @@ import api from '../api/apiClient';
 import appClient from '@/api/appClient';
 import cropData from '@/data/cropEncyclopedia.json';
 import animalData from '@/data/animalEncyclopedia.json';
-import DiagnosisScene3D from '@/components/DiagnosisScene3D';
+import DiagnosisPhoto from '@/components/DiagnosisPhoto';
 import { usePageContext } from '@/contexts/AgricultureContext';
 
 
@@ -296,7 +296,7 @@ export default function Diagnose() {
           </div>
 
           {domain === 'crop' && subject && (
-            <DiagnosisScene3D cropName={subject} label={subject} />
+            <DiagnosisPhoto cropName={subject} label={subject} />
           )}
 
           <div>
@@ -391,7 +391,7 @@ export default function Diagnose() {
           {result && result.source !== 'unavailable' && (
             <>
               {domain === 'crop' && subject && (
-                <DiagnosisScene3D
+                <DiagnosisPhoto
                   cropName={subject}
                   severity={confidencePct != null ? confidencePct / 100 : 0.5}
                   label={likelyIssue}

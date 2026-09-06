@@ -9,7 +9,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
-import CommunityBoardScene3D from '../components/CommunityBoardScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const CATEGORIES = ['Crops', 'Livestock', 'Soil', 'Weather', 'Market', 'Schemes', 'Equipment', 'Other'];
 
@@ -72,7 +72,7 @@ export default function CommunityForum() {
           <div className="flex items-start justify-between gap-2">
             <h2 className="font-bold text-base">{active.title}</h2>
             <div className="flex items-center gap-2">
-              <CommunityBoardScene3D category={active.category} className="h-10 w-10" />
+              <DynamicScenePhoto fallbackQuery="indian farmer community" category={active.category} className="h-10 w-10" />
               <Badge variant="secondary">{active.category}</Badge>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function CommunityForum() {
           <div><Label className="mb-1 block">{t('title')}</Label><Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
           <div><Label className="mb-1 block">{t('category')}</Label>
             <div className="flex items-center gap-2">
-              <CommunityBoardScene3D category={form.category} className="h-10 w-10" />
+              <DynamicScenePhoto fallbackQuery="indian farmer community" category={form.category} className="h-10 w-10" />
               <div className="flex flex-wrap gap-1.5">
                 {CATEGORIES.map((c) => (
                   <button key={c} onClick={() => setForm({ ...form, category: c })} className={`px-2.5 py-1 rounded-full text-xs ${form.category === c ? 'bg-lt-primary text-white' : 'bg-lt-bg text-lt-text-secondary'}`}>{c}</button>

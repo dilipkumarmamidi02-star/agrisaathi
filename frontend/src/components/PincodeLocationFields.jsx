@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { useLocationContext } from '../lib/LocationContext';

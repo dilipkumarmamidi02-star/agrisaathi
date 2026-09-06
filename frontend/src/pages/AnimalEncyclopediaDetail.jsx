@@ -10,7 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import animalData from '@/data/animalEncyclopedia.json';
-import AnimalEncyclopediaScene3D from '@/components/AnimalEncyclopediaScene3D';
+import DynamicScenePhoto from '@/components/DynamicScenePhoto';
 import { usePageContext } from '@/contexts/AgricultureContext';
 
 
@@ -96,7 +96,7 @@ export default function AnimalEncyclopediaDetail() {
         <p className="text-sm text-lt-text-secondary">{category.name} &middot; {animal.purpose}</p>
       </div>
 
-      <AnimalEncyclopediaScene3D
+      <DynamicScenePhoto fallbackQuery="farm animal"
         category={categoryId}
         maturity={
           activeStage != null

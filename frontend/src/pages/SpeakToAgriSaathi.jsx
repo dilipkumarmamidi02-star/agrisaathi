@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { getDataGovResource } from '../lib/dataGov';
 import { usePageContext, useAgricultureContext } from '../contexts/AgricultureContext';
-import SpeakContextScene3D from '../components/SpeakContextScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 /*
  * SPEAK TO AGRISAATHI
@@ -310,7 +310,7 @@ export default function SpeakToAgriSaathi() {
       </p>
 
       {speakTopic && (
-        <SpeakContextScene3D
+        <DynamicScenePhoto fallbackQuery="farmer speaking microphone field"
           topic={speakTopic}
           crop={speakCrop}
           commodity={speakTopic === 'market' ? speakCrop : null}

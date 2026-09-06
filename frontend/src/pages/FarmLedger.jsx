@@ -9,7 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import LedgerDeskScene3D from '../components/LedgerDeskScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const CATEGORIES = {
   income: ['Crop Sale', 'Livestock Sale', 'Government Subsidy', 'Other Income'],
@@ -79,7 +79,7 @@ export default function FarmLedger() {
         Every entry is written to a tamper-evident, hash-chained ledger — nothing can be silently edited or deleted after the fact.
       </p>
 
-      <LedgerDeskScene3D
+      <DynamicScenePhoto fallbackQuery="farm accounting ledger book"
         valid={valid}
         incomeRatio={totalIncome + totalExpense > 0 ? totalIncome / (totalIncome + totalExpense) : 0.5}
       />

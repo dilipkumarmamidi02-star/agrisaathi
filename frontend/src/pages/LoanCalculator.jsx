@@ -6,7 +6,7 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import PageHeader from '../components/PageHeader';
-import LoanCalcScene3D from '../components/LoanCalcScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 export default function LoanCalculator() {
   const { t } = useLang();
@@ -50,7 +50,7 @@ export default function LoanCalculator() {
       <PageHeader titleKey="loanCalculator" icon={Calculator} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('loanCalcIntro')}</p>
 
-      <LoanCalcScene3D principalRatio={principalRatio} stackHeight={stackHeight} />
+      <DynamicScenePhoto fallbackQuery="finance calculator money" principalRatio={principalRatio} stackHeight={stackHeight} />
 
       <Card className="mb-4"><CardContent className="pt-4 space-y-3">
         <div><Label className="mb-1 block text-xs">{t('loanAmount')} (₹)</Label><Input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} /></div>

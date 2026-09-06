@@ -5,7 +5,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import PageHeader from '../components/PageHeader';
-import WeatherScene3D from '../components/WeatherScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWmoCodeToCondition } from '../three/config/marketVisuals';
 
@@ -90,7 +90,7 @@ export default function WeatherAlerts() {
       <Button onClick={fetchWeather} variant="outline" size="sm" className="mb-3"><Navigation className="h-3 w-3 mr-1" />{t('refresh')}</Button>
 
       {forecast && (
-        <WeatherScene3D condition={sceneCondition} windSpeed={sceneWind || 0} height="h-40" />
+        <DynamicScenePhoto fallbackQuery="farm field sky weather" condition={sceneCondition} windSpeed={sceneWind || 0} height="h-40" />
       )}
 
       {plantedCrops.length > 0 && (

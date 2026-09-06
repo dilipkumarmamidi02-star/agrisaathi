@@ -6,7 +6,7 @@ import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import { useLang } from '../lib/i18n';
-import PestScene3D from '../components/PestScene3D';
+import PageBackdrop from '../components/PageBackdrop';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 // The library's `affects` field is a free-text list like "Rice, Wheat,
@@ -50,6 +50,7 @@ export default function PestLibrary() {
   const filtered = filter === 'all' ? items : items.filter((i) => i.type === filter);
 
   return (
+    <PageBackdrop query="crop pest insect leaf field">
     <div>
       <PageHeader titleKey="pestLibrary" icon={Bug} />
 
@@ -75,13 +76,6 @@ export default function PestLibrary() {
                 className={`cursor-pointer transition-colors ${selectedPest === p ? 'border-lt-primary ring-1 ring-lt-primary/30' : ''}`}
               >
                 <CardContent className="pt-3">
-                {selectedPest === p && (
-                  <PestScene3D
-                    cropName={firstAffectedCrop(p.affects)}
-                    type={p.type}
-                    label={`${p.name} on ${firstAffectedCrop(p.affects) || 'crop'}`}
-                  />
-                )}
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">{p.name}</p>
                   <Badge className={TYPE_COLORS[p.type] || 'bg-lt-bg text-lt-text'}>{p.type}</Badge>
@@ -111,5 +105,6 @@ export default function PestLibrary() {
       {disclaimer && <p className="text-[10px] text-lt-border mt-3">{disclaimer}</p>}
       <DataGovFeaturePanel feature="Pesticide Library" />
     </div>
+    </PageBackdrop>
   );
 }

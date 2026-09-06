@@ -1,6 +1,5 @@
-import { loadMarketIntelligence } from '../lib/marketIntelligence';
 import { useLocationContext } from '../lib/LocationContext';
-import React, {
+import {
   useCallback,
   useEffect,
   useMemo,
@@ -10,10 +9,8 @@ import React, {
 import {
   RefreshCw,
   MapPin,
-  ChevronDown,
   TrendingUp,
   Database,
-  Package,
   Warehouse,
   Wheat,
   Factory,
@@ -22,10 +19,9 @@ import {
 
 import {
   getDataGovResource,
-  getDataGovResourceRecords,
 } from '../lib/dataGov';
 import PincodeLocationFields from '../components/PincodeLocationFields';
-import MandiScene3D from '../components/MandiScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 const MARKET_RESOURCES = [
@@ -1162,7 +1158,7 @@ export default function MarketPrices() {
         </div>
 
         {/* 3D MANDI */}
-        <MandiScene3D commodities={marketSceneCommodities} />
+        <DynamicScenePhoto fallbackQuery="indian market mandi vegetables" commodities={marketSceneCommodities} />
 
         {/* LOCATION */}
 

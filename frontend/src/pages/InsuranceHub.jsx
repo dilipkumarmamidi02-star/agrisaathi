@@ -37,7 +37,7 @@ import {
 } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
-import InsuranceFieldScene3D from '../components/InsuranceFieldScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const CLAIM_STATUS = {
   none: { label: 'No claim', color: 'bg-lt-bg text-lt-text-secondary' },
@@ -86,7 +86,7 @@ export default function InsuranceHub() {
       <PageHeader titleKey="insuranceHub" icon={ShieldPlus} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('insuranceIntro')}</p>
 
-      <InsuranceFieldScene3D
+      <DynamicScenePhoto fallbackQuery="crop insurance field"
         cropName={focusedPolicy?.crop_name}
         claimStatus={focusedPolicy?.claim_status || 'none'}
         policyCount={policies.length}

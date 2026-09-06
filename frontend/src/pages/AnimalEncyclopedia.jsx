@@ -6,7 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
-import AnimalCategoryPreviewScene3D from '../components/AnimalCategoryPreviewScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 export default function AnimalEncyclopedia() {
@@ -75,7 +75,7 @@ export default function AnimalEncyclopedia() {
 
                   {expanded && (
                     <div className="mt-3 space-y-3 text-xs text-lt-text">
-                      <AnimalCategoryPreviewScene3D category={cat.category} label={cat.label} />
+                      <DynamicScenePhoto fallbackQuery="farm animal" category={cat.category} label={cat.label} />
 
                       {cat.breeds?.length > 0 && (
                         <div>

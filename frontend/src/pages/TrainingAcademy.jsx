@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, ArrowRight } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
-import TrainingAcademyScene3D from '../components/TrainingAcademyScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { Card, CardContent } from '../components/ui/card';
 import appClient from '../api/appClient';
 import { useLang } from '../lib/i18n';
@@ -56,7 +56,7 @@ export default function TrainingAcademy() {
         <Card><CardContent className="pt-6 text-center text-sm text-lt-text-muted">No training resources available yet.</CardContent></Card>
       ) : (
         <>
-          <TrainingAcademyScene3D categories={categories} activeCategory={active} />
+          <DynamicScenePhoto fallbackQuery="farmer training classroom" categories={categories} activeCategory={active} />
 
           <div className="space-y-2">
             {categories.map((c) => (

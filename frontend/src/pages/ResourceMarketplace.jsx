@@ -16,7 +16,7 @@ import {
 
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
-import ResourceMarketplaceScene3D from '../components/ResourceMarketplaceScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 const LOCAL_RESOURCES = [
@@ -96,7 +96,7 @@ export default function ResourceMarketplace() {
         claim live seller prices or stock.
       </p>
 
-      <ResourceMarketplaceScene3D category={category} sourceCount={marketplaceResources.length} />
+      <DynamicScenePhoto fallbackQuery="farm marketplace tools" category={category} sourceCount={marketplaceResources.length} />
 
       <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
         {LOCAL_RESOURCES.map((item) => (

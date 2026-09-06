@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import AuthScene3D from '../components/AuthScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 // Generic OAuth-style consent screen. AgriSaathi does not currently ship an
 // OAuth authorization-server backend, so nothing here invents a token
@@ -56,7 +56,7 @@ export default function OAuthConsent() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0f0d] px-4 relative overflow-hidden">
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-green-500/10 blur-[120px]" />
-      <AuthScene3D />
+      <DynamicScenePhoto fallbackQuery="farmer ploughing field with oxen" />
 
       <div className="w-full max-w-sm relative">
         <div className="flex items-center gap-2 mb-6 font-mono text-xs text-green-400 tracking-widest uppercase">

@@ -6,7 +6,7 @@ import { useLang } from '../lib/i18n';
 import appClient from '../api/appClient';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import VaultScene3D from '../components/VaultScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 /**
  * Spec #29 "Insurance Vault": secure digital vault visual language,
@@ -42,7 +42,7 @@ export default function InsuranceVault() {
         A secured, read-only view of your policy records. To add or edit a policy, use Insurance Hub.
       </p>
 
-      <VaultScene3D recordCount={policies.length} />
+      <DynamicScenePhoto fallbackQuery="insurance documents safe" recordCount={policies.length} />
 
       {loading ? (
         <p className="text-sm text-lt-text-muted">{t('loading')}</p>

@@ -37,7 +37,7 @@ import {
   Legend
 } from 'recharts';
 import PageHeader from '../components/PageHeader';
-import SensorHubScene3D from '../components/SensorHubScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 export default function SensorHub() {
   const { t } = useLang();
@@ -81,7 +81,7 @@ export default function SensorHub() {
       <PageHeader titleKey="sensorHub" icon={Activity} />
       <p className="text-xs text-lt-text-secondary mb-3">{t('sensorHubIntro')}</p>
 
-      <SensorHubScene3D latest={latest} readingCount={readings.length} />
+      <DynamicScenePhoto fallbackQuery="soil sensor technology field" latest={latest} readingCount={readings.length} />
 
       {latest && (
         <Card className="mb-4 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200"><CardContent className="pt-4">

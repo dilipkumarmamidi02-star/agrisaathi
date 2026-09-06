@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useLang } from '../lib/i18n';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   getDataGovResources,
   getDataGovResourceRecords,
 } from '../lib/dataGov';
-import GovDataScene3D from '../components/GovDataScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const ERROR_STATUS = 'API-ERROR';
 const EMPTY_STATUS = 'LIVE-EMPTY';
@@ -389,7 +388,7 @@ export default function DataGovLiveData() {
         </p>
       </div>
 
-      <GovDataScene3D
+      <DynamicScenePhoto fallbackQuery="government building india"
         resourceCount={resources.length}
         liveCount={summary.live}
         emptyCount={summary.empty}

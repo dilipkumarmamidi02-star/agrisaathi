@@ -4,7 +4,7 @@ import api from '../api/apiClient';
 import { getDeviceId } from '../lib/deviceId';
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
-import AlertWatchtowerScene3D from '../components/AlertWatchtowerScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 
@@ -66,7 +66,7 @@ export default function AlertsCenter() {
   return (
     <div>
       <PageHeader title={t('alertsCenterTitle')} icon={Bell} />
-      <AlertWatchtowerScene3D
+      <DynamicScenePhoto fallbackQuery="farm warning alert sky"
         stockAlerts={lowStockItems.length}
         weatherAlerts={forecastDays.length}
         priceAlerts={priceAlerts.length}

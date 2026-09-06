@@ -8,7 +8,7 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
 import { useLang } from '../lib/i18n';
-import EquipmentYardScene3D from '../components/EquipmentYardScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 
 export default function EquipmentRegistry() {
@@ -67,7 +67,7 @@ export default function EquipmentRegistry() {
       <PageHeader title={t('equipmentRegistryTitle')} icon={Wrench} />
       <p className="text-xs text-lt-text-secondary mb-3">Track your machinery and its maintenance schedule.</p>
 
-      <EquipmentYardScene3D
+      <DynamicScenePhoto fallbackQuery="tractor farm equipment"
         equipment={equipment.map((b) => ({
           name: b.payload.name,
           type: b.payload.type,

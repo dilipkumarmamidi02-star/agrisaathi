@@ -9,7 +9,7 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
-import TreatmentScene3D from '../components/TreatmentScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 export default function Treatments() {
@@ -56,7 +56,7 @@ export default function Treatments() {
       <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-200 rounded-lg p-2 mb-4">⚠️ {t('aiAssisted')}</p>
 
       {crop && (
-        <TreatmentScene3D
+        <DynamicScenePhoto fallbackQuery="crop treatment spray field"
           cropName={crop}
           hasOrganic={!!result?.organic_treatment}
           hasChemical={!!result?.chemical_treatment}

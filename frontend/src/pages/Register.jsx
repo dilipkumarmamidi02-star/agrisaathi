@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
-import AuthScene3D from '../components/AuthScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
@@ -85,7 +85,7 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0f0d] px-4 py-10 relative overflow-hidden">
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-green-500/10 blur-[120px]" />
-      <AuthScene3D />
+      <DynamicScenePhoto fallbackQuery="farmer ploughing field with oxen" />
 
       <div className="w-full max-w-md relative">
         <div className="flex items-center justify-between mb-6 font-mono text-xs text-green-400 tracking-widest uppercase">

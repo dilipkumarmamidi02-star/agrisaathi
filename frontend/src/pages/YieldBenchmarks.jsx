@@ -6,7 +6,7 @@ import { Card, CardContent } from '../components/ui/card';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import PageHeader from '../components/PageHeader';
-import YieldBenchmarkScene3D from '../components/YieldBenchmarkScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { getRegionalBenchmark } from '../three/config/yieldBenchmarks';
 
 /**
@@ -84,7 +84,7 @@ export default function YieldBenchmarks() {
             </Select>
           )}
 
-          <YieldBenchmarkScene3D
+          <DynamicScenePhoto fallbackQuery="wheat harvest yield field"
             cropName={active?.crop}
             yourRatio={active && active.benchmark > 0 ? active.yourYield / active.benchmark : 1}
             targetRatio={active && active.benchmark > 0 ? active.target / active.benchmark : 1.1}

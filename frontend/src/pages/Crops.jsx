@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Sprout, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import cropData from '@/data/cropEncyclopedia.json';
-import CropCategoryPreviewScene3D from '@/components/CropCategoryPreviewScene3D';
+import DynamicScenePhoto from '@/components/DynamicScenePhoto';
 import { CATEGORY_PREVIEW_CROP } from '@/three/config/cropVisuals';
 import { usePageContext } from '@/contexts/AgricultureContext';
 
@@ -57,7 +57,7 @@ export default function Crops() {
         {t('cropEncyclopediaIntro')}
       </p>
 
-      <CropCategoryPreviewScene3D
+      <DynamicScenePhoto fallbackQuery="crop plant field"
         cropName={previewCrop}
         label={previewCategory ? previewCategory.name : t('allCategories')}
       />

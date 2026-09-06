@@ -10,7 +10,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Badge } from '../components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '../components/ui/select';
 import PageHeader from '../components/PageHeader';
-import SupportDeskScene3D from '../components/SupportDeskScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 const CATEGORIES = ['Technical issue', 'Account', 'Feature request', 'Bug report', 'Other'];
@@ -65,7 +65,7 @@ export default function SupportTickets() {
   return (
     <div>
       <PageHeader title={t('supportTicketsTitle')} icon={LifeBuoy} />
-      <SupportDeskScene3D openCount={openCount} resolvedCount={resolvedCount} />
+      <DynamicScenePhoto fallbackQuery="customer support helpdesk" openCount={openCount} resolvedCount={resolvedCount} />
       <p className="text-xs text-lt-text-secondary mb-3">
         Report an issue or ask for help. Every ticket is recorded so you can track its status over time.
       </p>

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Home, FlaskConical, Droplets, Sun, TrendingUp,
-  AlertTriangle, IndianRupee, CalendarDays,
+  AlertTriangle, IndianRupee,
 } from 'lucide-react';
 import { useLang } from '@/lib/i18n';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/PageHeader';
 import cropData from '@/data/cropEncyclopedia.json';
-import CropEncyclopediaScene3D from '@/components/CropEncyclopediaScene3D';
+import DynamicScenePhoto from '@/components/DynamicScenePhoto';
 import { usePageContext } from '@/contexts/AgricultureContext';
 
 export default function CropEncyclopediaDetail() {
@@ -54,7 +54,7 @@ export default function CropEncyclopediaDetail() {
         <p className="text-sm text-gray-500">{category.name} &middot; {crop.category_use}</p>
       </div>
 
-      <CropEncyclopediaScene3D
+      <DynamicScenePhoto fallbackQuery="crop plant field"
         cropName={crop.name}
         stageProgress={
           activeStage != null

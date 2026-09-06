@@ -7,7 +7,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import PageHeader from '../components/PageHeader';
-import NotificationBeaconScene3D from '../components/NotificationBeaconScene3D';
+import DynamicScenePhoto from '../components/DynamicScenePhoto';
 import { useLang } from '../lib/i18n';
 
 
@@ -82,7 +82,7 @@ export default function FarmNotifications() {
   return (
     <div>
       <PageHeader title={t('farmNotificationsTitle')} icon={BellRing} />
-      <NotificationBeaconScene3D dueSoonCount={dueSoonCount} overdueCount={overdueCount} />
+      <DynamicScenePhoto fallbackQuery="farm bell notification" dueSoonCount={dueSoonCount} overdueCount={overdueCount} />
       <p className="text-xs text-lt-text-secondary mb-3">Set reminders for spraying, harvest, vaccination — anything with a date.</p>
 
       <div className="flex justify-end mb-3">

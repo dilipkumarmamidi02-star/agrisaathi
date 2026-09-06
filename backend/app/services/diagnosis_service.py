@@ -108,7 +108,8 @@ Keep any internal reasoning brief. Output ONLY the final JSON object as your las
                 }
             ],
             "temperature": 0.2,
-            "max_completion_tokens": 4000,
+            "max_completion_tokens": 900,
+            "reasoning_effort": "none",
             "reasoning_format": "hidden",
         }
 

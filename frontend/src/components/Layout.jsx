@@ -67,6 +67,11 @@ export default function Layout({ children }) {
     || (path === '/animal-encyclopedia' && location.pathname.startsWith('/animal-encyclopedia'))
     || (path === '/crops' && location.pathname.startsWith('/crop-encyclopedia'));
 
+  const BARE_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password', '/oauth-consent'];
+  if (BARE_ROUTES.includes(location.pathname)) {
+    return children;
+  }
+
   return (
     <div className="min-h-screen bg-lt-bg md:flex">
       {/* Desktop sidebar */}
@@ -122,11 +127,7 @@ export default function Layout({ children }) {
       </aside>
 
       {/* Desktop top bar */}
-      <div className="hidden md:flex md:fixed md:top-0 md:left-64 md:right-0 md:h-16 bg-lt-card border-b border-lt-border items-center justify-between px-6 z-30">
-        <div className="flex items-center gap-2 text-lt-text-muted text-sm w-80">
-          <Search size={16} />
-          <span>Search anything...</span>
-        </div>
+      <div className="hidden md:flex md:fixed md:top-0 md:left-64 md:right-0 md:h-16 bg-lt-card border-b border-lt-border items-center justify-end px-6 z-30">
         <div className="flex items-center gap-4">
           <Link to="/alerts-center" className="relative text-lt-text-muted hover:text-lt-text">
             <Bell size={20} />

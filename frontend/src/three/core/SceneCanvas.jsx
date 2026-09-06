@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useDeviceCapability, QUALITY_PRESETS } from '../hooks/useDeviceCapability';
+import { attachContextLossRecovery } from './useContextLossRecovery';
 
 /**
  * The one place every module's 3D scene mounts through.
@@ -20,6 +21,7 @@ export default function SceneCanvas({
   className = '',
   style,
   onCreated,
+  frameloop = 'demand',
 }) {
   const { webgl, tier, reducedMotion } = useDeviceCapability();
   const quality = QUALITY_PRESETS[tier];
@@ -36,7 +38,11 @@ export default function SceneCanvas({
       gl={{ antialias: quality.antialias, alpha: true, powerPreference: 'high-performance' }}
       shadows={quality.shadows}
       camera={camera}
-      onCreated={onCreated}
+      frameloop={frameloop}
+      onCreated={(state) => {
+        attachContextLossRecovery(state.gl);
+        if (onCreated) onCreated(state);
+      }}
     >
       <Suspense fallback={null}>
         {typeof children === 'function'

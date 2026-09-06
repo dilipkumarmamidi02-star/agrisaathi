@@ -4,7 +4,7 @@ import { CloudSun, Wind, Droplets, MapPin, Sunrise, Sunset, Gauge } from 'lucide
 import { Card, CardContent } from '../components/ui/card';
 import PageHeader from '../components/PageHeader';
 import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
-import WeatherPhotoHero from '../components/WeatherPhotoHero';
+import PageBackdrop from '../components/PageBackdrop';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
 
@@ -77,10 +77,18 @@ export default function Weather() {
     <div>
       <PageHeader titleKey="weather" icon={CloudSun} />
 
-      {loading && <p className="text-sm text-lt-text-muted">Loading weather...</p>}
+      {loading && !weather && (
+        <Card className="bg-blue-600/40 text-white mb-4 animate-pulse">
+          <CardContent className="pt-5 pb-5">
+            <div className="h-4 w-24 bg-white/30 rounded mb-2" />
+            <div className="h-10 w-20 bg-white/30 rounded mb-2" />
+            <div className="h-4 w-32 bg-white/30 rounded" />
+          </CardContent>
+        </Card>
+      )}
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {weather && <WeatherPhotoHero condition={weatherCondition} />}
+      <PageBackdrop query={weatherCondition} />
 
       {weather && (
         <Card className="bg-blue-600 text-white mb-4">

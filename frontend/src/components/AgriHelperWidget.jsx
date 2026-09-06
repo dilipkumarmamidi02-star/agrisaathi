@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { speakWhenReady } from '../lib/userGesture';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { useLang } from '../lib/i18n';
@@ -198,7 +199,7 @@ export default function AgriHelperWidget() {
         greetingTextRef.current = translated;
         setGreetingBanner({ text: translated });
         setMessages([{ role: 'assistant', text: translated }]);
-        speak(translated, (played) => setGreetingSpoken(played));
+        speakWhenReady(() => speak(translated, (played) => setGreetingSpoken(played)));
       });
     });
     return unsubscribe;

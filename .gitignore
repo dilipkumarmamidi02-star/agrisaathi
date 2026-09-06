@@ -77,3 +77,10 @@ dist/
 *.bak
 backend/venv/
 .patch-backups/
+node_modules/
+dist/
+.env
+.env.local
+*.bak
+backend/venv/
+.patch-backups/

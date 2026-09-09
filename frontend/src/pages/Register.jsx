@@ -50,6 +50,8 @@ function apiError(err) {
   return 'Something went wrong. Please try again.';
 }
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 async function backendRequest(path, options = {}) {
   const token = await auth.currentUser?.getIdToken();
 
@@ -57,7 +59,7 @@ async function backendRequest(path, options = {}) {
     throw new Error('Your authentication session is unavailable.');
   }
 
-  const response = await fetch(`http://localhost:8000${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',

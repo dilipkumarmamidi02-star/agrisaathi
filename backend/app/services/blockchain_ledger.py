@@ -14,7 +14,14 @@ from app.schemas.ledger import LedgerLogRequest, LedgerBlock
 # Swap this file's storage backend for Hyperledger Fabric later without
 # changing the public functions below (log_event / get_chain / verify_chain).
 
-LEDGER_DIR = Path(__file__).resolve().parents[1] / "data" / "ledger_store"
+# Vercel's serverless filesystem is read-only except /tmp, and files
+# written there do not persist across cold starts. Locally (no VERCEL
+# env var) we keep using the real project directory so data persists
+# across local runs.
+if os.environ.get("VERCEL"):
+    LEDGER_DIR = Path("/tmp/ledger_store")
+else:
+    LEDGER_DIR = Path(__file__).resolve().parents[1] / "data" / "ledger_store"
 LEDGER_DIR.mkdir(parents=True, exist_ok=True)
 
 

@@ -147,7 +147,7 @@ export default function MyLots() {
   const requestPickup = async (lot) => {
     if (!uid) { alert('Please sign in.'); return; }
     try {
-      await entities.LogisticsTrips.create({
+      await api.post('/api/entities/LogisticsTrip', {
         requestedBy: uid,
         requestedByName: displayName,
         cropType: lot.crop,

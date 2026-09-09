@@ -15,6 +15,14 @@ _raw_url = settings.database_url.strip()
 # Strip accidental surrounding quote characters some env-var UIs add.
 _raw_url = _raw_url.strip('"').strip("'").strip()
 
+# `vercel env pull` / copy-paste from some dashboards can leave a
+# literal two-character "\n" (backslash + n) or a real trailing
+# newline glued onto the value (e.g. "...neondb\n"). Neither is
+# whitespace as far as .strip() is concerned, so strip them
+# explicitly or every connection fails with
+# 'database "neondb\n" does not exist'.
+_raw_url = _raw_url.replace("\\n", "").replace("\n", "").strip()
+
 # Only treat this as a real database URL if it actually looks like
 # one. Anything else (empty string, stray quotes, placeholder junk)
 # falls back to SQLite instead of crashing the whole app at import

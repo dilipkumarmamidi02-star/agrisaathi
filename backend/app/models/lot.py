@@ -11,6 +11,19 @@ class Lot(Base):
 
     farmer_id = Column(String, index=True, nullable=False)
     farmer_name = Column(String, nullable=True)
+    farmer_phone = Column(String, nullable=True)
+    farmer_email = Column(String, nullable=True)
+
+    # Lot pickup location, captured from the browser at creation time.
+    # Used for the Haversine distance calc against buyer/logistics/
+    # cold-storage locations in Phase 3.
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    farmer_phone = Column(String, nullable=True)
+    farmer_email = Column(String, nullable=True)
+
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
 
     crop = Column(String, nullable=False)
     variety = Column(String, nullable=True)

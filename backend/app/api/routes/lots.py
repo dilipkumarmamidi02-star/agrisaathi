@@ -4,8 +4,11 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.core.firebase_auth import get_current_user
+from app.core.access_control import get_verified_user
 from app.core.database import get_db
 from app.models.lot import Lot
+from app.models.user import User
+from app.api.routes.users import _require_admin
 
 router = APIRouter(prefix="/api/lots", tags=["lots"])
 
@@ -17,7 +20,7 @@ def get_lots(
     farmer_id: Optional[str] = Query(None, description="Filter by farmer ID"),
     status: Optional[str] = Query(None, description="Filter by status"),
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: User = Depends(get_verified_user)
 ):
     query = db.query(Lot)
     if farmer_id:
@@ -32,6 +35,7 @@ def create_lot(
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
+    creator = db.query(User).filter(User.uid == user.get("uid")).first()
     crop = str(lot_data.get("crop") or "").strip()
     if not crop:
         raise HTTPException(status_code=400, detail="Commodity is required.")
@@ -60,20 +64,31 @@ def create_lot(
     
     lot_identifier = _new_lot_identifier()
     farmer_id = user.get("uid") or user.get("sub") or "unknown"
-    farmer_name = user.get("name") or user.get("email") or "Farmer"
+    farmer_name = (creator.full_name if creator and creator.full_name else None) or user.get("name") or user.get("email") or "Farmer"
+    farmer_phone = creator.phone if creator else None
+    farmer_email = (creator.email if creator else None) or user.get("email")
+    latitude = lot_data.get("latitude")
+    longitude = lot_data.get("longitude")
     
     lot = Lot(
         id=lot_identifier,
         lot_id=lot_identifier,
         farmer_id=farmer_id,
         farmer_name=farmer_name,
+        farmer_phone=farmer_phone,
+        farmer_email=farmer_email,
+        latitude=latitude,
+        longitude=longitude,
         crop=crop,
         variety=str(lot_data.get("variety") or "").strip(),
         quantity_quintal=quantity,
         price_per_quintal=price,
         min_price_per_quintal=min_price,
         harvest_date=lot_data.get("harvestDate"),
-        status="active",
+        # A lot only goes live automatically if it already has a quality
+        # report attached at creation time. Otherwise it sits pending
+        # until an admin reviews the known info and approves it.
+        status="active" if lot_data.get("qualityReportId") else "pending_review",
         qr_token=uuid.uuid4().hex + uuid.uuid4().hex[:16],
         blockchain_status="pending",
         quality_report_id=lot_data.get("qualityReportId"),
@@ -90,7 +105,7 @@ def create_lot(
 def get_lot(
     lot_id: str,
     db: Session = Depends(get_db),
-    user: dict = Depends(get_current_user)
+    user: User = Depends(get_verified_user)
 ):
     lot = db.query(Lot).filter(Lot.id == lot_id).first()
     if not lot:
@@ -108,6 +123,62 @@ def update_lot(
     if not lot:
         raise HTTPException(status_code=404, detail="Lot not found")
     allowed_fields = {"status", "price_per_quintal", "min_price_per_quintal", "quantity_quintal", "quality_grade", "quality_score"}
+    for key, value in lot_data.items():
+        if key in allowed_fields and hasattr(lot, key):
+            setattr(lot, key, value)
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+@router.post("/{lot_id}/verify")
+def admin_verify_lot(
+    lot_id: str,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    _require_admin(user, db)
+    lot = db.query(Lot).filter(Lot.id == lot_id).first()
+    if not lot:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    lot.status = "active"
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+@router.post("/{lot_id}/reject")
+def admin_reject_lot(
+    lot_id: str,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    _require_admin(user, db)
+    lot = db.query(Lot).filter(Lot.id == lot_id).first()
+    if not lot:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    lot.status = "rejected"
+    db.commit()
+    db.refresh(lot)
+    return lot
+
+
+@router.patch("/{lot_id}/admin-details")
+def admin_update_lot_details(
+    lot_id: str,
+    lot_data: dict,
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
+    _require_admin(user, db)
+    lot = db.query(Lot).filter(Lot.id == lot_id).first()
+    if not lot:
+        raise HTTPException(status_code=404, detail="Lot not found")
+    allowed_fields = {
+        "farmer_name",
+        "farmer_phone",
+        "farmer_email",
+        "latitude",
+        "longitude",
+    }
     for key, value in lot_data.items():
         if key in allowed_fields and hasattr(lot, key):
             setattr(lot, key, value)

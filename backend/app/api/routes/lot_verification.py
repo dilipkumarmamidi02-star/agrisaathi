@@ -74,7 +74,7 @@ def get_lot_qr_token_by_lot_id(lot_id: str):
                 detail="Lot not found.",
             )
 
-        if lot.status in {"cancelled", "deleted", "rejected"}:
+        if lot.status in {"cancelled", "deleted", "rejected", "pending_review"}:
             raise HTTPException(
                 status_code=410,
                 detail="This lot is no longer available.",
@@ -115,7 +115,7 @@ def verify_lot(qr_token: str):
                 detail="Lot QR code is invalid or the lot no longer exists.",
             )
 
-        if lot.status in {"cancelled", "deleted", "rejected"}:
+        if lot.status in {"cancelled", "deleted", "rejected", "pending_review"}:
             raise HTTPException(
                 status_code=410,
                 detail="This lot is no longer available for verification.",
@@ -148,6 +148,14 @@ def verify_lot(qr_token: str):
                 "notes": lot.notes,
                 "status": lot.status,
                 "farmer_name": lot.farmer_name,
+                "farmer_phone": lot.farmer_phone,
+                "farmer_email": lot.farmer_email,
+                "latitude": lot.latitude,
+                "longitude": lot.longitude,
+                # True when this lot skipped the Quality Checker and is
+                # sitting in "pending_review" for an admin to manually
+                # confirm the farmer-supplied details before it goes live.
+                "needs_admin_review": lot.status == "pending_review",
 
                 "quality_grade": lot.quality_grade,
                 "quality_score": lot.quality_score,

@@ -12,6 +12,12 @@ from app.core.config import settings
 # starts — a SQLite file there loses all data on every cold start.
 _raw_url = settings.database_url.strip()
 
+# Guard against a placeholder value of literal quote characters
+# (e.g. an env var saved as the two characters `""` instead of
+# being left truly empty) — treat that the same as "not configured".
+if _raw_url in ('""', "''"):
+    _raw_url = ""
+
 if _raw_url:
     # Some providers hand out "postgres://"; SQLAlchemy 2.x requires
     # the "postgresql://" scheme.

@@ -24,9 +24,13 @@ if "://" not in _raw_url:
 
 if _raw_url:
     # Some providers hand out "postgres://"; SQLAlchemy 2.x requires
-    # the "postgresql://" scheme.
+    # the "postgresql://" scheme. We use the pg8000 driver (pure
+    # Python, no C-extension compilation needed) instead of
+    # psycopg2, so it installs cleanly on any Python version.
     if _raw_url.startswith("postgres://"):
         _raw_url = "postgresql://" + _raw_url[len("postgres://"):]
+    if _raw_url.startswith("postgresql://"):
+        _raw_url = "postgresql+pg8000://" + _raw_url[len("postgresql://"):]
     DATABASE_URL = _raw_url
     connect_args = {}
 else:

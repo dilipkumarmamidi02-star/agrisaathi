@@ -12,10 +12,14 @@ from app.core.config import settings
 # starts — a SQLite file there loses all data on every cold start.
 _raw_url = settings.database_url.strip()
 
-# Guard against a placeholder value of literal quote characters
-# (e.g. an env var saved as the two characters `""` instead of
-# being left truly empty) — treat that the same as "not configured".
-if _raw_url in ('""', "''"):
+# Strip accidental surrounding quote characters some env-var UIs add.
+_raw_url = _raw_url.strip('"').strip("'").strip()
+
+# Only treat this as a real database URL if it actually looks like
+# one. Anything else (empty string, stray quotes, placeholder junk)
+# falls back to SQLite instead of crashing the whole app at import
+# time.
+if "://" not in _raw_url:
     _raw_url = ""
 
 if _raw_url:

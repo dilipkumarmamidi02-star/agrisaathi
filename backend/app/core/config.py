@@ -8,6 +8,9 @@ load_dotenv(ENV_FILE, override=False)
 
 class Settings(BaseSettings):
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.8-flash"
+    ollama_base_url: str = "http://127.0.0.1:11434"
+    ollama_vlm_model: str = "gemma4:latest"
     groq_api_key: str = ""
     cerebras_api_key: str = ""
     hf_api_token: str = ""
@@ -22,6 +25,18 @@ class Settings(BaseSettings):
     weather_api_url: str = "https://api.openweathermap.org/data/2.5"
 
     data_gov_api_key: str = ""
+    admin_email: str = ""
+
+    # Email OTP configuration
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_from_name: str = "AgriSaathi"
+    otp_expire_minutes: int = 10
+    otp_resend_seconds: int = 60
+    otp_max_attempts: int = 5
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
         env_file_encoding="utf-8",

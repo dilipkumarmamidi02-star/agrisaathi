@@ -44,7 +44,7 @@ import SoilCrossSection3D from '../components/SoilCrossSection3D';
 import { usePageContext } from '../contexts/AgricultureContext';
 
 const API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:8001';
+  import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const SOIL_MOISTURE_RESOURCE = 'soil_moisture';
 const LAND_UTILISATION_RESOURCE = 'land_utilisation';
@@ -325,11 +325,17 @@ export default function SoilPassport() {
 
       setLandRecords([]);
 
-      setLandError(
-        error?.response?.data?.detail ||
-        error?.message ||
-        'Could not load land-use statistics.'
-      );
+      const rawDetail = error?.response?.data?.detail;
+
+      const readableDetail =
+        typeof rawDetail === 'string'
+          ? rawDetail
+          : rawDetail?.message ||
+            rawDetail?.error ||
+            error?.message ||
+            'Could not load land-use statistics.';
+
+      setLandError(String(readableDetail));
     } finally {
       setLoadingLand(false);
     }

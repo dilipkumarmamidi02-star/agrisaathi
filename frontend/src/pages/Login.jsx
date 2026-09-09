@@ -3,9 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import PhotoBackdrop from '../components/PhotoBackdrop';
+import '../styles/auth.css';
 
 export default function Login() {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,86 +15,189 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError('');
     setLoading(true);
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
-    } catch (err) {
-      setError(
-        err?.code === 'auth/invalid-credential'
-          ? 'Incorrect email or password.'
-          : err?.message || 'Could not sign in. Please try again.'
+      await signInWithEmailAndPassword(
+        auth,
+        email.trim(),
+        password
       );
+
+      navigate('/', { replace: true });
+    } catch (err) {
+      if (
+        err?.code === 'auth/invalid-credential' ||
+        err?.code === 'auth/wrong-password' ||
+        err?.code === 'auth/user-not-found'
+      ) {
+        setError('Incorrect email or password.');
+      } else if (err?.code === 'auth/too-many-requests') {
+        setError('Too many sign-in attempts. Please try again later.');
+      } else if (err?.code === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection.');
+      } else {
+        setError(
+          err?.message ||
+          'Could not sign in. Please try again.'
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
-      <PhotoBackdrop
-        query="farmer ploughing field with oxen"
-        overlayClassName="absolute inset-0 bg-white/70"
-      />
+    <main className="auth-page">
+      <div className="auth-shell">
 
-      <div className="w-full max-w-sm relative">
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-600 flex items-center justify-center mb-3 shadow-sm">
-            <span className="text-white text-2xl">🌱</span>
+        {/* LEFT AGRICULTURAL VISUAL */}
+        <section className="auth-story">
+          <PhotoBackdrop
+            query="Indian farmer green agricultural field farming"
+            overlayClassName="absolute inset-0 bg-transparent"
+          />
+
+          <div className="auth-story-content">
+            <div className="auth-logo mb-5">
+              <span className="text-2xl">🌱</span>
+            </div>
+
+            <h1>
+              AgriSaathi
+            </h1>
+
+            <p>
+              Better farming decisions start with better information.
+              Access agricultural tools, market intelligence and
+              trusted support from one platform.
+            </p>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">AgriSaathi</h1>
-        </div>
+        </section>
 
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Welcome back</h2>
-          <p className="text-sm text-gray-500 mb-6">Sign in to continue to AgriSaathi</p>
+        {/* RIGHT LOGIN PANEL */}
+        <section>
 
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3">
-              {error}
+          <div className="flex items-center justify-between mb-3">
+            <div className="auth-node">
+              AUTH_NODE / LOGIN
             </div>
-          )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none rounded-lg px-3 py-2.5 text-sm text-gray-900 transition-colors"
-                required
-              />
+            <span className="auth-step">
+              STEP_1/1
+            </span>
+          </div>
+
+          <div className="auth-card">
+
+            <div className="auth-logo mb-5">
+              <span className="text-2xl">🌱</span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none rounded-lg px-3 py-2.5 text-sm text-gray-900 transition-colors"
-                required
-              />
-            </div>
-            <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">Forgot password?</Link>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold py-3 rounded-lg text-sm transition-colors shadow-sm"
+
+            <h1 className="text-3xl mb-2">
+              Welcome Back
+            </h1>
+
+            <p className="text-sm mb-7">
+              Sign in to continue to your AgriSaathi account.
+            </p>
+
+            {error && (
+              <div className="auth-status auth-status-error mb-5">
+                {error}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
             >
-              {loading ? 'Signing In…' : 'Sign In'}
-            </button>
-          </form>
-        </div>
 
-        <p className="text-sm text-gray-700 text-center mt-6">
-          Don&apos;t have an account?{' '}
-          <Link to="/register" className="text-emerald-700 font-semibold hover:text-emerald-800">Create one</Link>
-        </p>
+              <div>
+                <label className="auth-label">
+                  Email
+                </label>
+
+                <input
+                  className="auth-input"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="auth-label">
+                  Password
+                </label>
+
+                <input
+                  className="auth-input"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="auth-primary"
+              >
+                {loading ? 'SIGNING IN…' : 'SIGN IN'}
+              </button>
+
+            </form>
+
+            <div className="flex items-center gap-3 my-7">
+              <div className="h-px flex-1 bg-gray-200" />
+              <span className="text-xs text-gray-400 font-semibold">
+                OR
+              </span>
+              <div className="h-px flex-1 bg-gray-200" />
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm text-gray-500">
+                New to AgriSaathi?
+              </p>
+
+              <Link
+                to="/register"
+                className="inline-block mt-1 text-sm font-bold text-emerald-700 hover:text-emerald-800"
+              >
+                Create your account →
+              </Link>
+            </div>
+
+          </div>
+
+          <div className="auth-footer">
+            <span>
+              Farmer & Supporter Agricultural Platform
+            </span>
+          </div>
+
+        </section>
+
       </div>
-    </div>
+    </main>
   );
 }

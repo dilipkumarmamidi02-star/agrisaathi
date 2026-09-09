@@ -84,3 +84,40 @@ dist/
 *.bak
 backend/venv/
 .patch-backups/
+
+# Local / generated files
+.DS_Store
+**/.DS_Store
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.bak
+*.log
+
+# Repair / temporary backups
+.repair-backups/
+**/.repair-backups/
+*.before-*.bak
+*.before-*
+*.before_*
+
+# Python environments
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Secrets
+.env
+.env.*
+!.env.example
+firebase-service-account.json
+
+# Local databases / generated DB backups
+*.db-journal
+*.db-shm
+*.db-wal
+*.bak
+
+# Local generated storage
+backend/app/data/storage/

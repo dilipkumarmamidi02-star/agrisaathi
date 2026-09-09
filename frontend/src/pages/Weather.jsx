@@ -7,6 +7,7 @@ import DataGovFeaturePanel from '../components/DataGovFeaturePanel';
 import PageBackdrop from '../components/PageBackdrop';
 import { usePageContext } from '../contexts/AgricultureContext';
 import { mapWeatherDescriptionToCondition } from '../three/config/cropVisuals';
+import WeatherFarmAdvisor from '../components/weather/WeatherFarmAdvisor';
 
 const AQI_COLORS = {
   1: 'text-green-600 bg-green-50',
@@ -184,7 +185,32 @@ export default function Weather() {
               <p className="text-xs font-semibold text-lt-text-muted uppercase mb-2 flex items-center gap-1">
                 <Sunrise className="h-3.5 w-3.5" /> Sun
               </p>
-              <p className="text-sm">Rise: {formatClock(weather.sunrise)}</p>
+              
+        {weather && (
+          <WeatherFarmAdvisor
+            weather={{
+              temperature: weather.temperature,
+              humidity: weather.humidity,
+              rainfall: weather.rain_1h,
+              rainProbability:
+                weather.rain_probability ??
+                weather.precipitation_probability ??
+                weather.pop ??
+                0,
+              windSpeed: weather.wind_speed,
+              windGust:
+                weather.wind_gust ??
+                weather.wind_gust_speed ??
+                0,
+              pressure:
+                weather.pressure ??
+                weather.pressure_hpa ??
+                null,
+            }}
+          />
+        )}
+
+        <p className="text-sm">Rise: {formatClock(weather.sunrise)}</p>
               <p className="text-sm flex items-center gap-1"><Sunset className="h-3.5 w-3.5" /> Set: {formatClock(weather.sunset)}</p>
             </CardContent>
           </Card>

@@ -1,0 +1,325 @@
+/* ============================================================
+   AGRISAATHI AUTH UI
+   Clean agricultural light theme
+   Applies to Login + Register
+   ============================================================ */
+
+.auth-page {
+  min-height: 100vh;
+  background: #f5f8f4 !important;
+  color: #173b2b;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(46, 125, 80, 0.10), transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(100, 160, 110, 0.10), transparent 35%);
+}
+
+.auth-shell {
+  position: relative;
+  z-index: 2;
+  width: min(1180px, calc(100% - 32px));
+  min-height: 720px;
+  margin: 0 auto;
+  padding: 32px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+  gap: 28px;
+  align-items: center;
+}
+
+.auth-story {
+  position: relative;
+  min-height: 650px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #e9f1e9;
+  box-shadow: 0 18px 50px rgba(30, 70, 45, 0.12);
+}
+
+.auth-story img {
+  width: 100%;
+  height: 100%;
+  min-height: 650px;
+  object-fit: cover;
+}
+
+.auth-story::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(12, 52, 31, 0.72) 0%,
+      rgba(12, 52, 31, 0.18) 48%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+}
+
+.auth-story-content {
+  position: absolute;
+  z-index: 3;
+  left: 38px;
+  right: 38px;
+  bottom: 38px;
+  color: white;
+}
+
+.auth-story-content h1 {
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0 0 14px;
+}
+
+.auth-story-content p {
+  max-width: 520px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.90);
+}
+
+.auth-card {
+  position: relative;
+  background: rgba(255,255,255,0.97);
+  border: 1px solid #dce8df;
+  border-radius: 26px;
+  padding: 34px;
+  box-shadow: 0 20px 55px rgba(27, 66, 43, 0.13);
+}
+
+.auth-node {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  color: #20a35a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.auth-node::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #20c765;
+  box-shadow: 0 0 0 5px rgba(32,199,101,0.10);
+}
+
+.auth-step {
+  color: #7b8a81;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.auth-card h1,
+.auth-card h2 {
+  color: #183b2b !important;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.auth-card p {
+  color: #68766e;
+}
+
+.auth-label {
+  display: block;
+  color: #53645a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.auth-input,
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  background: #fbfdfb !important;
+  color: #183b2b !important;
+  border: 1px solid #d5e3d9 !important;
+  border-radius: 11px !important;
+  padding: 12px 14px !important;
+  outline: none;
+  transition: 0.18s ease;
+}
+
+.auth-input:focus,
+.auth-card input:focus,
+.auth-card select:focus,
+.auth-card textarea:focus {
+  border-color: #28a85c !important;
+  box-shadow: 0 0 0 4px rgba(40,168,92,0.10) !important;
+  background: white !important;
+}
+
+.auth-card button {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.auth-primary {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 11px;
+  background: #20b957 !important;
+  color: white !important;
+  font-weight: 750;
+  box-shadow: 0 9px 22px rgba(32,185,87,0.20);
+}
+
+.auth-primary:hover {
+  background: #159d49 !important;
+  transform: translateY(-1px);
+}
+
+.auth-secondary {
+  min-height: 48px;
+  border: 1px solid #d6e3da;
+  border-radius: 11px;
+  background: white;
+  color: #286546;
+  font-weight: 700;
+}
+
+.auth-secondary:hover {
+  background: #f3f8f4;
+}
+
+.auth-choice {
+  border: 1px solid #d9e6dc;
+  border-radius: 14px;
+  background: white;
+  color: #244735;
+  padding: 18px;
+  text-align: left;
+  transition: 0.18s ease;
+}
+
+.auth-choice:hover {
+  border-color: #7bc796;
+  background: #f8fcf9;
+}
+
+.auth-choice.active,
+.auth-choice[aria-selected="true"] {
+  border-color: #22a957 !important;
+  background: #f1fbf4 !important;
+  box-shadow: inset 0 0 0 1px rgba(34,169,87,0.15);
+}
+
+.auth-choice h3 {
+  color: #193d2b;
+  font-weight: 750;
+}
+
+.auth-choice p {
+  color: #718078;
+}
+
+.auth-status {
+  border-radius: 12px;
+  padding: 13px 15px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.auth-status-info {
+  background: #eef8f1;
+  border: 1px solid #cce7d4;
+  color: #27623d;
+}
+
+.auth-status-warning {
+  background: #fff8e8;
+  border: 1px solid #f0dfb4;
+  color: #76571c;
+}
+
+.auth-status-error {
+  background: #fff1f1;
+  border: 1px solid #efcccc;
+  color: #a33b3b;
+}
+
+.auth-status-success {
+  background: #edf9f1;
+  border: 1px solid #c6e7d0;
+  color: #237040;
+}
+
+.auth-otp {
+  text-align: center;
+  font-size: 28px !important;
+  font-weight: 800;
+  letter-spacing: 0.35em;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #6d7b72;
+  font-size: 14px;
+}
+
+.auth-footer a {
+  color: #168a46;
+  font-weight: 750;
+}
+
+.auth-logo {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #239b58;
+  color: white;
+  box-shadow: 0 10px 24px rgba(35,155,88,0.22);
+}
+
+@media (max-width: 900px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+    width: min(620px, calc(100% - 24px));
+    padding: 18px 0;
+  }
+
+  .auth-story {
+    display: none;
+  }
+
+  .auth-card {
+    padding: 26px 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-shell {
+    width: calc(100% - 16px);
+  }
+
+  .auth-card {
+    border-radius: 20px;
+    padding: 22px 17px;
+  }
+}

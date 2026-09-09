@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { MapPin, Phone, ExternalLink, Stethoscope, Sprout } from 'lucide-react';
 
 // Point this at your own backend. No vendor SDK, no API keys baked in.
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8001';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 async function authHeader() {
   const { getAuth } = await import('firebase/auth');

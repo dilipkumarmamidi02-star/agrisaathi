@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     firebase_service_account_path: str = "./firebase-service-account.json"
     environment: str = "development"
     allowed_origins: str = "http://localhost:5173"
+    database_url: str = ""
     hf_disease_model: str = "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
     hf_confidence_threshold: float = 0.55
     groq_vlm_model: str = "qwen/qwen3.6-27b"

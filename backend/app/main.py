@@ -22,6 +22,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Ensure all tables exist. On Vercel the SQLite file is created fresh
+# in /tmp on every cold start, so tables must be created at startup
+# rather than relying on a one-time migration step.
+from app.core.database import Base, engine  # noqa: E402
+from app.models.lot import Lot  # noqa: E402,F401
+from app.models.user import User  # noqa: E402,F401
+
+Base.metadata.create_all(bind=engine)
+
+
 # ============================================================
 # 🌾 AGRISAATHI CORS
 # ============================================================

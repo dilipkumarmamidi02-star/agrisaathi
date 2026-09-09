@@ -37,7 +37,14 @@ from app.models.base44_entities import (  # noqa: E402,F401
     LogisticsTrip, AuditLog,
 )
 
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    # In serverless, concurrent cold starts can race to create the
+    # same Postgres ENUM type or table, causing a benign "already
+    # exists" error on the loser. The schema is already there either
+    # way, so log and continue instead of crashing the whole app.
+    print(f"create_all warning (likely already exists, continuing): {e}")
 
 
 # ============================================================

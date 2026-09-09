@@ -31,8 +31,14 @@ if _raw_url:
         _raw_url = "postgresql://" + _raw_url[len("postgres://"):]
     if _raw_url.startswith("postgresql://"):
         _raw_url = "postgresql+pg8000://" + _raw_url[len("postgresql://"):]
+
+    # pg8000 doesn't understand psycopg2-style query params like
+    # "sslmode" or "channel_binding" — strip them from the URL and
+    # configure SSL via connect_args instead.
+    _raw_url = _raw_url.split("?")[0]
+
     DATABASE_URL = _raw_url
-    connect_args = {}
+    connect_args = {"ssl_context": True}
 else:
     DB_PATH = "/tmp/agrisaathi.db" if os.environ.get("VERCEL") else "./agrisaathi.db"
     DATABASE_URL = f"sqlite:///{DB_PATH}"

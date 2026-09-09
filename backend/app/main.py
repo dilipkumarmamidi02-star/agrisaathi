@@ -28,6 +28,14 @@ app = FastAPI(
 from app.core.database import Base, engine  # noqa: E402
 from app.models.lot import Lot  # noqa: E402,F401
 from app.models.user import User  # noqa: E402,F401
+from app.models.crop import Crop  # noqa: E402,F401
+from app.models.farm import Farm, CropBatch  # noqa: E402,F401
+from app.models.email_otp import EmailOTP  # noqa: E402,F401
+from app.models.base44_entities import (  # noqa: E402,F401
+    QualityReport, QualitySession, QualitySample, Grievance,
+    Notification, Offer, Order, PriceAlert, StorageFacility,
+    LogisticsTrip, AuditLog,
+)
 
 Base.metadata.create_all(bind=engine)
 

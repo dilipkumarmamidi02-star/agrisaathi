@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -7,6 +8,8 @@ ENV_FILE = BASE_DIR / ".env"
 load_dotenv(ENV_FILE, override=False)
 
 class Settings(BaseSettings):
+    ANALYSIS_MAX_TIME_LIMIT_SECONDS: int = 600
+
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.8-flash"
     ollama_base_url: str = "http://127.0.0.1:11434"
@@ -21,6 +24,13 @@ class Settings(BaseSettings):
     database_url: str = ""
     hf_disease_model: str = "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
     hf_confidence_threshold: float = 0.55
+
+    @field_validator("hf_confidence_threshold", mode="before")
+    @classmethod
+    def _hf_confidence_threshold_empty_to_default(cls, value):
+        if value is None or (isinstance(value, str) and value.strip() == ""):
+            return 0.55
+        return value
     groq_vlm_model: str = "qwen/qwen3.6-27b"
     weather_api_key: str = ""
     weather_api_url: str = "https://api.openweathermap.org/data/2.5"

@@ -134,7 +134,7 @@ export default function Diagnose() {
     try {
       const response = await api.post('/api/diagnosis/analyze', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 60000,
+        timeout: 600000, // 10 minutes, matches Quality Checker
       });
 
       setResult(response.data);

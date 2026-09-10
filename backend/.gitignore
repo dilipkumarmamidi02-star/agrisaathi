@@ -8,3 +8,4 @@ firebase-service-account.json
 
 # Generated location data
 scripts/pincode_directory.csv
+.env*.local

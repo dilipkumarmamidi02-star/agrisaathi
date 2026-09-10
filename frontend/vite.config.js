@@ -15,7 +15,16 @@ export default defineConfig({
       manifest: false, // using our own public/manifest.webmanifest
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       workbox: {
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB, up from the 2 MB default
+        globDirectory: 'dist',
+        globPatterns: [
+          '**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2,ttf,eot,json}'
+        ],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        cleanupOutdatedCaches: true,
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [
+          /^\/api\//
+        ]
       },
     }),
   ],

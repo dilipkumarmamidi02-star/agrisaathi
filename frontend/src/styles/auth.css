@@ -323,3 +323,384 @@
     padding: 22px 17px;
   }
 }
+
+/* ============================================================
+   AGRISAATHI — AUTHENTICATION EXPERIENCE
+   Clean agricultural portal theme.
+   Authentication logic is intentionally untouched.
+   ============================================================ */
+
+:root {
+  --agri-green-900: #173b2b;
+  --agri-green-800: #1f5a38;
+  --agri-green-700: #267347;
+  --agri-green-600: #2d8a55;
+  --agri-green-500: #36a463;
+  --agri-green-100: #eaf5ed;
+  --agri-green-50: #f5faf6;
+  --agri-cream: #f7faf5;
+  --agri-border: #d8e6da;
+  --agri-muted: #64736a;
+}
+
+/* ------------------------------------------------------------
+   Shared authentication page
+   ------------------------------------------------------------ */
+
+.auth-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(54, 164, 99, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(117, 168, 96, 0.10),
+      transparent 32%
+    ),
+    var(--agri-cream);
+  color: var(--agri-green-900);
+}
+
+/* ------------------------------------------------------------
+   Login shell
+   ------------------------------------------------------------ */
+
+.auth-shell {
+  position: relative;
+}
+
+.auth-story {
+  overflow: hidden;
+  border-radius: 28px;
+  min-height: 640px;
+}
+
+.auth-story::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(14, 48, 29, 0.12),
+      rgba(14, 48, 29, 0.60)
+    );
+  pointer-events: none;
+}
+
+.auth-story-content {
+  position: relative;
+  z-index: 3;
+}
+
+/* ------------------------------------------------------------
+   Logos
+   ------------------------------------------------------------ */
+
+.auth-logo {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: linear-gradient(
+    135deg,
+    #e8f6eb,
+    #d7eedc
+  );
+  border: 1px solid #c7e2cd;
+  box-shadow:
+    0 8px 24px rgba(32, 95, 54, 0.10);
+}
+
+/* ------------------------------------------------------------
+   Auth cards
+   ------------------------------------------------------------ */
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--agri-border);
+  border-radius: 24px;
+  box-shadow:
+    0 24px 70px rgba(31, 76, 45, 0.13),
+    0 5px 18px rgba(31, 76, 45, 0.06);
+  backdrop-filter: blur(14px);
+}
+
+/* ------------------------------------------------------------
+   Inputs
+   ------------------------------------------------------------ */
+
+.auth-input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #d2e1d5;
+  border-radius: 11px;
+  background: #fbfdfb;
+  color: var(--agri-green-900);
+  padding: 0.75rem 0.9rem;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.auth-input::placeholder {
+  color: #8b988f;
+}
+
+.auth-input:hover {
+  border-color: #b8d1be;
+}
+
+.auth-input:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: var(--agri-green-500);
+  box-shadow:
+    0 0 0 4px rgba(54, 164, 99, 0.11);
+}
+
+/* ------------------------------------------------------------
+   Labels
+   ------------------------------------------------------------ */
+
+.auth-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #52645a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+/* ------------------------------------------------------------
+   Primary button
+   ------------------------------------------------------------ */
+
+.auth-primary {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    #2d8a55,
+    #239b58
+  );
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow:
+    0 12px 28px rgba(35, 155, 88, 0.20);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.auth-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    #267347,
+    #187d45
+  );
+  transform: translateY(-1px);
+  box-shadow:
+    0 15px 32px rgba(35, 155, 88, 0.25);
+}
+
+.auth-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-primary:disabled {
+  opacity: 0.60;
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------
+   Status messages
+   ------------------------------------------------------------ */
+
+.auth-status {
+  border-radius: 11px;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.88rem;
+}
+
+.auth-status-error {
+  background: #fff3f3;
+  border: 1px solid #efcccc;
+  color: #a33b3b;
+}
+
+.auth-status-success {
+  background: #edf9f1;
+  border: 1px solid #c9e7d1;
+  color: #237040;
+}
+
+/* ------------------------------------------------------------
+   Register page
+   ------------------------------------------------------------ */
+
+.auth-register-page {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(247, 251, 246, 0.98),
+      rgba(235, 247, 237, 0.95)
+    ) !important;
+}
+
+.auth-register-page .bg-\[\#0f1512\] {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-color: var(--agri-border) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 24px 70px rgba(31, 76, 45, 0.14),
+    0 5px 18px rgba(31, 76, 45, 0.06) !important;
+}
+
+.auth-register-page h1,
+.auth-register-page .text-slate-800 {
+  color: var(--agri-green-900) !important;
+}
+
+.auth-register-page .text-gray-500 {
+  color: #66766c !important;
+}
+
+.auth-register-page .text-gray-600 {
+  color: #718078 !important;
+}
+
+.auth-register-page .text-green-400 {
+  color: var(--agri-green-600) !important;
+}
+
+.auth-register-page .text-green-300 {
+  color: #287446 !important;
+}
+
+.auth-register-page .border-green-900\/40,
+.auth-register-page .border-green-900\/50 {
+  border-color: var(--agri-border) !important;
+}
+
+.auth-register-page input,
+.auth-register-page select,
+.auth-register-page textarea {
+  background: #fbfdfb !important;
+  color: var(--agri-green-900) !important;
+  border-color: #d2e1d5 !important;
+}
+
+.auth-register-page input:focus,
+.auth-register-page select:focus,
+.auth-register-page textarea:focus {
+  border-color: var(--agri-green-500) !important;
+  box-shadow:
+    0 0 0 4px rgba(54, 164, 99, 0.11) !important;
+}
+
+/* Account type cards */
+
+.auth-register-page button.rounded-lg.border.p-4 {
+  background: #ffffff !important;
+  border-color: #d8e6da !important;
+}
+
+.auth-register-page button.rounded-lg.border.p-4:hover {
+  background: #f5faf6 !important;
+  border-color: #94c5a0 !important;
+}
+
+.auth-register-page button.rounded-lg.border.p-4 .text-slate-800 {
+  color: var(--agri-green-900) !important;
+}
+
+.auth-register-page button.bg-green-500 {
+  min-height: 50px;
+  background: linear-gradient(
+    135deg,
+    #2d8a55,
+    #239b58
+  ) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 12px 28px rgba(35, 155, 88, 0.20);
+}
+
+.auth-register-page button.bg-green-500:hover {
+  background: linear-gradient(
+    135deg,
+    #267347,
+    #187d45
+  ) !important;
+}
+
+/* ------------------------------------------------------------
+   Agriculture visual on registration
+   ------------------------------------------------------------ */
+
+.auth-register-page [data-scene-photo],
+.auth-register-page .dynamic-scene-photo {
+  opacity: 0.90;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .auth-story {
+    min-height: 420px;
+    border-radius: 22px;
+  }
+
+  .auth-card {
+    border-radius: 20px;
+  }
+
+  .auth-register-page .bg-\[\#0f1512\] {
+    border-radius: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-story {
+    min-height: 300px;
+    border-radius: 18px;
+  }
+
+  .auth-card {
+    border-radius: 18px;
+  }
+
+  .auth-input,
+  .auth-primary {
+    min-height: 48px;
+  }
+}
+
+/* ------------------------------------------------------------
+   Reduced motion
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-input,
+  .auth-primary {
+    transition: none;
+  }
+
+  .auth-primary:hover:not(:disabled) {
+    transform: none;
+  }
+}

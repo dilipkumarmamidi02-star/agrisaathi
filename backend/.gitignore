@@ -5,3 +5,6 @@ __pycache__/
 app/data/pincode_directory.csv
 app/data/pincode_directory.offset
 firebase-service-account.json
+
+# Generated location data
+scripts/pincode_directory.csv

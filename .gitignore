@@ -121,3 +121,18 @@ firebase-service-account.json
 
 # Local generated storage
 backend/app/data/storage/
+# AgriSaathi local secrets
+**/firebase-service-account.json
+# Local databases
+*.db
+# Frontend generated files
+# Foundry generated/dependency directories
+blockchain/lib/
+blockchain/out/
+blockchain/cache/
+# Vercel
+.vercel/
+# Repair / temporary artifacts
+repair_*/
+# Foundry generated files
+# Repair artifacts

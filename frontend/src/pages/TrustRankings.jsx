@@ -1,12 +1,27 @@
 import { useEffect, useState } from 'react';
-import { entities } from '../api/appClient';
+import { getAuth } from 'firebase/auth';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+async function getOrders() {
+  const user = getAuth().currentUser;
+  if (!user) throw new Error('You are not signed in.');
+  const token = await user.getIdToken();
+  const response = await fetch(`${API_URL}/api/orders`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const text = await response.text();
+  if (!response.ok) throw new Error(text || `Request failed: ${response.status}`);
+  const data = text ? JSON.parse(text) : {};
+  return Array.isArray(data) ? data : data?.orders || data?.items || [];
+}
 
 export default function TrustRankings() {
   const [rankings, setRankings] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    entities.Orders.list('-created_date', 500).then((orders) => {
+    getOrders().then((orders) => {
       const byFarmer = {};
       orders.forEach((o) => {
         if (!o.farmerId) return;

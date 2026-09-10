@@ -126,6 +126,103 @@ export default function QualityChecker() {
   };
 
 
+
+  const compressQualityImage = (file) =>
+    new Promise((resolve, reject) => {
+      if (!file || !file.type.startsWith('image/')) {
+        reject(new Error('Only image files are supported.'));
+        return;
+      }
+
+      const MAX_BYTES = 2.5 * 1024 * 1024;
+      const MAX_DIMENSION = 1600;
+
+      if (file.size <= MAX_BYTES) {
+        resolve(file);
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onerror = () => {
+        reject(new Error(`Unable to read ${file.name}.`));
+      };
+
+      reader.onload = () => {
+        const image = new Image();
+
+        image.onerror = () => {
+          reject(new Error(`Unable to decode ${file.name}.`));
+        };
+
+        image.onload = () => {
+          let width = image.naturalWidth;
+          let height = image.naturalHeight;
+
+          const scale = Math.min(
+            1,
+            MAX_DIMENSION / Math.max(width, height)
+          );
+
+          width = Math.max(1, Math.round(width * scale));
+          height = Math.max(1, Math.round(height * scale));
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const context = canvas.getContext('2d');
+
+          if (!context) {
+            reject(new Error(`Unable to process ${file.name}.`));
+            return;
+          }
+
+          context.drawImage(image, 0, 0, width, height);
+
+          const convert = (quality) => {
+            canvas.toBlob(
+              (blob) => {
+                if (!blob) {
+                  reject(new Error(`Unable to compress ${file.name}.`));
+                  return;
+                }
+
+                if (blob.size <= MAX_BYTES || quality <= 0.55) {
+                  const outputName = file.name.replace(
+                    /\.(png|jpe?g|webp|heic|heif)$/i,
+                    ''
+                  ) + '.jpg';
+
+                  resolve(
+                    new File(
+                      [blob],
+                      outputName,
+                      {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                      }
+                    )
+                  );
+                  return;
+                }
+
+                convert(Math.max(0.55, quality - 0.08));
+              },
+              'image/jpeg',
+              quality
+            );
+          };
+
+          convert(0.82);
+        };
+
+        image.src = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+
   const analyze = async () => {
     setError('');
 
@@ -164,8 +261,12 @@ export default function QualityChecker() {
         variety.trim()
       );
 
-      files.forEach((file) => {
-        formData.append('files', file);
+      const compressedFiles = await Promise.all(
+        files.map((file) => compressQualityImage(file))
+      );
+
+      compressedFiles.forEach((file) => {
+        formData.append('files', file, file.name);
       });
 
       const result = await api.post(
@@ -194,10 +295,31 @@ export default function QualityChecker() {
         err
       );
 
+      const status = err?.response?.status;
+
       const detail =
         err?.response?.data?.detail ||
         err?.message ||
         'Quality analysis failed.';
+
+      if (status === 413) {
+        setError(
+          'The selected images are too large. They will be compressed automatically before upload. Please try again.'
+        );
+        return;
+      }
+
+      if (status === 502) {
+        const providerDetail =
+          typeof detail === 'object'
+            ? detail.message || JSON.stringify(detail)
+            : String(detail);
+
+        setError(
+          `AI quality analysis is temporarily unavailable. ${providerDetail}`
+        );
+        return;
+      }
 
       if (
         typeof detail === 'object'

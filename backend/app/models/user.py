@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean, Enum, Text
+from sqlalchemy import Column, String, DateTime, Boolean, Enum, Text, Float
 from sqlalchemy.sql import func
 from app.core.database import Base
 import enum
@@ -52,4 +52,7 @@ class User(Base):
     village = Column(String, nullable=True)
     district = Column(String, nullable=True)
     state = Column(String, nullable=True)
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+
     created_at = Column(DateTime, server_default=func.now())

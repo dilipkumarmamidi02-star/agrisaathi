@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi.concurrency import run_in_threadpool
 from typing import Optional
 from app.schemas.diagnosis import DiagnosisResponse
 from app.services.diagnosis_service import diagnose_image
@@ -15,4 +16,8 @@ async def analyze_image(
     image_bytes = await file.read()
     if len(image_bytes) > MAX_IMAGE_SIZE:
         raise HTTPException(413, "Image too large. Max 10MB.")
-    return diagnose_image(image_bytes, crop_hint)
+    return await run_in_threadpool(
+        diagnose_image,
+        image_bytes,
+        crop_hint,
+    )

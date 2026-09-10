@@ -14,6 +14,10 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
+import asyncio
+from starlette.concurrency import run_in_threadpool
+from app.core.config import settings
+
 from app.core.database import get_db
 from app.core.firebase_auth import get_current_user
 from app.models.base44_entities import (
@@ -21,6 +25,8 @@ from app.models.base44_entities import (
     QualitySample,
     QualitySession,
 )
+from app.models.user import User, UserRole
+
 from app.services.quality_service import (
     analyze_quality_images,
 )
@@ -94,6 +100,104 @@ def _serialize_report(
             if report.updated_at
             else None
         ),
+    }
+
+
+
+def _require_quality_admin(current_user: dict, db: Session) -> User:
+    uid = current_user.get("uid")
+    user = db.query(User).filter(User.uid == uid).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User profile not found")
+
+    if user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access required for platform quality analytics",
+        )
+
+    return user
+
+
+@router.get("/admin/analytics")
+def admin_quality_analytics(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Platform-wide quality analytics.
+
+    This intentionally does NOT use the farmer-scoped list endpoint.
+    """
+    _require_quality_admin(current_user, db)
+
+    reports = (
+        db.query(QualityReport)
+        .order_by(QualityReport.created_at.desc())
+        .all()
+    )
+
+    total = len(reports)
+
+    grade_counts = {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0,
+        "F": 0,
+    }
+
+    commodity_counts = {}
+    monthly_counts = {}
+
+    for report in reports:
+        grade = (report.overall_grade or "").strip().upper()
+        if grade in grade_counts:
+            grade_counts[grade] += 1
+
+        commodity = (report.commodity or "Unknown").strip() or "Unknown"
+        commodity_counts[commodity] = commodity_counts.get(commodity, 0) + 1
+
+        created = report.created_at
+        if created:
+            key = created.strftime("%Y-%m")
+            monthly_counts[key] = monthly_counts.get(key, 0) + 1
+
+    # Count lots independently from quality reports.
+    try:
+        from app.models.lot import Lot
+        total_lots = db.query(Lot).count()
+    except Exception:
+        total_lots = 0
+
+    return {
+        "total_quality_reports": total,
+        "grade_a_reports": grade_counts["A"],
+        "grade_b_reports": grade_counts["B"],
+        "grade_c_reports": grade_counts["C"],
+        "grade_d_reports": grade_counts["D"],
+        "grade_f_reports": grade_counts["F"],
+        "total_lots": total_lots,
+        "grade_distribution": [
+            {"grade": "A", "count": grade_counts["A"]},
+            {"grade": "B", "count": grade_counts["B"]},
+            {"grade": "C", "count": grade_counts["C"]},
+            {"grade": "D", "count": grade_counts["D"]},
+            {"grade": "F", "count": grade_counts["F"]},
+        ],
+        "commodity_distribution": [
+            {"commodity": k, "count": v}
+            for k, v in sorted(
+                commodity_counts.items(),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+        ],
+        "monthly_distribution": [
+            {"month": k, "count": v}
+            for k, v in sorted(monthly_counts.items())
+        ],
     }
 
 
@@ -195,13 +299,13 @@ async def analyze_quality(
             )
 
         if len(image_bytes) > (
-            10 * 1024 * 1024
+            12 * 1024 * 1024
         ):
             raise HTTPException(
                 status_code=413,
                 detail=(
                     f"Sample {index} exceeds "
-                    "the 10MB limit."
+                    "the 12MB limit."
                 ),
             )
 
@@ -245,11 +349,28 @@ async def analyze_quality(
 
     try:
 
-        analysis = analyze_quality_images(
-            image_bytes_list=image_bytes_list,
-            commodity=commodity,
-            variety=variety or None,
+        analysis = await asyncio.wait_for(
+            run_in_threadpool(
+                analyze_quality_images,
+                image_bytes_list=image_bytes_list,
+                commodity=commodity,
+                variety=variety or None,
+            ),
+            timeout=settings.ANALYSIS_MAX_TIME_LIMIT_SECONDS,
         )
+
+    except asyncio.TimeoutError as exc:
+
+        db.rollback()
+
+        raise HTTPException(
+            status_code=504,
+            detail=(
+                "Quality analysis exceeded the "
+                f"{settings.ANALYSIS_MAX_TIME_LIMIT_SECONDS // 60}-minute "
+                "time limit. Please try again."
+            ),
+        ) from exc
 
     except ValueError as exc:
 

@@ -164,10 +164,24 @@ class Offer(Base):
     buyer_id = Column(String)
     farmer_id = Column(String)
     quantity = Column(Float)
+    quantity_unit = Column(String, nullable=True)
     price_per_unit = Column(Float)
     total_price = Column(Float)
+    pickup_or_delivery = Column(String, nullable=True)
+    payment_terms = Column(String, nullable=True)
+    expiry_date = Column(String, nullable=True)
+    conditions = Column(Text, nullable=True)
     status = Column(String)
+    counter_price = Column(Float, nullable=True)
+    counter_notes = Column(Text, nullable=True)
+    farmer_notes = Column(Text, nullable=True)
+    buyer_notes = Column(Text, nullable=True)
+    negotiation_history = Column(JSON, nullable=True)
+    created_by = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, nullable=True)
+    distance_km = Column(Float, nullable=True)
+    wants_own_logistics = Column(Boolean, default=False)
 
 class Order(Base):
     __tablename__ = "orders"
@@ -226,6 +240,56 @@ class AuditLog(Base):
     created_at = Column(DateTime, server_default=func.now())
 
 
+
+class LogisticsRequest(Base):
+    __tablename__ = "logistics_requests"
+    id = Column(String, primary_key=True)
+    lot_id = Column(String, index=True)
+    offer_id = Column(String, nullable=True)
+    requested_by = Column(String, index=True)
+    pickup_lat = Column(Float, nullable=True)
+    pickup_lng = Column(Float, nullable=True)
+    dropoff_lat = Column(Float, nullable=True)
+    dropoff_lng = Column(Float, nullable=True)
+    status = Column(String, default="open")
+    accepted_offer_id = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class LogisticsOffer(Base):
+    __tablename__ = "logistics_offers"
+    id = Column(String, primary_key=True)
+    request_id = Column(String, index=True)
+    provider_id = Column(String, index=True)
+    cost = Column(Float, nullable=False)
+    status = Column(String, default="pending")
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class StorageRequest(Base):
+    __tablename__ = "storage_requests"
+    id = Column(String, primary_key=True)
+    lot_id = Column(String, index=True)
+    requested_by = Column(String, index=True)
+    facility_type = Column(String, nullable=False)
+    lot_lat = Column(Float, nullable=True)
+    lot_lng = Column(Float, nullable=True)
+    status = Column(String, default="open")
+    accepted_offer_id = Column(String, nullable=True)
+    created_at = Column(DateTime, server_default=func.now())
+
+
+class StorageOffer(Base):
+    __tablename__ = "storage_offers"
+    id = Column(String, primary_key=True)
+    request_id = Column(String, index=True)
+    provider_id = Column(String, index=True)
+    facility_id = Column(String, nullable=True)
+    cost = Column(Float, nullable=False)
+    status = Column(String, default="pending")
+    created_at = Column(DateTime, server_default=func.now())
+
+
 ENTITY_REGISTRY = {
     "QualityReport": QualityReport,
     "QualitySession": QualitySession,
@@ -238,4 +302,8 @@ ENTITY_REGISTRY = {
     "StorageFacility": StorageFacility,
     "LogisticsTrip": LogisticsTrip,
     "AuditLog": AuditLog,
+    "LogisticsRequest": LogisticsRequest,
+    "LogisticsOffer": LogisticsOffer,
+    "StorageRequest": StorageRequest,
+    "StorageOffer": StorageOffer,
 }

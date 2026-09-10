@@ -3,8 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.firebase_auth import get_current_user
+from app.api.routes.quality_admin import router as quality_admin_router
+from app.api.routes.orders import router as orders_router
 from app.api.routes.email_otp import router as email_otp_router
 from app.api.routes.grievances import router as grievances_router
+from app.api.routes.offer_flow import router as offer_flow_router
+from app.api.routes.logistics_flow import router as logistics_flow_router
+from app.api.routes.storage_flow import router as storage_flow_router
 from app.api.routes.quality_reports import router as quality_reports_router
 from app.api.routes.lot_verification import router as lot_verification_router
 from app.api.routes import (
@@ -95,58 +100,14 @@ app.add_middleware(
 )
 
 
-# ============================================================
-# AGRISAATHI CORS
-# ============================================================
-#
-# Production frontend:
-#   https://agrisaathi-ashy.vercel.app
-#
-# Local development:
-#   http://localhost:5173
-#   http://127.0.0.1:5173
-#
-# Do NOT use allow_origins=["*"] because the application
-# uses authenticated requests / Authorization headers.
-# ============================================================
-
-def _build_allowed_origins():
-    configured = getattr(settings, "allowed_origins", "") or ""
-
-    origins = [
-        origin.strip().rstrip("/")
-        for origin in configured.split(",")
-        if origin.strip()
-    ]
-
-    required_origins = [
-        "https://agrisaathi-ashy.vercel.app",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
-
-    for origin in required_origins:
-        if origin not in origins:
-            origins.append(origin)
-
-    return origins
-
-
-ALLOWED_CORS_ORIGINS = _build_allowed_origins()
-
-print("============================================================")
-print("🌾 AgriSaathi CORS")
-print("============================================================")
-
-for origin in ALLOWED_CORS_ORIGINS:
-    print(f"  ✓ {origin}")
-
-print("============================================================")
-origins = [origin.strip() for origin in settings.allowed_origins.split(",") if origin.strip()]
 
 
 # Public — no auth. Health check must stay reachable for uptime monitors.
+_auth_dep = [Depends(get_current_user)]
+
 app.include_router(health.router)
+app.include_router(quality_admin_router, dependencies=_auth_dep)
+app.include_router(orders_router, dependencies=_auth_dep)
 
 # users.router already enforces auth per-route (see app/api/routes/users.py),
 # so it's not wrapped again here to avoid running the check twice.
@@ -155,8 +116,6 @@ app.include_router(health.router)
 app.include_router(users.router)
 
 # Everything else requires a valid Firebase ID token.
-_auth_dep = [Depends(get_current_user)]
-
 app.include_router(crop.router, dependencies=_auth_dep)
 app.include_router(fertilizer.router, dependencies=_auth_dep)
 app.include_router(diagnosis.router, dependencies=_auth_dep)
@@ -199,6 +158,9 @@ app.include_router(
     dependencies=_auth_dep,
 )
 app.include_router(grievances_router)
+app.include_router(offer_flow_router, dependencies=_auth_dep)
+app.include_router(logistics_flow_router, dependencies=_auth_dep)
+app.include_router(storage_flow_router, dependencies=_auth_dep)
 
 
 @app.get("/")

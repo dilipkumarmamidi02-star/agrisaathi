@@ -11,17 +11,55 @@ import { INDIAN_LANGUAGES } from '../lib/indianLanguages';
 import { useHelperRouter } from '../lib/useHelperRouter';
 import { getVoiceGovernmentContext } from '../lib/voiceDataGov';
 
+async function waitForFirebaseUser() {
+  if (auth.currentUser) return auth.currentUser;
+
+  return new Promise((resolve) => {
+    let unsubscribe;
+
+    const finish = (user) => {
+      if (unsubscribe) unsubscribe();
+      resolve(user || null);
+    };
+
+    unsubscribe = onAuthStateChanged(auth, finish);
+  });
+}
+
 async function translateText(text, targetLang) {
   if (!text || targetLang === 'en') return text;
+
   try {
-    const res = await api.post(API_ENDPOINTS.translate, {
-      text,
-      target_language: targetLang,
-    });
+    const user = await waitForFirebaseUser();
+
+    if (!user) {
+      console.warn('[Agri Helper] Translation skipped: no authenticated Firebase user');
+      return text;
+    }
+
+    const token = await user.getIdToken();
+
+    if (!token) {
+      console.warn('[Agri Helper] Translation skipped: Firebase ID token unavailable');
+      return text;
+    }
+
+    const res = await api.post(
+      API_ENDPOINTS.translate,
+      {
+        text,
+        target_language: targetLang,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     return res.data.translated_text || text;
-  } catch {
-    // Translation service unavailable — fall back to original text
-    // rather than blocking the reply.
+  } catch (error) {
+    console.error('[Agri Helper] Translation failed:', error);
     return text;
   }
 }

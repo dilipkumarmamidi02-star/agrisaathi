@@ -34,7 +34,7 @@ OLLAMA_MODEL = (
     else "gemma4:latest"
 )
 
-MAX_IMAGE_BYTES = 10 * 1024 * 1024
+MAX_IMAGE_BYTES = 12 * 1024 * 1024
 MAX_IMAGE_SIZE = 1024
 GROQ_BATCH_SIZE = 3
 
@@ -770,15 +770,15 @@ def _analyze_with_ollama(
 
     # Keep Ollama fallback deliberately small because local VLM
     # inference is much slower than the hosted providers.
-    batch_size = 2
+    batch_size = 1
 
     all_results: list[dict[str, Any]] = []
 
     timeout = httpx.Timeout(
-        connect=10.0,
-        read=180.0,
-        write=60.0,
-        pool=10.0,
+        connect=15.0,
+        read=300.0,
+        write=120.0,
+        pool=15.0,
     )
 
     logger.info(

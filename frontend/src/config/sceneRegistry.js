@@ -125,22 +125,10 @@ export const sceneRegistry = {
     environment: 'laboratory',
   },
 
-  '/irrigation-planner': {
-    module: 'irrigation',
-    visualLevel: SCENE_LEVELS.IMMERSIVE,
-    environment: 'irrigation-field',
-  },
-
   '/harvest-records': {
     module: 'harvest',
     visualLevel: SCENE_LEVELS.IMMERSIVE,
     environment: 'harvest-field',
-  },
-
-  '/inventory-tracker': {
-    module: 'inventory',
-    visualLevel: SCENE_LEVELS.CONTEXTUAL,
-    environment: 'farm-storage',
   },
 
   '/equipment-registry': {
@@ -215,12 +203,6 @@ export const sceneRegistry = {
     environment: 'financial',
   },
 
-  '/farm-ledger': {
-    module: 'farm-ledger',
-    visualLevel: SCENE_LEVELS.SUBTLE,
-    environment: 'farm-ledger',
-  },
-
   '/expense-analytics': {
     module: 'expense-analytics',
     visualLevel: SCENE_LEVELS.SUBTLE,
@@ -255,12 +237,6 @@ export const sceneRegistry = {
     module: 'sustainability',
     visualLevel: SCENE_LEVELS.CONTEXTUAL,
     environment: 'living-farm',
-  },
-
-  '/expert-directory': {
-    module: 'experts',
-    visualLevel: SCENE_LEVELS.SUBTLE,
-    environment: 'expert-hub',
   },
 
   '/document-wallet': {

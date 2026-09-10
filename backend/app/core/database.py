@@ -1,5 +1,6 @@
 import os
 
+import ssl
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -46,7 +47,11 @@ if _raw_url:
     _raw_url = _raw_url.split("?")[0]
 
     DATABASE_URL = _raw_url
-    connect_args = {"ssl_context": True}
+    connect_args = (
+        {"ssl_context": ssl.create_default_context()}
+        if DATABASE_URL.startswith("postgresql")
+        else {}
+    )
 else:
     DB_PATH = "/tmp/agrisaathi.db" if os.environ.get("VERCEL") else "./agrisaathi.db"
     DATABASE_URL = f"sqlite:///{DB_PATH}"

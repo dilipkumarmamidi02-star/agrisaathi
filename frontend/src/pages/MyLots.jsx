@@ -148,10 +148,9 @@ export default function MyLots() {
     if (!uid) { alert('Please sign in.'); return; }
     try {
       await api.post('/api/entities/LogisticsTrip', {
-        requestedBy: uid,
-        requestedByName: displayName,
-        cropType: lot.crop,
-        quantityQuintal: lot.quantityQuintal || lot.quantity_quintal || 0,
+        farmer_id: uid,
+        commodity: lot.crop || lot.commodity || '',
+        quantity: Number(lot.quantityQuintal || lot.quantity_quintal || lot.quantity || 0),
         status: 'open'
       });
       alert('Pickup requested.');

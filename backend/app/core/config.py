@@ -37,6 +37,12 @@ class Settings(BaseSettings):
 
     data_gov_api_key: str = ""
     admin_email: str = ""
+    support_email: str = "agrisaathiteamapex@gmail.com"
+
+    quality_checker_provider_order: str = "gemini_vlm,groq_vlm,ollama_vlm"
+    diagnose_provider_order: str = "groq_vlm,ollama_vlm"
+    min_images_per_request: int = 3
+    max_images_per_request: int = 5
 
     # Email OTP configuration
     smtp_host: str = ""

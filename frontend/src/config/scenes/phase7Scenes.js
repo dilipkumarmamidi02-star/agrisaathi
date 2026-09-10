@@ -15,22 +15,6 @@ export const phase7Scenes = {
     objects: ["soilSample", "waterSample", "sensorDisplay"],
   },
 
-  "/irrigation-planner": {
-    id: "irrigation-planner",
-    level: "immersive",
-    environment: "irrigated-field",
-    camera: "overview",
-    objects: ["cropField", "channels", "waterZones", "pump"],
-  },
-
-  "/farm-ledger": {
-    id: "farm-ledger",
-    level: "subtle",
-    environment: "farm-office",
-    camera: "overview",
-    objects: ["desk", "ledger", "fieldModel"],
-  },
-
   "/expense-analytics": {
     id: "expense-analytics",
     level: "contextual",
@@ -53,14 +37,6 @@ export const phase7Scenes = {
     environment: "harvest-field",
     camera: "overview",
     objects: ["cropField", "harvester", "cropRows"],
-  },
-
-  "/inventory-tracker": {
-    id: "inventory-tracker",
-    level: "contextual",
-    environment: "farm-storage",
-    camera: "overview",
-    objects: ["seedBags", "fertilizerBags", "tools", "equipment"],
   },
 
   "/equipment-registry": {

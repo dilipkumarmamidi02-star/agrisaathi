@@ -1,3 +1,7 @@
+from app.services.ai_providers import run_with_fallback
+from app.services.image_validation import validate_image_batch
+from app.core.config import settings
+
 import base64
 import json
 import os
@@ -118,7 +122,11 @@ Keep any internal reasoning brief. Output ONLY the final JSON object as your las
             "Content-Type": "application/json",
         }
 
-        with httpx.Client(timeout=60) as client:
+        # 10-minute ceiling to match the frontend and Quality Checker's
+        # Groq/Ollama timeouts, in case Groq is slow or we add an Ollama
+        # fallback here later.
+        timeout = httpx.Timeout(connect=15.0, read=580.0, write=60.0, pool=15.0)
+        with httpx.Client(timeout=timeout) as client:
             response = client.post(GROQ_URL, headers=headers, json=payload)
 
         if response.status_code == 200:

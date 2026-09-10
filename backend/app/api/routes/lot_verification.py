@@ -12,6 +12,49 @@ except ImportError:
     QualityReport = None
 
 
+
+def _farmer_profile_location(lot, farmer):
+    """
+    Authoritative lot destination:
+
+    1. Explicit lot coordinates, when present.
+    2. Farmer Profile coordinates, when lot coordinates are absent.
+    3. Farmer Profile address fields as human-readable fallback.
+
+    Buyer/supporter coordinates are NEVER used as the lot location.
+    """
+    lot_lat = getattr(lot, "latitude", None)
+    lot_lng = getattr(lot, "longitude", None)
+
+    farmer_lat = getattr(farmer, "latitude", None) if farmer else None
+    farmer_lng = getattr(farmer, "longitude", None) if farmer else None
+
+    latitude = lot_lat if lot_lat is not None else farmer_lat
+    longitude = lot_lng if lot_lng is not None else farmer_lng
+
+    parts = []
+    if farmer:
+        for field in ("address", "village", "district", "state"):
+            value = getattr(farmer, field, None)
+            if value:
+                parts.append(str(value).strip())
+
+    return {
+        "latitude": latitude,
+        "longitude": longitude,
+        "address": ", ".join(dict.fromkeys(parts)) if parts else None,
+        "source": (
+            "lot"
+            if lot_lat is not None and lot_lng is not None
+            else "farmer_profile"
+            if farmer_lat is not None and farmer_lng is not None
+            else "farmer_profile_address"
+            if parts
+            else None
+        ),
+    }
+
+
 router = APIRouter(
     prefix="/api/lot-verification",
     tags=["lot-verification"],
@@ -150,8 +193,10 @@ def verify_lot(qr_token: str):
                 "farmer_name": lot.farmer_name,
                 "farmer_phone": lot.farmer_phone,
                 "farmer_email": lot.farmer_email,
-                "latitude": lot.latitude,
-                "longitude": lot.longitude,
+                "latitude": location_data["latitude"],
+                "longitude": location_data["longitude"],
+                "location_address": location_data["address"],
+                "location_source": location_data["source"],
                 # True when this lot skipped the Quality Checker and is
                 # sitting in "pending_review" for an admin to manually
                 # confirm the farmer-supplied details before it goes live.

@@ -28,6 +28,8 @@ class UserUpdate(BaseModel):
     village: Optional[str] = None
     address: Optional[str] = None
     preferred_language: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class SupporterRegistration(BaseModel):
@@ -35,6 +37,8 @@ class SupporterRegistration(BaseModel):
     business_name: str
     full_name: str
     phone: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 
@@ -84,6 +88,8 @@ def _serialize(user: User) -> dict:
         "village": user.village,
         "address": user.address,
         "preferred_language": user.preferred_language,
+        "latitude": user.latitude,
+        "longitude": user.longitude,
         "role": user.role.value if user.role else None,
         "supporter_type": user.supporter_type,
         "business_name": user.business_name,
@@ -194,6 +200,11 @@ async def register_supporter(
 
     if payload.phone:
         user.phone = payload.phone.strip()
+
+    if payload.latitude is not None:
+        user.latitude = payload.latitude
+    if payload.longitude is not None:
+        user.longitude = payload.longitude
 
     user.verification_status = "pending"
 

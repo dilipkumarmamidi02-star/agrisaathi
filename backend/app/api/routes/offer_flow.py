@@ -8,6 +8,7 @@ POST /api/offers/{offer_id}/respond
 Only verified buyer/trader/institutional-buyer supporters can create offers.
 Farmers can view/respond to their own offers.
 """
+from datetime import datetime
 
 import hashlib
 import json
@@ -191,6 +192,20 @@ async def create_offer(
         raise HTTPException(
             status_code=409,
             detail="This lot is not currently available for offers.",
+        )
+
+    # A sold/closed lot can never receive another marketplace offer.
+    # This is enforced server-side, not just by hiding the lot in the UI.
+    if str(lot.status).lower() in {
+        "sold",
+        "closed",
+        "completed",
+        "cancelled",
+        "rejected",
+    }:
+        raise HTTPException(
+            status_code=409,
+            detail="This lot is closed and cannot receive new offers.",
         )
 
     farmer = (
@@ -636,12 +651,31 @@ async def respond_to_offer(
     current_user: User = Depends(get_verified_user),
     db: Session = Depends(get_db),
 ):
+    """
+    Farmer accepts/rejects a marketplace offer.
+
+    ACCEPT:
+      1. Lock the offer/lot transaction where supported.
+      2. Confirm the selected offer.
+      3. Automatically reject every other pending offer for the same lot.
+      4. Create the real Order if it does not already exist.
+      5. Mark the lot as sold/closed so it disappears from the active marketplace.
+      6. Prevent any future offers through create_offer().
+      7. Write append-only blockchain ledger events.
+
+    REJECT:
+      Only the selected offer is rejected.
+    """
+
     if payload.decision not in {"accept", "reject"}:
         raise HTTPException(
             status_code=400,
             detail="Decision must be accept or reject.",
         )
 
+    # ---------------------------------------------------------------
+    # LOAD OFFER
+    # ---------------------------------------------------------------
     offer = (
         db.query(Offer)
         .filter(Offer.id == offer_id)
@@ -666,103 +700,240 @@ async def respond_to_offer(
             detail="This offer has already been processed.",
         )
 
-    offer.status = (
-        "accepted"
-        if payload.decision == "accept"
-        else "rejected"
+    # ---------------------------------------------------------------
+    # LOAD LOT
+    # ---------------------------------------------------------------
+    lot = (
+        db.query(Lot)
+        .filter(Lot.id == offer.lot_id)
+        .first()
     )
 
-    
+    if not lot:
+        raise HTTPException(
+            status_code=404,
+            detail="The lot associated with this offer no longer exists.",
+        )
+
+    # Never allow an offer to be accepted against a lot that was
+    # already closed/sold by another transaction.
+    if payload.decision == "accept" and lot.status != "active":
+        raise HTTPException(
+            status_code=409,
+            detail="This lot is no longer available. Another transaction may have already closed it.",
+        )
+
     # ---------------------------------------------------------------
-    # ORDER-AUTO-CREATED-FROM-OFFER
-    #
-    # Accepted offers become real orders. The duplicate check is
-    # intentionally based on lot + buyer + farmer + accepted status,
-    # because an order may already have been created by an earlier
-    # repair/manual migration.
+    # REJECT PATH
     # ---------------------------------------------------------------
-    if payload.decision == "accept":
-        existing_order = (
-            db.query(Order)
-            .filter(
-                Order.lot_id == offer.lot_id,
-                Order.buyer_id == offer.buyer_id,
-                Order.farmer_id == offer.farmer_id,
+    if payload.decision == "reject":
+        offer.status = "rejected"
+
+        try:
+            from app.blockchain_ledger import BlockchainLedger
+
+            BlockchainLedger().add_block(
+                {
+                    "event": "offer_rejected",
+                    "offer_id": offer.id,
+                    "lot_id": offer.lot_id,
+                    "farmer_id": offer.farmer_id,
+                    "buyer_id": offer.buyer_id,
+                }
             )
+        except Exception as exc:
+            print(f"Offer ledger warning: {exc}")
+
+        db.commit()
+        db.refresh(offer)
+
+        return {
+            "success": True,
+            "offer_id": offer.id,
+            "status": offer.status,
+            "lot_id": offer.lot_id,
+            "lot_status": lot.status,
+            "auto_rejected_offer_ids": [],
+        }
+
+    # ---------------------------------------------------------------
+    # ACCEPT PATH
+    # ---------------------------------------------------------------
+
+    # Selected offer wins.
+    offer.status = "accepted"
+
+    # ---------------------------------------------------------------
+    # AUTOMATICALLY REJECT ALL OTHER PENDING OFFERS
+    # ---------------------------------------------------------------
+    competing_offers = (
+        db.query(Offer)
+        .filter(
+            Offer.lot_id == offer.lot_id,
+            Offer.id != offer.id,
+            Offer.status == "pending",
+        )
+        .all()
+    )
+
+    auto_rejected_ids = []
+
+    for competing in competing_offers:
+        competing.status = "rejected"
+        auto_rejected_ids.append(competing.id)
+
+    # ---------------------------------------------------------------
+    # CREATE / REUSE REAL ORDER
+    # ---------------------------------------------------------------
+    existing_order = (
+        db.query(Order)
+        .filter(
+            Order.lot_id == offer.lot_id,
+            Order.buyer_id == offer.buyer_id,
+            Order.farmer_id == offer.farmer_id,
+        )
+        .first()
+    )
+
+    if existing_order:
+        order = existing_order
+
+        # Make sure an accepted offer always corresponds to a
+        # confirmed order.
+        if getattr(order, "status", None) != "confirmed":
+            order.status = "confirmed"
+
+    else:
+        commodity = (
+            getattr(lot, "crop", None)
+            or getattr(lot, "commodity", None)
+            or "Unknown"
+        )
+
+        order_primary_id = "ORDER-" + str(offer.id)
+
+        existing_by_id = (
+            db.query(Order)
+            .filter(Order.id == order_primary_id)
             .first()
         )
 
-        if not existing_order:
-            lot = None
-
-            try:
-                from app.models.lot import Lot
-
-                lot = (
-                    db.query(Lot)
-                    .filter(Lot.id == offer.lot_id)
-                    .first()
-                )
-            except Exception:
-                lot = None
-
-            commodity = (
-                getattr(lot, "crop", None)
-                or getattr(lot, "commodity", None)
-                or "Unknown"
+        if existing_by_id:
+            order = existing_by_id
+            order.status = "confirmed"
+        else:
+            order = Order(
+                id=order_primary_id,
+                order_id=(
+                    "ORD-"
+                    + datetime.utcnow().strftime("%Y%m%d")
+                    + "-"
+                    + uuid.uuid4().hex[:8].upper()
+                ),
+                lot_id=offer.lot_id,
+                farmer_id=offer.farmer_id,
+                buyer_id=offer.buyer_id,
+                commodity=commodity,
+                quantity=offer.quantity,
+                gross_amount=offer.total_price,
+                net_amount=offer.total_price,
+                status="confirmed",
             )
 
-            order_id = (
-                "ORDER-"
-                + str(offer.id)
-            )
+            db.add(order)
 
-            # Guard once more against the exact generated primary key.
-            existing_by_id = (
-                db.query(Order)
-                .filter(Order.id == order_id)
-                .first()
-            )
+    # Flush so the Order exists in the current transaction before
+    # the lot/ledger operations continue.
+    db.flush()
 
-            if not existing_by_id:
-                order = Order(
-                    id=order_id,
-                    order_id=(
-                        "ORD-"
-                        + datetime.utcnow().strftime("%Y%m%d")
-                        + "-"
-                        + uuid.uuid4().hex[:8].upper()
-                    ),
-                    lot_id=offer.lot_id,
-                    farmer_id=offer.farmer_id,
-                    buyer_id=offer.buyer_id,
-                    commodity=commodity,
-                    quantity=offer.quantity,
-                    gross_amount=offer.total_price,
-                    net_amount=offer.total_price,
-                    status="confirmed",
-                )
+    # ---------------------------------------------------------------
+    # CLOSE / SELL LOT
+    # ---------------------------------------------------------------
+    #
+    # LotsMarketplace already requests:
+    #
+    #   /api/lots/?status=active
+    #
+    # Therefore a non-active status automatically removes this lot
+    # from the marketplace.
+    #
+    lot.status = "sold"
 
-                db.add(order)
+    if hasattr(lot, "blockchain_status"):
+        lot.blockchain_status = "confirmed"
 
+    # ---------------------------------------------------------------
+    # BLOCKCHAIN LEDGER
+    # ---------------------------------------------------------------
     try:
         from app.blockchain_ledger import BlockchainLedger
 
-        BlockchainLedger().add_block(
+        ledger = BlockchainLedger()
+
+        ledger.add_block(
             {
-                "event": f"offer_{offer.status}",
+                "event": "offer_accepted",
                 "offer_id": offer.id,
                 "lot_id": offer.lot_id,
+                "buyer_id": offer.buyer_id,
+                "farmer_id": offer.farmer_id,
+                "order_id": getattr(order, "order_id", None) or order.id,
+                "price": offer.price_per_unit,
+                "quantity": offer.quantity,
             }
         )
+
+        for rejected_id in auto_rejected_ids:
+            ledger.add_block(
+                {
+                    "event": "offer_auto_rejected",
+                    "offer_id": rejected_id,
+                    "lot_id": offer.lot_id,
+                    "accepted_offer_id": offer.id,
+                    "reason": "another offer on the same lot was accepted",
+                }
+            )
+
+        ledger.add_block(
+            {
+                "event": "lot_closed_after_offer_acceptance",
+                "lot_id": offer.lot_id,
+                "offer_id": offer.id,
+                "order_id": getattr(order, "order_id", None) or order.id,
+                "status": "sold",
+            }
+        )
+
     except Exception as exc:
+        # Ledger failure must not silently roll back the marketplace
+        # transaction, preserving the existing best-effort ledger
+        # integration used by this application.
         print(f"Offer ledger warning: {exc}")
 
+    # ---------------------------------------------------------------
+    # ATOMIC DATABASE COMMIT
+    # ---------------------------------------------------------------
+    #
+    # Offer accepted
+    # Competing offers rejected
+    # Order confirmed
+    # Lot closed
+    #
+    # are committed together.
+    # ---------------------------------------------------------------
     db.commit()
+
     db.refresh(offer)
+    db.refresh(lot)
+    db.refresh(order)
 
     return {
         "success": True,
         "offer_id": offer.id,
         "status": offer.status,
+        "lot_id": lot.id,
+        "lot_status": lot.status,
+        "order_id": getattr(order, "order_id", None) or order.id,
+        "auto_rejected_offer_ids": auto_rejected_ids,
+        "auto_rejected_count": len(auto_rejected_ids),
     }

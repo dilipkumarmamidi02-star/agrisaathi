@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { speakWhenReady } from '../lib/userGesture';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { useLang } from '../lib/i18n';
@@ -200,12 +199,25 @@ export default function AgriHelperWidget() {
       speakingRef.current = false;
       setIsSpeaking(false);
       if (e.error === 'interrupted' || e.error === 'canceled') {
-        // Expected when a newer speak() call supersedes this one
-        // (e.g. dev-mode StrictMode double effects) — not a real failure.
-        console.log('[AgriHelper speak] superseded by a newer speak call, not an error');
-      } else {
-        console.error('[AgriHelper speak] BLOCKED or failed:', e.error, '- likely Chrome autoplay policy if this is the first speak() call on page load');
+        // Expected when a newer utterance replaces the previous one.
+        onDone?.(false);
+        return;
       }
+
+      if (e.error === 'not-allowed') {
+        // Browser autoplay policy. Do not report this as an
+        // AgriSaathi application failure.
+        console.debug(
+          '[AgriHelper speak] browser blocked autoplay; waiting for user gesture'
+        );
+        onDone?.(false);
+        return;
+      }
+
+      console.error(
+        '[AgriHelper speak] speech synthesis failed:',
+        e.error
+      );
       onDone?.(false);
     };
     window.speechSynthesis.speak(utter);
@@ -237,7 +249,10 @@ export default function AgriHelperWidget() {
         greetingTextRef.current = translated;
         setGreetingBanner({ text: translated });
         setMessages([{ role: 'assistant', text: translated }]);
-        speakWhenReady(() => speak(translated, (played) => setGreetingSpoken(played)));
+        // Never autoplay Agri Helper speech on page load.
+        // Chrome can reject speechSynthesis before a user gesture.
+        // The visible "Tap to hear" control starts the greeting.
+        setGreetingSpoken(false);
       });
     });
     return unsubscribe;

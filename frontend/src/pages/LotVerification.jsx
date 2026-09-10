@@ -142,6 +142,16 @@ export default function LotVerification() {
           setData(body)
         }
       } catch (err) {
+        // React StrictMode can abort the first effect during its
+        // development-only mount/unmount/remount cycle.
+        // That is not a verification failure.
+        if (err?.name === 'AbortError') {
+          if (active) {
+            setLoading(false)
+          }
+          return
+        }
+
         console.error(
           '[LotVerification] Verification failed:',
           err
@@ -149,16 +159,10 @@ export default function LotVerification() {
 
         if (!active) return
 
-        if (err?.name === 'AbortError') {
-          setError(
-            'Lot verification timed out. Please try scanning the QR code again.'
-          )
-        } else {
-          setError(
-            err?.message ||
-            'Unable to verify this lot.'
-          )
-        }
+        setError(
+          err?.message ||
+          'Unable to verify this lot.'
+        )
       } finally {
         if (active) {
           setLoading(false)

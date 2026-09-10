@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.models.lot import Lot
+from app.models.user import User
 
 try:
     from app.models.base44_entities import QualityReport
@@ -157,6 +158,24 @@ def verify_lot(qr_token: str):
                 status_code=404,
                 detail="Lot QR code is invalid or the lot no longer exists.",
             )
+
+        # Resolve the farmer who owns this lot.
+        #
+        # Lot.farmer_id stores the Firebase UID used by the rest of
+        # the AgriSaathi farmer-scoped APIs.
+        farmer = (
+            db.query(User)
+            .filter(User.uid == lot.farmer_id)
+            .first()
+        )
+
+        # Location priority:
+        #   1. Lot coordinates
+        #   2. Farmer profile coordinates
+        #   3. Farmer profile address
+        #
+        # Never use buyer/supporter coordinates as lot location.
+        location_data = _farmer_profile_location(lot, farmer)
 
         if lot.status in {"cancelled", "deleted", "rejected", "pending_review"}:
             raise HTTPException(

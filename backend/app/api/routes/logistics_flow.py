@@ -286,6 +286,56 @@ def accept_offer(
             detail="Request is no longer open",
         )
 
+    # req.offer_id is a marketplace Offer ID.
+    # LogisticsTrip.order_id must contain the actual confirmed Order ID.
+    if not req.offer_id:
+        raise HTTPException(
+            status_code=409,
+            detail="This logistics request is not linked to a marketplace offer.",
+        )
+
+    # Import the marketplace entities locally to avoid changing the
+    # existing module import structure unnecessarily.
+    from app.models.base44_entities import Offer, Order
+
+    marketplace_offer = (
+        db.query(Offer)
+        .filter(Offer.id == req.offer_id)
+        .first()
+    )
+
+    if not marketplace_offer:
+        raise HTTPException(
+            status_code=409,
+            detail="The marketplace offer linked to this logistics request was not found.",
+        )
+
+    if marketplace_offer.status != "accepted":
+        raise HTTPException(
+            status_code=409,
+            detail="The linked marketplace offer is not accepted.",
+        )
+
+    # Find the real confirmed order generated from the accepted offer.
+    order = (
+        db.query(Order)
+        .filter(
+            Order.lot_id == marketplace_offer.lot_id,
+            Order.buyer_id == marketplace_offer.buyer_id,
+            Order.farmer_id == marketplace_offer.farmer_id,
+            Order.status == "confirmed",
+        )
+        .order_by(Order.created_at.desc())
+        .first()
+    )
+
+    if not order:
+        raise HTTPException(
+            status_code=409,
+            detail="A confirmed order could not be found for this logistics request.",
+        )
+
+    # Accept this provider's quote and reject competing quotes.
     logi_offer.status = "accepted"
     req.status = "accepted"
     req.accepted_offer_id = logi_offer.id
@@ -298,17 +348,21 @@ def accept_offer(
         synchronize_session=False,
     )
 
+    # Create the logistics trip against the REAL Order.
     trip = LogisticsTrip(
         id=str(uuid.uuid4()),
         trip_id=str(uuid.uuid4())[:8],
-        order_id=req.offer_id,
-        farmer_id=req.requested_by,
+        order_id=order.id,
+        farmer_id=order.farmer_id,
         provider_id=logi_offer.provider_id,
+        commodity=order.commodity,
+        quantity=order.quantity,
         status="assigned",
     )
 
     db.add(trip)
     db.commit()
+    db.refresh(trip)
 
     log_event(
         LedgerLogRequest(
@@ -317,6 +371,8 @@ def accept_offer(
             event_type="logistics_accepted",
             payload={
                 "request_id": req.id,
+                "offer_id": req.offer_id,
+                "order_id": order.id,
                 "provider_id": logi_offer.provider_id,
                 "trip_id": trip.id,
             },
@@ -327,4 +383,5 @@ def accept_offer(
     return {
         "status": "accepted",
         "trip_id": trip.id,
+        "order_id": order.id,
     }

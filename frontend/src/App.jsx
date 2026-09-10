@@ -161,6 +161,8 @@ function AppContent() {
   return (
     <Layout>
 <Routes>
+          <Route path="/lot-verification/:token" element={<LotVerification />} />
+
 <Route element={<RequireAuth />}>
           <Route path="/" element={<RoleHome />} />
           <Route path="/speak-to-agrisaathi" element={<SpeakToAgriSaathi />} />
@@ -208,8 +210,8 @@ function AppContent() {
           <Route path="/profile-settings" element={<ProfileSettings />} />
           <Route path="/weather-alerts" element={<WeatherAlerts />} />
           <Route path="/document-wallet" element={<DocumentWallet />} />
-          <Route path="/insurance" element={<Navigate to="/insurance-hub" replace />} />
-          <Route path="/inventory" element={<Navigate to="/inventory-tracker" replace />} />
+          <Route path="/insurance" element={<Navigate to="/government-schemes" replace />} />
+          <Route path="/inventory" element={<Navigate to="/my-lots" replace />} />
           <Route path="/export-reports" element={<ExportReports />} />
           <Route path="/sensor-hub" element={<SensorHub />} />
           <Route path="/marketplace" element={<LotsMarketplace />} />

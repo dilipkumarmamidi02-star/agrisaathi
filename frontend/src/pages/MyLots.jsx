@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { api } from '../api/appClient';
 import { useUserRole } from '../hooks/useUserRole';
-
-// Dynamically import QRCode to avoid build issues
-let QRCode;
+import QRCode from "qrcode";
 
 export default function MyLots() {
   const location = useLocation();
@@ -26,15 +24,6 @@ export default function MyLots() {
   const [showQR, setShowQR] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [showForm, setShowForm] = useState(false);
-
-  useEffect(() => {
-    // Load QRCode dynamically
-    import('qrcode').then(module => {
-      QRCode = module.default;
-    }).catch(() => {
-      console.warn('QRCode library not loaded');
-    });
-  }, []);
 
   useEffect(() => {
     if (location.state) {
@@ -123,16 +112,6 @@ export default function MyLots() {
   };
 
   const generateQR = async (lot) => {
-    if (!QRCode) {
-      try {
-        const module = await import('qrcode');
-        QRCode = module.default;
-      } catch (e) {
-        alert('QR Code library not available. Please install qrcode package.');
-        return;
-      }
-    }
-    
     const token = lot.qr_token || lot.id;
     const verifyUrl = window.location.origin + '/lot-verification/' + encodeURIComponent(token);
     try {

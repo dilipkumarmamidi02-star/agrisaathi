@@ -13,7 +13,7 @@ import { useUserRole } from '../hooks/useUserRole';
 // Desktop sidebar nav — maps the reference-mockup labels onto real,
 // already-existing routes (confirmed against App.jsx). No new pages
 // invented; a few mockup labels map onto the closest real equivalent
-// (e.g. "Crop Calendar" -> /crop-planner, "Farm Diary" -> /farm-ledger,
+// (e.g. "Crop Calendar" -> /crop-planner,
 // "AI Saathi" -> /speak-to-agrisaathi, the actual voice-first feature).
 const SIDEBAR_SECTIONS = [
   {
@@ -41,9 +41,6 @@ const SIDEBAR_SECTIONS = [
     items: [
       { path: '/market-prices', icon: Wallet, label: 'Mandi Prices' },
       { path: '/schemes', icon: Landmark, label: 'Govt Schemes' },
-      { path: '/input-marketplace', icon: Store, label: 'MarketPlace' },
-      { path: '/training-center', icon: BookOpen, label: 'Knowledge Hub' },
-      { path: '/farm-ledger', icon: FileSpreadsheet, label: 'Farm Diary' },
       { path: '/alerts-center', icon: Bell, label: 'Price Alerts' },
     ],
   },
